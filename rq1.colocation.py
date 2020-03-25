@@ -9,14 +9,33 @@ from mlxtend.preprocessing import TransactionEncoder
 from mlxtend.frequent_patterns import apriori
 from mlxtend.frequent_patterns import association_rules
 import numpy as np 
+from collections import Counter
 
 
-def singleColocation(arm_df, file_count):
-    for row in arm_df.itertuples():
-        len_itemset = len(list( row[2]) ) 
-        if len_itemset == 1:
-            print( round( row[1] * file_count , 5) , list(row[2]) )
-            print('='*25)
+def singleColocation(df_):
+    file_names = np.unique( df_['FILEPATH'].tolist() )
+    file_count = len(file_names) 
+    colocate_dict, file_dict  = {}, {}
+    for file_name in file_names:
+        per_file_df = df_[df_['FILEPATH']==file_name]
+        icp_list    = per_file_df['TYPE'].tolist()    
+        icp_count_dic =  dict( Counter(icp_list) )
+        for k_, v_ in icp_count_dic.items():
+            if v_  > 1:
+                print('Type:{}, Count:{}'.format(k_, v_))
+                if k_ not in colocate_dict:
+                    colocate_dict[k_] = [v_]
+                    file_dict[k_]     = [v_]
+                else:
+                    colocate_dict[k_] = colocate_dict[k_] + [v_]                    
+                    file_dict[k_]     = file_dict[k_] + [v_]         
+    print(colocate_dict) 
+    print('-'*25) 
+    print(file_dict) 
+    print('-'*25)           
+
+
+
 
 
 def multiColocation(arm_df, file_count):
@@ -49,7 +68,6 @@ def doColocation(arm_list_of_list, tx_cnt):
     te_ary = te.fit(arm_list_of_list).transform(arm_list_of_list)
     df = pd.DataFrame(te_ary, columns=te.columns_)
     frequent_itemsets = apriori(df, min_support=0.0001, use_colnames=True)   ## do not change: min_support=0.0001
-    singleColocation(frequent_itemsets, tx_cnt) 
     len_dic, cate_dic = multiColocation(frequent_itemsets, tx_cnt) 
 
 
@@ -82,6 +100,7 @@ def findColocation(file_name):
         icp_list    = per_file_df['TYPE'].tolist()
         arm_list.append(icp_list) 
     # print(arm_list) 
+    singleColocation(file_df) 
     doColocation( arm_list , file_count ) 
 
 
