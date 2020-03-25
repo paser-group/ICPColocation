@@ -22,13 +22,12 @@ def singleColocation(df_):
         icp_count_dic =  dict( Counter(icp_list) )
         for k_, v_ in icp_count_dic.items():
             if v_  > 1:
-                print('Type:{}, Count:{}'.format(k_, v_))
                 if k_ not in colocate_dict:
                     colocate_dict[k_] = [v_]
-                    file_dict[k_]     = [v_]
+                    file_dict[k_]     = [file_name]
                 else:
                     colocate_dict[k_] = colocate_dict[k_] + [v_]                    
-                    file_dict[k_]     = file_dict[k_] + [v_]         
+                    file_dict[k_]     = file_dict[k_] + [file_name]          
     print(colocate_dict) 
     print('-'*25) 
     print(file_dict) 
