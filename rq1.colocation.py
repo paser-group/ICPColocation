@@ -22,17 +22,21 @@ def doColocation(arm_list_of_list):
     support_dict = dict_itemsets['support']
     itemset_dict = dict_itemsets['itemsets']    
     identifiers  = support_dict.keys()
-    len_items_dict = {}
+    len_items_dict, colocation_dict  = {}, {}
     for ID in identifiers:
         support_val = support_dict[ID]
         itemset_val = itemset_dict[ID]
         itemset_len = len(itemset_val) 
         if itemset_len not in len_items_dict:
             len_items_dict[itemset_len] = [support_val] 
+            colocation_dict[itemset_len] = [itemset_val]
         else: 
-            len_items_dict[itemset_len] = len_items_dict[itemset_len]   +  [support_val]             
+            len_items_dict[itemset_len] = len_items_dict[itemset_len]   +  [support_val]        
+            colocation_dict[itemset_len] = colocation_dict[itemset_len] + [itemset_val] 
+             
 
     print(len_items_dict) 
+    print(colocation_dict) 
 
     # support_list = []
     # for _, v_ in support_dict.items():
