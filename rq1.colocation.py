@@ -20,7 +20,7 @@ def doColocation(arm_list_of_list):
     dict_itemsets = dict( frequent_itemsets.to_dict() ) 
     # print(dict_itemsets) 
     support_dict = dict_itemsets['support']
-    itemset_dict = dict_itemsets['itemset']    
+    itemset_dict = dict_itemsets['itemsets']    
     identifiers  = support_dict.keys()
     len_items_dict = {}
     for ID in identifiers:
@@ -71,7 +71,7 @@ def findColocation(file_name):
 
 
 if __name__=='__main__':
-    # dataset_file = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATION_INPUT_MOZI.csv'
+    dataset_file = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATION_INPUT_MOZI.csv'
 
     # dataset_file = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATION_INPUT_OSTK.csv'    
 
