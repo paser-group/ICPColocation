@@ -11,13 +11,21 @@ from mlxtend.frequent_patterns import association_rules
 import numpy as np 
 
 
-def doColocation(arm_list_of_list):
-    te = TransactionEncoder()
-    te_ary = te.fit(arm_list_of_list).transform(arm_list_of_list)
-    df = pd.DataFrame(te_ary, columns=te.columns_)
-    frequent_itemsets = apriori(df, min_support=0.0001, use_colnames=True)
-    # print( dir( frequent_itemsets)  )    
-    dict_itemsets = dict( frequent_itemsets.to_dict() ) 
+def singleColocation(arm_df, file_count):
+    for row in arm_df.itertuples():
+        len_itemset = len(list( row[2]) ) 
+        if len_itemset == 1:
+            print( round( row[1] * file_count , 5) , list(row[2]) )
+            print('='*25)
+
+
+def multiColocation(arm_df, file_count):
+    for row in arm_df.itertuples():
+        len_itemset = len(list( row[2]) ) 
+        if len_itemset > 1:
+            print( round( row[1] * file_count , 5) , list(row[2]) )
+            print('*'*25)
+    dict_itemsets = dict( arm_df.to_dict() ) 
     # print(dict_itemsets) 
     support_dict = dict_itemsets['support']
     itemset_dict = dict_itemsets['itemsets']    
@@ -27,21 +35,23 @@ def doColocation(arm_list_of_list):
         support_val = support_dict[ID]
         itemset_val = itemset_dict[ID]
         itemset_len = len(itemset_val) 
-        if itemset_len not in len_items_dict:
-            len_items_dict[itemset_len] = [support_val] 
-            colocation_dict[itemset_len] = [itemset_val]
-        else: 
-            len_items_dict[itemset_len] = len_items_dict[itemset_len]   +  [support_val]        
-            colocation_dict[itemset_len] = colocation_dict[itemset_len] + [itemset_val] 
-             
+        if itemset_len > 1:
+            if itemset_len not in len_items_dict:
+                len_items_dict[itemset_len] = [support_val] 
+                colocation_dict[itemset_len] = [itemset_val]
+            else: 
+                len_items_dict[itemset_len] = len_items_dict[itemset_len]   +  [support_val]        
+                colocation_dict[itemset_len] = colocation_dict[itemset_len] + [itemset_val] 
+    return len_items_dict, colocation_dict 
 
-    print(len_items_dict) 
-    print(colocation_dict) 
+def doColocation(arm_list_of_list, tx_cnt):
+    te = TransactionEncoder()
+    te_ary = te.fit(arm_list_of_list).transform(arm_list_of_list)
+    df = pd.DataFrame(te_ary, columns=te.columns_)
+    frequent_itemsets = apriori(df, min_support=0.0001, use_colnames=True)   ## do not change: min_support=0.0001
+    singleColocation(frequent_itemsets, tx_cnt) 
+    len_dic, cate_dic = multiColocation(frequent_itemsets, tx_cnt) 
 
-    # support_list = []
-    # for _, v_ in support_dict.items():
-    #     support_list.append(v_) 
-    # print(min(support_list), max(support_list)) 
 
 
 def weakCrypto(single_val):
@@ -66,12 +76,13 @@ def findColocation(file_name):
     file_df = filterDataframe( file_df )
 
     file_names = np.unique( file_df['FILEPATH'].tolist() )
+    file_count = len(file_names) 
     for file_name in file_names:
         per_file_df = file_df[file_df['FILEPATH']==file_name]
         icp_list    = per_file_df['TYPE'].tolist()
         arm_list.append(icp_list) 
     # print(arm_list) 
-    doColocation( arm_list )
+    doColocation( arm_list , file_count ) 
 
 
 if __name__=='__main__':
