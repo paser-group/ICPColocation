@@ -90,7 +90,20 @@ def getMetricsForAllScripts(none_list, only_one_list, atleast_two):
     return metric_df
 
 
-
+def getColocatedAllScripts(none_list, only_one_list, atleast_two): 
+    all_file_flags = []
+    for file_ in none_list:
+        if(os.path.exists(file_)):
+            all_file_flags.append( (file_, 'NEUTRAL') ) 
+    for file_ in only_one_list:
+        if(os.path.exists(file_)):
+            all_file_flags.append( (file_, 'ONLY_ONE') ) 
+    for file_ in atleast_two:
+        if(os.path.exists(file_)):
+            all_file_flags.append( (file_, 'MORE_THAN_ONE') )             
+    _df = pd.DataFrame( all_file_flags ) 
+    _df.columns = ['FILE_PATH', 'STATUS' ]
+    return _df
 
 
 if __name__=='__main__':
@@ -104,8 +117,12 @@ if __name__=='__main__':
     full_file       = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/V2_ALL_WIKIMEDIA_PUPPET.csv'
 
     print('~'*100) 
+    print(colocation_file) 
     full_file_tuple  = getColocationMapping(colocation_file, full_file) 
     script_metric_df = getMetricsForAllScripts(full_file_tuple[0], full_file_tuple[1], full_file_tuple[2] ) 
+    colocation_df    = getColocatedAllScripts(full_file_tuple[0], full_file_tuple[1], full_file_tuple[2] )     
     print(script_metric_df.head()) 
-    print(script_metric_df.shape) 
+    print('-'*50)
+    print( colocation_df.head()) 
+    print('-'*50)    
     print('~'*100)     
