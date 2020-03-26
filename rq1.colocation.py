@@ -28,10 +28,26 @@ def singleColocation(df_):
                 else:
                     colocate_dict[k_] = colocate_dict[k_] + [v_]                    
                     file_dict[k_]     = file_dict[k_] + [file_name]          
-    print(colocate_dict) 
-    print('-'*25) 
-    print(file_dict) 
-    print('-'*25)           
+    # print(colocate_dict) 
+    print('='*50)
+    print('Smell-wise calculation')
+    for k, v in colocate_dict.items():
+        type_df = df_[df_['TYPE']==k]
+        type_count, _ = type_df.shape 
+        type_colocated = sum(v) 
+        type_perc    = round(float( type_colocated )/float(type_count), 5) * 100
+        print('TYPE:{}, ALL:{}, COLOCATED:{}, PERC:{}'.format(k, type_count, type_colocated, type_perc))
+        print('-'*25) 
+    print('='*50)
+    print('File-wise calculation')
+    for k, v in file_dict.items():
+        type_df = df_[df_['TYPE']==k]
+        type_count     = len( np.unique( type_df['FILEPATH'].tolist() ) )
+        type_colocated = len( np.unique(v)  ) 
+        type_perc    = round(float( type_colocated )/float(type_count), 5) * 100
+        print('TYPE:{}, ALL:{}, COLOCATED:{}, PERC:{}'.format(k, type_count, type_colocated, type_perc))
+        print('-'*25) 
+    print('='*50)           
 
 
 
@@ -100,7 +116,7 @@ def findColocation(file_name):
         arm_list.append(icp_list) 
     # print(arm_list) 
     singleColocation(file_df) 
-    doColocation( arm_list , file_count ) 
+    # doColocation( arm_list , file_count ) 
 
 
 if __name__=='__main__':
