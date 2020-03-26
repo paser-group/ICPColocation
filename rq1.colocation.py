@@ -52,13 +52,13 @@ def singleColocation(df_):
     print('='*50)           
 
 
-def multiColocationARM(arm_df, file_count):
+def multiColocationARM(arm_df, file_count, tot_smell_count):
+    print('*'*25)
+    print('File analysis ... ')
+    print('*'*25)
     for row in arm_df.itertuples():
         len_itemset = len(list( row[2]) ) 
         if len_itemset > 1:
-            print('*'*25)
-            print('File analysis ... ')
-            print('*'*25)
             print('TYPE:{}, PERC:{}'.format( list(row[2]) , round( row[1]  , 5) * 100 ) )
             print('*'*25)
     dict_itemsets = dict( arm_df.to_dict() ) 
@@ -80,18 +80,27 @@ def multiColocationARM(arm_df, file_count):
                 len_items_dict[itemset_len] = len_items_dict[itemset_len]   +  [support_val]        
                 colocation_dict[itemset_len] = colocation_dict[itemset_len] + [itemset_val] 
         # support count for files 
-    
+    print('*'*25)
+    print('Smell  analysis ... ')
+    for row in arm_df.itertuples():
+        len_itemset = len(list( row[2]) ) 
+        if len_itemset > 1:
+            smell_count = row[1]   * file_count 
+            smell_prop  = round(float(smell_count)/float(tot_smell_count), 5) * 100 
+            print('TYPE:{}, SMELL_COUNT:{}, SMELL_PROP:{}'.format( list(row[2]) , smell_count, smell_prop ) )
+            print('*'*25)
+    print('*'*25)    
 
     return len_items_dict, colocation_dict 
 
 
         
-def doColocation(arm_list_of_list, tx_cnt):
+def doColocation(arm_list_of_list, tx_cnt, smell_cnt):
     te = TransactionEncoder()
     te_ary = te.fit(arm_list_of_list).transform(arm_list_of_list)
     df = pd.DataFrame(te_ary, columns=te.columns_)
     frequent_itemsets = apriori(df, min_support=0.0001, use_colnames=True)   ## do not change: min_support=0.0001 
-    multiColocationARM(frequent_itemsets, tx_cnt) 
+    multiColocationARM(frequent_itemsets, tx_cnt, smell_cnt) 
 
 def weakCrypto(single_val):
     categ = ''
@@ -116,6 +125,7 @@ def findColocation(file_name):
     file_df = filterDataframe( file_df )
     file_names = np.unique( file_df['FILEPATH'].tolist() )
     file_count = len(file_names) 
+    smell_count = len(file_df['TYPE'].tolist()) 
     
     for file_name in file_names:
         per_file_df = file_df[file_df['FILEPATH']==file_name]
@@ -124,7 +134,7 @@ def findColocation(file_name):
     print('~'*100)         
     singleColocation(file_df)
     print('~'*100)         
-    doColocation( arm_list , file_count ) 
+    doColocation( arm_list , file_count, smell_count  ) 
 
 
 if __name__=='__main__':
