@@ -106,12 +106,31 @@ def getColocatedAllScripts(none_list, only_one_list, atleast_two):
     return _df
 
 
-if __name__=='__main__':
-    colocation_file = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATION_INPUT_MOZI.csv'
-    full_file       = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/V2_ALL_MOZILLA_PUPPET.csv'
+def getSameDiffAllScripts(none_, one_, two_, same_, diff_):
+    all_file_flags = []
+    for file_ in diff_:
+        if(os.path.exists(file_)):
+            all_file_flags.append( (file_, 'COLO_DIFF') )     
+    for file_ in same_:
+        if(os.path.exists(file_)):
+            all_file_flags.append( (file_, 'COLO_SAME') )  
+    for file_ in one_:
+        if(os.path.exists(file_)):
+            all_file_flags.append( (file_, 'INSECURE') )     
+    for file_ in none_:
+        if(os.path.exists(file_)):
+            all_file_flags.append( (file_, 'NEUTRAL') )         
+                        
+    _df = pd.DataFrame( all_file_flags ) 
+    _df.columns = ['FILE_PATH', 'STATUS' ]
+    return _df
 
-    colocation_file = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATION_INPUT_OSTK.csv'
-    full_file       = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/V2_ALL_OPENSTACK_PUPPET.csv'
+if __name__=='__main__':
+    # colocation_file = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATION_INPUT_MOZI.csv'
+    # full_file       = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/V2_ALL_MOZILLA_PUPPET.csv'
+
+    # colocation_file = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATION_INPUT_OSTK.csv'
+    # full_file       = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/V2_ALL_OPENSTACK_PUPPET.csv'
 
     colocation_file = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATION_INPUT_WIKI.csv'
     full_file       = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/V2_ALL_WIKIMEDIA_PUPPET.csv'
@@ -121,8 +140,13 @@ if __name__=='__main__':
     full_file_tuple  = getColocationMapping(colocation_file, full_file) 
     script_metric_df = getMetricsForAllScripts(full_file_tuple[0], full_file_tuple[1], full_file_tuple[2] ) 
     colocation_df    = getColocatedAllScripts(full_file_tuple[0], full_file_tuple[1], full_file_tuple[2] )     
+    same_diff_df     = getSameDiffAllScripts(full_file_tuple[0], full_file_tuple[1], full_file_tuple[2], full_file_tuple[4], full_file_tuple[5] )         
     print(script_metric_df.head()) 
     print('-'*50)
     print( colocation_df.head()) 
     print('-'*50)    
+    print( same_diff_df.head()) 
+    print('-'*50)        
+    print( colocation_df.shape, same_diff_df.shape  ) 
+    print('-'*50)        
     print('~'*100)     
