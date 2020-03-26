@@ -37,8 +37,8 @@ def getFilesWithDiffColocations(colocation_df):
         per_file_df = colocation_df[colocation_df['FILEPATH']==file_name]
         icp_list    = per_file_df['TYPE'].tolist()
         icp_dict = dict( Counter(icp_list) )
-        if len(icp_list) > 1:
-            for k_, v_ in icp_list.items():
+        if len(icp_dict) > 1:
+            for k_, v_ in icp_dict.items():
                 diff_file_list.append( file_name )
     diff_file_list = list( np.unique(diff_file_list) )
     return diff_file_list 
@@ -49,31 +49,43 @@ def getColocationMapping(colocation_file, full_file):
 
     NO_ICP_DF           = full_df[full_df['TOTAL'] < 1 ]
     files_with_no_icps  = np.unique( NO_ICP_DF['FILE_NAME'].tolist()  )
+    files_with_no_icps  = [x_.replace('/Users/akond/SECU_REPOS/', '/Users/arahman/PRIOR_NCSU/SECU_REPOS/') for x_ in files_with_no_icps ]
 
     ONLY_ONE_ICP_DF     = full_df[full_df['TOTAL'] == 1 ]
     files_with_only_one = np.unique( ONLY_ONE_ICP_DF['FILE_NAME'].tolist()  )
+    files_with_only_one  = [x_.replace('/Users/akond/SECU_REPOS/', '/Users/arahman/PRIOR_NCSU/SECU_REPOS/') for x_ in files_with_only_one ]
 
     MORE_THAN_ONE_ICP_DF = full_df[full_df['TOTAL'] > 1 ]
     files_with_more_one  = np.unique( MORE_THAN_ONE_ICP_DF['FILE_NAME'].tolist()  )
+    files_with_more_one  = [x_.replace('/Users/akond/SECU_REPOS/', '/Users/arahman/PRIOR_NCSU/SECU_REPOS/') for x_ in files_with_more_one ]
 
     SAME_COLOCATION_DICT = getFilesWithSameColocations(colocation_df) 
-    files_with_same_colocation = SAME_COLOCATION_DICT.values() 
+    files_with_same_colocation = list (SAME_COLOCATION_DICT.values())[0] 
+    files_with_same_colocation  = [x_.replace('/Users/akond/SECU_REPOS/', '/Users/arahman/PRIOR_NCSU/SECU_REPOS/') for x_ in files_with_same_colocation ]
 
     files_with_diff_colocation = getFilesWithDiffColocations(colocation_df) 
+    files_with_diff_colocation  = [x_.replace('/Users/akond/SECU_REPOS/', '/Users/arahman/PRIOR_NCSU/SECU_REPOS/') for x_ in files_with_diff_colocation ]
 
     only_files_with_diff_colocation =  [z_ for z_ in files_with_diff_colocation if z_ not in files_with_same_colocation]
-    print( only_files_with_diff_colocation )
-
+    # print( only_files_with_diff_colocation )
     only_files_with_same_colocation =  [z_ for z_ in files_with_same_colocation if z_ not in files_with_diff_colocation]
-    print( only_files_with_same_colocation )
+    # print( only_files_with_same_colocation )
+    return files_with_no_icps, files_with_only_one, files_with_more_one, files_with_same_colocation, files_with_diff_colocation, only_files_with_same_colocation, only_files_with_diff_colocation
 
 if __name__=='__main__':
     colocation_file = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATION_INPUT_MOZI.csv'
     full_file       = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/V2_ALL_MOZILLA_PUPPET.csv'
 
-    # dataset_file = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATION_INPUT_OSTK.csv'    
+    # colocation_file = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATION_INPUT_OSTK.csv'
+    # full_file       = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/V2_ALL_OPENSTACK_PUPPET.csv'
 
-    # dataset_file = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATION_INPUT_WIKI.csv'    
+    # colocation_file = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATION_INPUT_WIKI.csv'
+    # full_file       = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/V2_ALL_WIKIMEDIA_PUPPET.csv'
+
     print('~'*100) 
-    getColocationMapping(colocation_file, full_file) 
+    full_file_tuple = getColocationMapping(colocation_file, full_file) 
+    for elem in full_file_tuple:
+        print(elem)
+        print('*'*50)
+    # print(full_file_tuple) 
     print('~'*100)     
