@@ -10,6 +10,8 @@ from collections import Counter
 from mlxtend.preprocessing import TransactionEncoder
 from mlxtend.frequent_patterns import apriori
 from mlxtend.frequent_patterns import association_rules
+import os 
+import main_static_metric_extactor
 
 def getFilesWithSameColocations(df_param):
     file_names = np.unique( df_param['FILEPATH'].tolist() )
@@ -72,6 +74,24 @@ def getColocationMapping(colocation_file, full_file):
     # print( only_files_with_same_colocation )
     return files_with_no_icps, files_with_only_one, files_with_more_one, files_with_same_colocation, files_with_diff_colocation, only_files_with_same_colocation, only_files_with_diff_colocation
 
+def getMetricsForAllScripts(none_list, only_one_list, atleast_two): 
+    all_file_metrics = []
+    atleast_one = only_one_list + atleast_two 
+    for file_ in none_list:
+        if(os.path.exists(file_)):
+            attribute, command, comment, ensure, _file, file_mode, hard_code_, include, sloc, require, ssh_auth, url_ = main_static_metric_extactor.getAllStaticMetricForSingleFile(file_) 
+            all_file_metrics.append( (file_, attribute, command, comment, ensure, _file, file_mode, hard_code_, include, sloc, require, ssh_auth, url_, 'NEUTRAL') ) 
+    for file_ in atleast_one:
+        if(os.path.exists(file_)):
+            attribute, command, comment, ensure, _file, file_mode, hard_code_, include, sloc, require, ssh_auth, url_ = main_static_metric_extactor.getAllStaticMetricForSingleFile(file_) 
+            all_file_metrics.append( (file_, attribute, command, comment, ensure, _file, file_mode, hard_code_, include, sloc, require, ssh_auth, url_, 'INSECURE') ) 
+    metric_df = pd.DataFrame( all_file_metrics ) 
+    return metric_df
+
+
+
+
+
 if __name__=='__main__':
     colocation_file = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATION_INPUT_MOZI.csv'
     full_file       = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/V2_ALL_MOZILLA_PUPPET.csv'
@@ -83,9 +103,8 @@ if __name__=='__main__':
     # full_file       = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/V2_ALL_WIKIMEDIA_PUPPET.csv'
 
     print('~'*100) 
-    full_file_tuple = getColocationMapping(colocation_file, full_file) 
-    for elem in full_file_tuple:
-        print(elem)
-        print('*'*50)
-    # print(full_file_tuple) 
+    full_file_tuple  = getColocationMapping(colocation_file, full_file) 
+    script_metric_df = getMetricsForAllScripts(full_file_tuple[0], full_file_tuple[1], full_file_tuple[2] ) 
+    print(script_metric_df.head()) 
+    print(script_metric_df.shape) 
     print('~'*100)     
