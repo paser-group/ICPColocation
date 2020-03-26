@@ -31,38 +31,17 @@ def getFilesWithSameColocations(df_param):
 
 
 def getFilesWithDiffColocations(colocation_df):
-    arm_list_of_list = [] 
+    diff_file_list = []
     file_names = np.unique( colocation_df['FILEPATH'].tolist() )    
     for file_name in file_names:
         per_file_df = colocation_df[colocation_df['FILEPATH']==file_name]
         icp_list    = per_file_df['TYPE'].tolist()
-        arm_list_of_list.append(icp_list) 
-
-    te = TransactionEncoder()
-    te_ary = te.fit(arm_list_of_list).transform(arm_list_of_list)
-    df = pd.DataFrame(te_ary, columns=te.columns_)
-    frequent_itemsets = apriori(df, min_support=0.0001, use_colnames=True)   ## do not change: min_support=0.0001 
-
-    dict_itemsets = dict( frequent_itemsets.to_dict() ) 
-    support_dict = dict_itemsets['support']
-    itemset_dict = dict_itemsets['itemsets']    
-    identifiers  = support_dict.keys()
-    len_items_dict, colocation_dict, file_dict  = {}, {}, {}
-    for ID in identifiers:
-        support_val = support_dict[ID]
-        itemset_val = itemset_dict[ID]
-        itemset_len = len(itemset_val) 
-        # support count for security smell
-        if itemset_len > 1:
-            if itemset_len not in len_items_dict:
-                len_items_dict[itemset_len] = [support_val] 
-                colocation_dict[itemset_len] = [itemset_val]
-            else: 
-                len_items_dict[itemset_len] = len_items_dict[itemset_len]   +  [support_val]        
-                colocation_dict[itemset_len] = colocation_dict[itemset_len] + [itemset_val] 
-        # support count for files 
-    return  colocation_dict 
-
+        icp_dict = dict( Counter(icp_list) )
+        if len(icp_list) > 1:
+            for k_, v_ in icp_list.items():
+                diff_file_list.append( file_name )
+    diff_file_list = list( np.unique(diff_file_list) )
+    return diff_file_list 
 
 def getColocationMapping(colocation_file, full_file):
     colocation_df = pd.read_csv(colocation_file)
@@ -80,9 +59,13 @@ def getColocationMapping(colocation_file, full_file):
     SAME_COLOCATION_DICT = getFilesWithSameColocations(colocation_df) 
     files_with_same_colocation = SAME_COLOCATION_DICT.values() 
 
-    DIFF_COLOCATION_DICT = getFilesWithDiffColocations(colocation_df) 
-    files_with_diff_colocation = DIFF_COLOCATION_DICT.values() 
+    files_with_diff_colocation = getFilesWithDiffColocations(colocation_df) 
 
+    only_files_with_diff_colocation =  [z_ for z_ in files_with_diff_colocation if z_ not in files_with_same_colocation]
+    print( only_files_with_diff_colocation )
+
+    only_files_with_same_colocation =  [z_ for z_ in files_with_same_colocation if z_ not in files_with_diff_colocation]
+    print( only_files_with_same_colocation )
 
 if __name__=='__main__':
     colocation_file = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATION_INPUT_MOZI.csv'
