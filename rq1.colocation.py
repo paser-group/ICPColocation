@@ -109,6 +109,7 @@ def filterDataframe(file_df):
     filtered_df['TYPE'] = filtered_df['TYPE'].apply(weakCrypto)
     return filtered_df 
 
+
 def findColocation(file_name):
     arm_list = []
     file_df = pd.read_csv(file_name) 
@@ -120,8 +121,10 @@ def findColocation(file_name):
         per_file_df = file_df[file_df['FILEPATH']==file_name]
         icp_list    = per_file_df['TYPE'].tolist()
         arm_list.append(icp_list) 
+    print('~'*100)         
+    singleColocation(file_df)
+    print('~'*100)         
     doColocation( arm_list , file_count ) 
-    doDifferentColocation( file_df  )
 
 
 if __name__=='__main__':
@@ -130,4 +133,7 @@ if __name__=='__main__':
     # dataset_file = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATION_INPUT_OSTK.csv'    
 
     # dataset_file = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATION_INPUT_WIKI.csv'    
+    print('~'*100) 
     findColocation(dataset_file)
+    print('~'*100) 
+
