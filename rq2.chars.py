@@ -108,7 +108,11 @@ def getColocatedAllScripts(none_list, only_one_list, atleast_two):
 
 def getSameDiffAllScripts(none_, one_, two_, same_, diff_):
     all_file_flags = []
+    rest_diff = [z_ for z_ in two_ if ( (z_ not in diff_)  and  ( z_ not in same_)  )   ] 
     for file_ in diff_:
+        if(os.path.exists(file_)):
+            all_file_flags.append( (file_, 'COLO_DIFF') )     
+    for file_ in rest_diff:
         if(os.path.exists(file_)):
             all_file_flags.append( (file_, 'COLO_DIFF') )     
     for file_ in same_:
