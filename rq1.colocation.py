@@ -13,6 +13,7 @@ from collections import Counter
 
 
 def singleColocation(df_):
+    print('~'*100)         
     file_names = np.unique( df_['FILEPATH'].tolist() )
     file_count = len(file_names) 
     colocate_dict, file_dict  = {}, {}
@@ -30,7 +31,7 @@ def singleColocation(df_):
                     file_dict[k_]     = file_dict[k_] + [file_name]          
     # print(colocate_dict) 
     print('='*50)
-    print('Smell-wise calculation')
+    print('SAME OCCURRENCE ... Smell-wise calculation')
     print('='*50)
     for k, v in colocate_dict.items():
         type_df = df_[df_['TYPE']==k]
@@ -40,7 +41,7 @@ def singleColocation(df_):
         print('TYPE:{}, ALL:{}, COLOCATED:{}, PERC:{}'.format(k, type_count, type_colocated, type_perc))
         print('-'*25) 
     print('='*50)
-    print('File-wise calculation')
+    print('SAME OCCURRENCE ... File-wise calculation')
     print('='*50)
     for k, v in file_dict.items():
         type_df = df_[df_['TYPE']==k]
@@ -50,6 +51,7 @@ def singleColocation(df_):
         print('TYPE:{}, ALL:{}, COLOCATED:{}, PERC:{}'.format(k, type_count, type_colocated, type_perc))
         print('-'*25) 
     print('='*50)           
+    print('~'*100)             
 
 
 def multiColocationARM(arm_df, file_count, tot_smell_count):
