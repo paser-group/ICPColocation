@@ -86,6 +86,7 @@ def getMetricsForAllScripts(none_list, only_one_list, atleast_two):
             attribute, command, comment, ensure, _file, file_mode, hard_code_, include, sloc, require, ssh_auth, url_ = main_static_metric_extactor.getAllStaticMetricForSingleFile(file_) 
             all_file_metrics.append( (file_, attribute, command, comment, ensure, _file, file_mode, hard_code_, include, sloc, require, ssh_auth, url_, 'INSECURE') ) 
     metric_df = pd.DataFrame( all_file_metrics ) 
+    metric_df.columns = ['FILE_PATH', 'ATTR', 'CMD', 'COMMENT', 'ENS', 'FILE', 'FILE_MODE', 'HARD_CODE', 'INCL', 'SLOC', 'REQ', 'SSH', 'URL', 'STATUS' ]
     return metric_df
 
 
