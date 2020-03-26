@@ -31,6 +31,7 @@ def singleColocation(df_):
     # print(colocate_dict) 
     print('='*50)
     print('Smell-wise calculation')
+    print('='*50)
     for k, v in colocate_dict.items():
         type_df = df_[df_['TYPE']==k]
         type_count, _ = type_df.shape 
@@ -40,6 +41,7 @@ def singleColocation(df_):
         print('-'*25) 
     print('='*50)
     print('File-wise calculation')
+    print('='*50)
     for k, v in file_dict.items():
         type_df = df_[df_['TYPE']==k]
         type_count     = len( np.unique( type_df['FILEPATH'].tolist() ) )
@@ -50,25 +52,26 @@ def singleColocation(df_):
     print('='*50)           
 
 
-
-
-
-def multiColocation(arm_df, file_count):
+def multiColocationARM(arm_df, file_count):
     for row in arm_df.itertuples():
         len_itemset = len(list( row[2]) ) 
         if len_itemset > 1:
-            print( round( row[1] * file_count , 5) , list(row[2]) )
+            print('*'*25)
+            print('File analysis ... ')
+            print('*'*25)
+            print('TYPE:{}, PERC:{}'.format( list(row[2]) , round( row[1]  , 5) * 100 ) )
             print('*'*25)
     dict_itemsets = dict( arm_df.to_dict() ) 
     # print(dict_itemsets) 
     support_dict = dict_itemsets['support']
     itemset_dict = dict_itemsets['itemsets']    
     identifiers  = support_dict.keys()
-    len_items_dict, colocation_dict  = {}, {}
+    len_items_dict, colocation_dict, file_dict  = {}, {}, {}
     for ID in identifiers:
         support_val = support_dict[ID]
         itemset_val = itemset_dict[ID]
         itemset_len = len(itemset_val) 
+        # support count for security smell
         if itemset_len > 1:
             if itemset_len not in len_items_dict:
                 len_items_dict[itemset_len] = [support_val] 
@@ -76,16 +79,19 @@ def multiColocation(arm_df, file_count):
             else: 
                 len_items_dict[itemset_len] = len_items_dict[itemset_len]   +  [support_val]        
                 colocation_dict[itemset_len] = colocation_dict[itemset_len] + [itemset_val] 
+        # support count for files 
+    
+
     return len_items_dict, colocation_dict 
 
+
+        
 def doColocation(arm_list_of_list, tx_cnt):
     te = TransactionEncoder()
     te_ary = te.fit(arm_list_of_list).transform(arm_list_of_list)
     df = pd.DataFrame(te_ary, columns=te.columns_)
-    frequent_itemsets = apriori(df, min_support=0.0001, use_colnames=True)   ## do not change: min_support=0.0001
-    len_dic, cate_dic = multiColocation(frequent_itemsets, tx_cnt) 
-
-
+    frequent_itemsets = apriori(df, min_support=0.0001, use_colnames=True)   ## do not change: min_support=0.0001 
+    multiColocationARM(frequent_itemsets, tx_cnt) 
 
 def weakCrypto(single_val):
     categ = ''
@@ -107,16 +113,15 @@ def findColocation(file_name):
     arm_list = []
     file_df = pd.read_csv(file_name) 
     file_df = filterDataframe( file_df )
-
     file_names = np.unique( file_df['FILEPATH'].tolist() )
     file_count = len(file_names) 
+    
     for file_name in file_names:
         per_file_df = file_df[file_df['FILEPATH']==file_name]
         icp_list    = per_file_df['TYPE'].tolist()
         arm_list.append(icp_list) 
-    # print(arm_list) 
-    singleColocation(file_df) 
-    # doColocation( arm_list , file_count ) 
+    doColocation( arm_list , file_count ) 
+    doDifferentColocation( file_df  )
 
 
 if __name__=='__main__':
