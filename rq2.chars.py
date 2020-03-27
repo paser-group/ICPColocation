@@ -194,7 +194,9 @@ def pairwiseComp(ls_file):
         print('*'*100)
 
 
-def performKruskal(ls_file): 
+def performKruskalForColocatedStatus(ls_file): 
+    #reff: https://machinelearningmastery.com/nonparametric-statistical-significance-tests-in-python/ 
+    #reff: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.kruskal.html
     for dataset_file in ls_file:
         name = dataset_file.split('/')[-1]
         print("Dataset:", name )
@@ -221,9 +223,46 @@ def performKruskal(ls_file):
             print("NEUTRAL :::[MEDIAN]:{}, [MEAN]:{}, [MAX]:{}, [MIN]:{}".format(np.median(list(none_for_feature)), np.mean(list(none_for_feature)),  max(list(none_for_feature)),  min(list(none_for_feature)) ) )            
             try:
                 F_, p_ = stats.kruskal(more_one_for_feature, only_one_for_feature, none_for_feature)
+                more_none_cliffs = cliffsDelta.cliffsDelta(list(more_one_for_feature), list(none_for_feature))
+                more_one_cliffs  = cliffsDelta.cliffsDelta(list(more_one_for_feature), list(only_one_for_feature))                
+                one_none_cliffs  = cliffsDelta.cliffsDelta(list(only_one_for_feature), list(none_for_feature))
             except ValueError:
                 F_, p_ = 0.0, 1.0 
-            print('Feature:{}, p-value:{}'.format(feature_, p_) )
+            print('Feature:{}, p-value:{}, DELTA_MORE_NONE:{}, DELTA_MORE_ONE:{}, DELTA_ONE_NONE:{}'.format(feature_, p_, more_none_cliffs, more_one_cliffs, one_none_cliffs) )
+            print('='*50)
+        print('*'*100)    
+
+def performPairwiseForSameDiff(ls_file): 
+    for dataset_file in ls_file:
+        name = dataset_file.split('/')[-1]
+        print("Dataset:", name )
+        full_df = pd.read_csv(dataset_file)
+        df2read = full_df[full_df['SAME_DIFF_STATUS']!='NEUTRAL']
+        df2read = df2read[df2read['SAME_DIFF_STATUS']!='INSECURE']
+
+        features = df2read.columns
+        dropcols = ['FILE_PATH', 'ICP_STATUS', 'COLOCATED_STATUS', 'SAME_DIFF_STATUS']
+        features2see = [x_ for x_ in features if x_ not in dropcols]
+        for feature_ in features2see:
+            data_for_feature = df2read[feature_]
+            median_, mean_, total_ = np.median(data_for_feature), np.mean(data_for_feature), sum(data_for_feature)
+            print("Feature:{}, [ALL DATA] median:{}, mean:{}, sum:{}".format(feature_, median_, mean_, total_  ) )
+            print('='*50)
+            same_for_feature = df2read[df2read['SAME_DIFF_STATUS']=='COLO_SAME'][feature_]
+            diff_for_feature = df2read[df2read['SAME_DIFF_STATUS']=='COLO_DIFF'][feature_]
+            '''
+            summary time
+            '''
+            print('THE FEATURE IS:', feature_ )
+            print('='*25)
+            print("SAME:::[MEDIAN]:{}, [MEAN]:{}, [MAX]:{}, [MIN]:{}".format(np.median(list(same_for_feature)), np.mean(list(same_for_feature)), max(list(same_for_feature) ), min(list(same_for_feature) )   ) )
+            print("DIFF:::[MEDIAN]:{}, [MEAN]:{}, [MAX]:{}, [MIN]:{}".format(np.median(list(diff_for_feature)), np.mean(list(diff_for_feature)),  max(list(diff_for_feature)),  min(list(diff_for_feature)) ) )            
+            try:
+                TS, p_ = stats.mannwhitneyu(list(same_for_feature), list(diff_for_feature), alternative='greater')
+                cliffs = cliffsDelta.cliffsDelta(list(same_for_feature), list(diff_for_feature))
+            except ValueError:
+                TS, p_ = 0.0, 1.0 
+            print('Feature:{}, p-value:{}, CLIFFS:{}'.format(feature_, p_, cliffs) )
             print('='*50)
         print('*'*100)    
 
@@ -238,4 +277,5 @@ if __name__=='__main__':
     wiki_file     = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATED_WIKIMEDIA.csv'
 
     # pairwiseComp([mozi_file, ostk_file, wiki_file])
-    performKruskal([mozi_file, ostk_file, wiki_file])
+    # performKruskalForColocatedStatus([mozi_file, ostk_file, wiki_file])
+    performPairwiseForSameDiff([mozi_file, ostk_file, wiki_file])
