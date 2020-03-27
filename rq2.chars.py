@@ -14,7 +14,6 @@ from mlxtend.frequent_patterns import apriori
 from mlxtend.frequent_patterns import association_rules
 import os 
 import main_static_metric_extactor
-from scipy.stats import friedmanchisquare
 
 def getFilesWithSameColocations(df_param):
     file_names = np.unique( df_param['FILEPATH'].tolist() )
@@ -195,7 +194,7 @@ def pairwiseComp(ls_file):
         print('*'*100)
 
 
-def performFreidman(ls_file): 
+def performKruskal(ls_file): 
     for dataset_file in ls_file:
         name = dataset_file.split('/')[-1]
         print("Dataset:", name )
@@ -221,10 +220,10 @@ def performFreidman(ls_file):
             print("ONLY_ONE:::[MEDIAN]:{}, [MEAN]:{}, [MAX]:{}, [MIN]:{}".format(np.median(list(only_one_for_feature)), np.mean(list(only_one_for_feature)), max(list(only_one_for_feature) ), min(list(only_one_for_feature) )   ) )
             print("NEUTRAL :::[MEDIAN]:{}, [MEAN]:{}, [MAX]:{}, [MIN]:{}".format(np.median(list(none_for_feature)), np.mean(list(none_for_feature)),  max(list(none_for_feature)),  min(list(none_for_feature)) ) )            
             try:
-                F_, p_ = friedmanchisquare(more_one_for_feature, only_one_for_feature, none_for_feature)
+                F_, p_ = stats.kruskal(more_one_for_feature, only_one_for_feature, none_for_feature)
             except ValueError:
-                F_, p_ = = 0.0, 1.0 
-            print('Feature:{}, p-value:{}'.format(feature_, p) )
+                F_, p_ = 0.0, 1.0 
+            print('Feature:{}, p-value:{}'.format(feature_, p_) )
             print('='*50)
         print('*'*100)    
 
@@ -239,4 +238,4 @@ if __name__=='__main__':
     wiki_file     = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATED_WIKIMEDIA.csv'
 
     # pairwiseComp([mozi_file, ostk_file, wiki_file])
-    performFreidman([mozi_file, ostk_file, wiki_file])
+    performKruskal([mozi_file, ostk_file, wiki_file])
