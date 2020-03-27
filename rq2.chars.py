@@ -4,8 +4,10 @@ Mar 26 2020
 Thursday 
 Characterizing scripts 
 '''
-import pandas as pd 
-import numpy as np 
+from scipy import stats
+import pandas as pd
+import numpy as np
+import cliffsDelta
 from collections import Counter 
 from mlxtend.preprocessing import TransactionEncoder
 from mlxtend.frequent_patterns import apriori
@@ -129,10 +131,10 @@ def getSameDiffAllScripts(none_, one_, two_, same_, diff_):
     _df.columns = ['FILE_PATH', 'SAME_DIFF_STATUS' ]
     return _df
 
-if __name__=='__main__':
-    colocation_file = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATION_INPUT_MOZI.csv'
-    full_file       = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/V2_ALL_MOZILLA_PUPPET.csv'
-    output_file     = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATED_MOZILLA.csv'
+def dataGen():
+    # colocation_file = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATION_INPUT_MOZI.csv'
+    # full_file       = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/V2_ALL_MOZILLA_PUPPET.csv'
+    # output_file     = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATED_MOZILLA.csv'
 
     # colocation_file = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATION_INPUT_OSTK.csv'
     # full_file       = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/V2_ALL_OPENSTACK_PUPPET.csv'
@@ -156,4 +158,50 @@ if __name__=='__main__':
     print( script_metric_df.shape,  colocation_df.shape, same_diff_df.shape, full_df.shape  ) 
     full_df.to_csv(output_file, index=False, encoding='utf-8')
     print('-'*50)        
-    print('~'*100)     
+    print('~'*100)         
+
+def pairwiseComp(ls_file):
+    for dataset_file in ls_file:
+        name = dataset_file.split('/')[-1]
+        print("Dataset:", name )
+        df2read = pd.read_csv(dataset_file)
+
+        features = df2read.columns
+        dropcols = ['FILE_PATH', 'ICP_STATUS', 'COLOCATED_STATUS', 'SAME_DIFF_STATUS']
+        features2see = [x_ for x_ in features if x_ not in dropcols]
+        for feature_ in features2see:
+            data_for_feature = df2read[feature_]
+            median_, mean_, total_ = np.median(data_for_feature), np.mean(data_for_feature), sum(data_for_feature)
+            print("Feature:{}, [ALL DATA] median:{}, mean:{}, sum:{}".format(feature_, median_, mean_, total_  ) )
+            print('='*50)
+            defective_vals_for_feature     = df2read[df2read['ICP_STATUS']=='INSECURE'][feature_]
+            non_defective_vals_for_feature = df2read[df2read['ICP_STATUS']=='NEUTRAL'][feature_]
+            '''
+            summary time
+            '''
+            print('THE FEATURE IS:', feature_ )
+            print('='*25)
+            print("INSECURE:::[MEDIAN]:{}, [MEAN]:{}, [MAX]:{}, [MIN]:{}".format(np.median(list(defective_vals_for_feature)), np.mean(list(defective_vals_for_feature)), max(list(defective_vals_for_feature) ), min(list(defective_vals_for_feature) )   ) )
+            print("NEUTRAL :::[MEDIAN]:{}, [MEAN]:{}, [MAX]:{}, [MIN]:{}".format(np.median(list(non_defective_vals_for_feature)), np.mean(list(non_defective_vals_for_feature)),  max(list(non_defective_vals_for_feature)),  min(list(non_defective_vals_for_feature)) ) )
+            
+            try:
+                TS, p = stats.mannwhitneyu(list(defective_vals_for_feature), list(non_defective_vals_for_feature), alternative='greater')
+            except ValueError:
+                TS, p = 0.0, 1.0 
+            cliffs_delta = cliffsDelta.cliffsDelta(list(defective_vals_for_feature), list(non_defective_vals_for_feature))
+            print('Feature:{}, p-value:{}, cliffs:{}'.format(feature_, p, cliffs_delta) )
+            print('='*50)
+        print('*'*100)
+
+
+if __name__=='__main__':
+    '''
+    dataGen()
+    Generation of data done ... do analysis 
+    '''
+
+    mozi_file     = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATED_MOZILLA.csv'
+    ostk_file     = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATED_OPENSTACK.csv'
+    wiki_file     = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATED_WIKIMEDIA.csv'
+
+    pairwiseComp([mozi_file, ostk_file, wiki_file])
