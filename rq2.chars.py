@@ -14,6 +14,7 @@ from mlxtend.frequent_patterns import apriori
 from mlxtend.frequent_patterns import association_rules
 import os 
 import main_static_metric_extactor
+from scipy.stats import friedmanchisquare
 
 def getFilesWithSameColocations(df_param):
     file_names = np.unique( df_param['FILEPATH'].tolist() )
@@ -194,6 +195,39 @@ def pairwiseComp(ls_file):
         print('*'*100)
 
 
+def performFreidman(ls_file): 
+    for dataset_file in ls_file:
+        name = dataset_file.split('/')[-1]
+        print("Dataset:", name )
+        df2read = pd.read_csv(dataset_file)
+
+        features = df2read.columns
+        dropcols = ['FILE_PATH', 'ICP_STATUS', 'COLOCATED_STATUS', 'SAME_DIFF_STATUS']
+        features2see = [x_ for x_ in features if x_ not in dropcols]
+        for feature_ in features2see:
+            data_for_feature = df2read[feature_]
+            median_, mean_, total_ = np.median(data_for_feature), np.mean(data_for_feature), sum(data_for_feature)
+            print("Feature:{}, [ALL DATA] median:{}, mean:{}, sum:{}".format(feature_, median_, mean_, total_  ) )
+            print('='*50)
+            more_one_for_feature = df2read[df2read['COLOCATED_STATUS']=='MORE_THAN_ONE'][feature_]
+            only_one_for_feature = df2read[df2read['COLOCATED_STATUS']=='ONLY_ONE'][feature_]
+            none_for_feature     = df2read[df2read['COLOCATED_STATUS']=='NEUTRAL'][feature_]
+            '''
+            summary time
+            '''
+            print('THE FEATURE IS:', feature_ )
+            print('='*25)
+            print("MORE_ONE:::[MEDIAN]:{}, [MEAN]:{}, [MAX]:{}, [MIN]:{}".format(np.median(list(more_one_for_feature)), np.mean(list(more_one_for_feature)), max(list(more_one_for_feature) ), min(list(more_one_for_feature) )   ) )
+            print("ONLY_ONE:::[MEDIAN]:{}, [MEAN]:{}, [MAX]:{}, [MIN]:{}".format(np.median(list(only_one_for_feature)), np.mean(list(only_one_for_feature)), max(list(only_one_for_feature) ), min(list(only_one_for_feature) )   ) )
+            print("NEUTRAL :::[MEDIAN]:{}, [MEAN]:{}, [MAX]:{}, [MIN]:{}".format(np.median(list(none_for_feature)), np.mean(list(none_for_feature)),  max(list(none_for_feature)),  min(list(none_for_feature)) ) )            
+            try:
+                F_, p_ = friedmanchisquare(more_one_for_feature, only_one_for_feature, none_for_feature)
+            except ValueError:
+                F_, p_ = = 0.0, 1.0 
+            print('Feature:{}, p-value:{}'.format(feature_, p) )
+            print('='*50)
+        print('*'*100)    
+
 if __name__=='__main__':
     '''
     dataGen()
@@ -204,4 +238,5 @@ if __name__=='__main__':
     ostk_file     = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATED_OPENSTACK.csv'
     wiki_file     = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/ICP_Localization/RAW_DATASETS/COLOCATED_WIKIMEDIA.csv'
 
-    pairwiseComp([mozi_file, ostk_file, wiki_file])
+    # pairwiseComp([mozi_file, ostk_file, wiki_file])
+    performFreidman([mozi_file, ostk_file, wiki_file])
