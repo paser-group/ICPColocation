@@ -49,6 +49,18 @@ in `cdh::hive::defaults`. there is hard-coded password for `$jdbc_password` i.e.
 #### Example-5 
 
   
-
+Variables or attributes that have HTTP URL first needs to be checked for HTTPS. If exists then report, 
+otherwise do not. 
+`location  => "http://repos.mesosphere.io/` and `source  => "http://repos.mesosphere.io/el/${osrel}/noarch/RPMS/`
+are examples in `/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/mesos-2018-06/manifests/repo.pp` (`class mesos::repo`).
 
  
+#### Example-6 
+
+In `class nginx::ssl` located in `/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/nginx-2018-06`
+uses a template file using `template()` for `file{}` `content => template('nginx/ssl.conf.erb')`.
+The ERB file has a hard-coded SSL cipher that is an example of a hard-coded secret. 
+So we need to check for SSL cipher or SSH keys in ERB files as well. 
+
+ 
+
