@@ -437,7 +437,7 @@ if $scaleio['existing_cluster'] {
 
 `client_password` later used in `class {'::scaleio_openstack::nova':}` as `gateway_password`
 
-#### Example-13
+#### Example-13 
 
 Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-scaleio-2018-06/deployment_scripts/puppet/manifests/cluster.pp`
 
