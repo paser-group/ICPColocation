@@ -1,13 +1,11 @@
-# Possible Trajectories 
+# Track the Data Flow 
 
-## Sep 28, 2020 
+### Wikimedia Exploration, Sep 28 2020 
 
 1. First get the ICP 
 2. Identify attribute or variable from the ICP
 3. Track the variable or attribute upwards and downwards 
 4. Search within the module 
-
-### Examples:
 
 #### Example-1
 
@@ -62,7 +60,10 @@ uses a template file using `template()` for `file{}` `content => template('nginx
 The ERB file has a hard-coded SSL cipher that is an example of a hard-coded secret. 
 So we need to check for SSL cipher or SSH keys in ERB files as well. 
 
-#### Example-7
+
+### Openstack Exploration, Sep 30 2020 
+
+#### Example-1
 
 Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ec2api-2018-06/sync.pp`
 
@@ -70,21 +71,21 @@ Hard-coded user name (`$system_user = 'ec2api'`) propagated from paramters into 
 `user => $system_user`. 
 
 
-#### Example-8 
+#### Example-2 
 
 Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ec2api-2018-06/postgresql.pp`
 
 Hard-coded user name (`$user = 'ec2api'`) propagated from parameters into the 
 `::openstacklib::db::postgresql {` body of `password_hash => postgresql_password($user, $password)`. 
 
-#### Example-9
+#### Example-3
 
 Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ec2api-2018-06/mysql.pp`
 
 Hard-coded user name (`$user = 'ec2api'`) propagated from parameters into the 
 `::openstacklib::db::mysql {` body of `user => $user,`. 
 
-#### Example-10 
+#### Example-4 
 
 Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ec2api-2018-06/`
 
@@ -92,7 +93,7 @@ Insecure HTTP used in `keystone/auth.pp` (`$public_url = 'http://127.0.0.1:8788'
 `keystone::resource::service_identity` (`public_url => $public_url`). 
 
 
-#### Example-11
+#### Example-5
 
 Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-plumgrid-2018-06/deployment_scripts/puppet/manifests/plumgrid_nova_compute.pp` 
 
@@ -126,7 +127,7 @@ Another example:
 
 
 
-#### Example-12 
+#### Example-6
 
 Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-plumgrid-2018-06/deployment_scripts/puppet/modules/plumgrid/manifests/init.pp`
 
@@ -135,7 +136,7 @@ Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-plumgrid-20
 
 Also, `$rest_ip = '0.0.0.0',` is not used anywhere in the module (`plumgrid/`) 
 
-#### Example-13 
+#### Example-7
 
 Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-plumgrid-2018-06/deployment_scripts/puppet/modules/plumgrid/manifests`
 
@@ -144,7 +145,7 @@ Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-plumgrid-20
 
 This is not detected by SLIC ... needs better parsing 
 
-#### Example-14 
+#### Example-8
 
 Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-heat-2018-06/manifests/keystone/auth_cfn.pp`
 
@@ -158,7 +159,7 @@ Example of insecure HTTP being assigned
 > admin_url           => $admin_url,
 > internal_url        => $internal_url,
 
-#### Example-15
+#### Example-9
 
 Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-heat-2018-06/example/site.pp`
 
@@ -201,14 +202,162 @@ inside `class heat::engine (){}`
 So if we have a script that looks like above then we can get a full flow of information of 
 data `whatever-key-you-like` 
 
+#### Example-10 
 
-#### Example-16
+Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-neutron-2018-06` 
 
-Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-ceilometer-redis-2018-06/deployment_scripts/puppet/modules/redis/tests/init.pp`
+1. In `manifests/agents/ml2/networking_baremetal.pp` ,   `$auth_url` ('http://127.0.0.1:35357') is propagated into `ironic_neutron_agent_config {}` as `'ironic/auth_url': value => $auth_url;`
 
-`conf_bind => '0.0.0.0'`, used in `init.pp` is used no where ... this is a false positive 
+2. In `manifests/agents/ml2/networking_baremetal.pp` , `$password` propagated into `ironic_neutron_agent_config {}` as `'ironic/password': value => $password;`
 
-#### Example-17 
+3. In `manifests/agents/ovn_metadata.pp`, `$auth_ca_cert`, `$shared_secret`, `$nova_client_cert`  are propagated into 
+
+>  'DEFAULT/auth_ca_cert':                   value => $auth_ca_cert;
+>  'DEFAULT/metadata_proxy_shared_secret':   value => $shared_secret;
+> 'DEFAULT/nova_client_cert':               value => $nova_client_cert;
+
+Need to check how these (`$auth_ca_cert`, `$shared_secret`, `$nova_client_cert`) values are assigned. 
+Similar things happen in `manifests/agents/ml2/metadata.pp`  
+
+4. `content => template('neutron/n1kv.conf.erb'),` in `n1kv_vem.pp`. Need to check content of the ERB file 
+
+5. In `manifests/agents/l2gw.pp` , `$l2_gw_agent_priv_key_base_path, $l2_gw_agent_cert_base_path, $l2_gw_agent_ca_cert_base_path`
+
+> 'ovsdb/l2_gw_agent_priv_key_base_path':     value => $l2_gw_agent_priv_key_base_path;
+> 'ovsdb/l2_gw_agent_cert_base_path':         value => $l2_gw_agent_cert_base_path;
+> 'ovsdb/l2_gw_agent_ca_cert_base_path':      value => $l2_gw_agent_ca_cert_base_path;
+
+Need to check where `$l2_gw_agent_priv_key_base_path, $l2_gw_agent_cert_base_path, $l2_gw_agent_ca_cert_base_path` is coming from. 
+
+6. In `manifests/agents/dhcp.pp`, `$ovsdb_agent_ssl_key_file , $ovsdb_agent_ssl_cert_file, $ovsdb_agent_ssl_ca_file` used in `neutron_dhcp_agent_config {}` and `$req_ssl_opts = {}` 
+
+Need to check where `$ovsdb_agent_ssl_key_file , $ovsdb_agent_ssl_cert_file, $ovsdb_agent_ssl_ca_file` is coming from. 
+
+7. In `manifests/db/postgresql.pp` , `$password,` propagates into `password_hash => postgresql_password($user, $password),` ... this function gives hash , not plain password. `$user ` propagates into `::openstacklib::db::postgresql {` as `user => $user,`
+
+8. In `manifests/db/mysql.pp` , `$password,` propagates into `password_hash => mysql_password($password),` ... this function gives hash , not plain password. `$user ` propagates into `::openstacklib::db::postgresql {` as `user => $user,`
+
+9. In `manifests/keystone/auth.pp` we see 
+
+>  $password,
+>  $public_url          = 'http://127.0.0.1:9696',
+>  $admin_url           = 'http://127.0.0.1:9696',
+>  $internal_url        = 'http://127.0.0.1:9696',
+
+later being used in `keystone::resource::service_identity {}` as 
+
+> password            => $password,
+> public_url          => $public_url,
+> admin_url           => $admin_url,
+> internal_url        => $internal_url,
+
+No function call ... all plain text 
+
+10. In `manifests/keystone/authtoken.pp` we see 
+
+>  $username                       = 'neutron',
+>  $password                       = $::os_service_default,
+>  $auth_url                       = 'http://localhost:5000',
+>  $www_authenticate_uri           = 'http://localhost:5000',
+
+later being used in `keystone::resource::authtoken {}` as 
+
+>    username                       => $username,
+>    password                       => $password,
+>    auth_url                       => $auth_url,
+>    www_authenticate_uri           => $www_authenticate_uri_real,
+
+11. In `manifests/plugins/ovs/opendaylight.pp`, `$odl_username, $odl_password, $odl_check_url` was used in 
+
+>  command   => "${curl_post} -u ${odl_username}:${odl_password} -d '${rest_data}' ${cert_rest_url}",
+>  unless    => "${curl_get} -u ${odl_username}:${odl_password} -d '${rest_get_data}' ${cert_rest_get} | grep -q ${cert_data}",
+>  command   => "curl -k -o /dev/null --fail --silent --head -u ${odl_username}:${odl_password} ${odl_check_url_parsed}",
+
+Need to see how the values of `$odl_username, $odl_password, $odl_check_url` are flowing 
+
+12. In `manifests/plugins/plumgrid.pp`,  `$connection, $admin_password, $auth_protocol, $l2gateway_sw_username, $l2gateway_sw_password`  
+ is  used in 
+
+> 'PLUMgridDirector/username':             value => $username;
+> 'PLUMgridDirector/password':             value => $password, secret =>true;
+> 'l2gateway/sw_username':                 value => $l2gateway_sw_username;
+> 'l2gateway/sw_password':                 value => $l2gateway_sw_password, secret =>true;
+
+and 
+
+> 'keystone_authtoken/admin_user' :                value => 'admin';
+> 'keystone_authtoken/admin_password':             value => $admin_password, secret =>true;
+
+hard-coded user name. 
+
+Similar things are observed in `manifests/plugins/opencontrail.pp`, for `$keystone_admin_user, $keystone_admin_tenant_name,$keystone_admin_password, $keystone_admin_token` in `neutron_plugin_opencontrail {}` 
+
+Similar things happen in `manifests/plugins/nvp.pp`, for `$nvp_user, $nvp_password,` in `neutron_plugin_nvp {}`
+
+Similar things happen on `manifests/plugins/nuage.pp` for `$nuage_vsd_username, $nuage_vsd_password,` in `'RESTPROXY/serverauth': value => "{nuage_vsd_username}:${nuage_vsd_password}";`
+
+Similar things happen in `manifests/plugins/nsx.pp`, for `$nsx_api_user, $nsx_api_password` in `neutron_plugin_nsx {}`
+
+Similar things happen in `manifests/plugins/midonet.pp`, for `$keystone_username, $keystone_password` in `neutron_plugin_midonet {}`
+
+Similar things happen in `manifests/plugins/cisco.pp` for 
+- `$database_user, $database_pass` in `neutron_plugin_cisco_db_conn {}`
+- `$keystone_username, $keystone_password, $keystone_auth_url` in `neutron_plugin_cisco_credentials {}`
+
+Similar things happen in `manifests/server/notifications.pp`, for `$auth_url, $username, $password` in `neutron_config {}`
+
+Similar things happen in `manifests/server/placement.pp`, for `$auth_url, $username, $password` in `neutron_config {}`
+
+Similar things happen in `manifests/services/lbaas/octavia.pp`, for `$base_url, $auth_url, $admin_user, $admin_password` in `neutron_config {}`
+
+Similar things happen in `manifests/wsgi/api.pp`, for `$ssl_cert, $ssl_crl_path` in `::openstacklib::wsgi::apache {}`
+
+Similar things happen in `manifests/rootwrap.pp`, for `$xenapi_connection_username, $xenapi_connection_password` in `:neutron_rootwrap_config {} `
+
+###### Slightly unrelated: `$quota_firewall_policy,$$quota_router,$quota_security_group_rule,$quota_firewall_rule `  need to see this flows to and from `manifests/quota.pp` ... later used in `neutron_config {}`
+
+Similar things happen in `manifests/init.pp` for `$amqp_username, $amqp_password` in `oslo::messaging::amqp {}`
+Similar things happen in `manifests/init.pp` for `$kombu_ssl_certfile, $kombu_ssl_keyfile` in `oslo::messaging::rabbit {}`
+Similar things happen in `manifests/designate.pp`, for `$auth_url, $username, $password` in `neutron_config {}`
+
+##### Tracking data 
+
+1. `examples/neutron.pp`: `password => 'secrete',` in `class { '::neutron::server::notifications':` calls `manifests/server/notifications.pp` with `password` that flows into `neutron_config {}` 
+
+2. `examples/cisco_ml2.pp`: 
+```
+class {'::neutron::plugins::ml2::cisco::ucsm':
+  ucsm_username  => 'admin',
+  ucsm_password  => 'password',
+}  
+```
+calls `manifests/plugins/ml2/cisco/uscm.pp` with `ucsm_username` and `ucsm_password` that flows into ` neutron_plugin_ml2 {}` 
+
+3. In `manifests/plugins/ml2/cisco/uscm.pp` 
+
+```
+  nexus_config             => {
+    'n9372-1' => {
+      'username'     => 'admin',
+      'password'     => 'password',
+    },
+    'n9372-2' => {
+      'username'     => 'admin',
+      'password'     => 'password',
+    }, 
+  }
+```
+
+`username` and `password`  flows within `$nexus_config,` into `class neutron::plugins::ml2::cisco::nexus(){}` in `manifests/plugins/ml2/cisco/nexus.pp`
+
+
+#### Example-11 
+
+1. Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-ceilometer-redis-2018-06/deployment_scripts/puppet/modules/redis/tests/init.pp`, `conf_bind => '0.0.0.0'`, used in `init.pp` is used no where ... this is a false positive 
+
+
+
+#### Example-12
 
 Location: ``
 
@@ -222,7 +371,7 @@ Even though there is a SQL-injection like statement, the value is not hard-coded
 from hiera(). This should not be flagged. 
 
 
-#### Example-18
+#### Example-12
 
 Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-scaleio-2018-06/deployment_scripts/puppet/manifests/nova.pp`
 
@@ -237,7 +386,7 @@ if $scaleio['existing_cluster'] {
 
 `client_password` later used in `class {'::scaleio_openstack::nova':}` as `gateway_password`
 
-#### Example-19
+#### Example-13
 
 Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-scaleio-2018-06/deployment_scripts/puppet/manifests/cluster.pp`
 
@@ -257,7 +406,7 @@ after >50 lines later used as
 in `scaleio::login {'Normal':}`
 
 
-#### Example-20
+#### Example-14
 
 Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-aodh-2018-06/examples/aodh.pp`
 
