@@ -355,7 +355,58 @@ calls `manifests/plugins/ml2/cisco/uscm.pp` with `ucsm_username` and `ucsm_passw
 
 1. Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-ceilometer-redis-2018-06/deployment_scripts/puppet/modules/redis/tests/init.pp`, `conf_bind => '0.0.0.0'`, used in `init.pp` is used no where ... this is a false positive 
 
+#### Example-12
 
+Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-monasca-2018-06/` 
+
+1. In `manifests/vertica/config.pp`,  `$db_admin_password` is declared but not assigned, so this will be a FP 
+
+2. In `manifests/vertica/config.pp`,  `$db_user` is declared and used inside `file {}`, using `owner  => $db_user,` 
+
+3. In `manifests/storm/config.pp`,  `$mirror = 'http://apache.arvixe.com/storm',` is used in `wget::fetch { "${mirror}/${storm_version}/${tarfile}": }`
+
+4. In `manifests/storm/config.pp`,  `$storm_user` is used in `storm_user => $storm_user` and `user { $storm_user:` and `owner => $storm_user,` and `exec { "tar -xvzf /${cache_dir}/${tarfile}":`
+
+5. In `manifests/storm/config.pp`,  `$storm_user` is declared but not assigned, so this will be a FP  
+
+6. In `manifests/persister/config.pp`,  `$db_admin_password` is declared but not assigned, so this will be a FP  
+
+7. In `manifests/keystone/auth.pp`, `$role_user` is used in `keystone_role { }` and `$real_user_roles_user = [$role_user]` 
+
+8. In `manifests/influxdb/bootstrap.pp`, `$influxdb_password` and `$influxdb_dbuser_ro_password` is used in `exec { "/tmp/${script}": environment => []}` 
+
+9. In `manifests/db/mysql.pp`, `$sql_password` is used in `mysql::db { 'mon':}` which is a true positive 
+and in `password_hash => mysql_password($sql_password),` si a false positive 
+
+10. In `manifests/checks/instances/solidfire.pp`, `$admin_password` and `$admin_password` is declared but not used in so this is a false positive 
+
+11. In `manifests/checks/instances/rabbitmq.pp`, `$rabbitmq_user` and `$rabbitmq_pass` is declared but not used in so this is a false positive 
+
+12. In `manifests/checks/instances/mysql.pp`, `$user` and `$pass` is declared but not used in so this is a false positive 
+
+13. In `manifests/checks/instances/http_check.pp`, `$username` and `$password` is declared but not used in so this is a false positive 
+
+14. In `manifests/checks/vertica.pp`, `$user` and `$password` is declared but not used in so this is a false positive  
+
+15. In `manifests/checks/ovs.pp`, `$admin_user` and `$admin_password` is declared but not used in so this is a false positive  
+
+16. In `manifests/checks/libvert.pp`, `$admin_user` and `$admin_password` is declared but not used in so this is a false positive  
+
+17. In `manifests/checks/libvert.pp`, `$admin_user` and `$admin_password` is declared but not used in so this is a false positive  
+
+18. In `manifests/thresh.pp`, `$thresh_fetch_url` is used in `wget::fetch { "${thresh_fetch_url}/${mon_thresh_build_ver}/${mon_thresh_deb}":}` 
+
+18. In `manifests/persister.pp`, `$db_admin_password` is declared but not used and  `pers_fetch_url` is used in `wget::fetch { "${pers_fetch_url}/${mon_pers_build_ver}/${mon_pers_deb}":`
+
+19. In `manifests/params.pp`, `$agent_password`, `$admin_password`, `$admin_name`, `$user_name` is declared but not used ... `database_url` is a true positive 
+
+20. In `manifests/notification.pp`, `$smtp_password` and `$smtp_user` is declared but not assigned, so FP 
+
+21. In `manifests/api.pp`, `$api_user` is used in `owner => $api_user,` and ` user { $api_user:}`
+
+22. In `manifests/alarmdefs.pp`, `$admin_username` and `$admin_password` is used in `environment => []`
+
+23. In `manifests/agent.pp`, `$password` and `$username` is declared but not assigned, so FP 
 
 #### Example-12
 
