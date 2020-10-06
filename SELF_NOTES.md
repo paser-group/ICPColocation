@@ -408,7 +408,70 @@ and in `password_hash => mysql_password($sql_password),` si a false positive
 
 23. In `manifests/agent.pp`, `$password` and `$username` is declared but not assigned, so FP 
 
-#### Example-12
+#### Example-13
+
+Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-mellanox-2018-06/` 
+
+1. In `deployment_scripts/puppet/manifests` using `'sdn/password': value => "${neo_password}";`  user names and passwords are used but they come from hiera (`$mlnx = hiera('mellanox-plugin')` and `  $neo_password = $mlnx['mlnx_neo_password']`). 
+
+#### Example-14
+
+Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-vitrage-2018-06/` 
+
+1. In `manifests/db/mysql.pp` using password is not hard-coded as `password_hash => mysql_password($password),` is used ... user name is used `user => $user,` that comes from `$user = 'vitrage',`. Need to track how $user propagates. Similar thing for `manifests/db/postgresql.pp`.  
+
+2. In `manifests/keystone/auth.pp`, $passowrd is used with `password => $password,` and $auth_name is used with `auth_name => $auth_name,`. Similar for $public_url, $admin_url, $internal_url that uses HTTP. 
+
+3. In `manifests/keystone/authtoken.pp`, $passowrd is used with `password => $password,` and $username is used with `username => $username,` and `auth_url => $auth_url,`. Need to track $password, $username, $auth_url.   
+
+4. In `manifests/wsgi/apache.pp`, $ssl_certs_dir is used with `ssl_certs_dir => $ssl_certs_dir,` and $ssl_crl_path is used with `ssl_crl_path => $ssl_crl_path,`. Need to track $ssl_crl_path, $ssl_crl_path.  
+
+5. In `manifests/init.pp`, need to track $amqp_ssl_ca_file, $amqp_ssl_cert_file, $amqp_ssl_key_file, $amqp_ssl_key_password, $amqp_username, $amqp_password as they are used and assigned. 
+
+6. In `manifests/auth.pp`, need to track $auth_url, $auth_user, $auth_password as they are used and assigned. 
+
+7. In `manifests/api.pp`, need to track $host as it is used and assigned (`$host = '0.0.0.0'` and `'api/host' : value => $host;`). 
+
+8. In `examples/vitrage.pp`, `class { '::vitrage::keystone::auth':}` calls `manifests/keystone/auth.pp` with 
+
+```
+  admin_url    => 'http://127.0.0.1:8999',
+  internal_url => 'http://127.0.0.1:8999',
+  public_url   => 'http://127.0.0.1:8999',
+  password     => 'a_big_secret',
+```
+
+which is propagated into `keystone::resource::service_identity {}` in `manifests/keystone/auth.pp` 
+
+9. In `examples/vitrage.pp`, `class { '::vitrage::api':}` calls `manifests/api.pp`, but the specifed paramers mentioned below go nowhere 
+
+```
+  keystone_password     => 'a_big_secret',
+  keystone_identity_uri => 'http://127.0.0.1:35357/',
+```
+
+10. In `examples/vitrage.pp`, `class { '::vitrage::auth':}` calls `manifests/auth.pp`, with parameters below 
+
+```
+  auth_password => 'a_big_secret',
+```
+that is propagated into `vitrage_config {}` in `manifests/auth.pp`
+
+#### Example-15
+
+Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/solar-resources-2018-06/resources/` 
+
+1. In `nova_puppet/1.0.0/actions/remove.pp` hard-coded password `rabbit_password    => 'not important as removed',`  
+
+2. in `node_network_puppet/1.0.0/actions/remove.pp` there is a hard-coded password `auth_password   => 'not important as removed',` . Similar for a hard-coded password in `neutron_puppet/1.0.0/actions/remove.pp (rabbit_password   => 'not important as removed',)` 
+
+3. True positive in `neutron_agents_metadata_puppet/1.0.0/actions/run.pp` ... example: `auth_url => "http://${auth_host}:${auth_port}/v2.0",`
+
+4. In `nova_puppet/1.0.0/actions/run.pp` even though used, $qpid_password, $rabbit_password, $db_password, $db_user comes from hiera()  .. so not hard-coded password. Similarly for $neutron_admin_password and $neutron_admin_username in `nova_neutron_puppet/1.0.0/actions/run.pp`. Similar for $libvirt_inject_password in `nova_compute_libvirt_puppet/1.0.0/actions/update.pp` and `nova_compute_libvirt_puppet/1.0.0/actions/run.pp`. Similar for $admin_user and $admin_password in `nova_api_puppet/1.0.0/actions/update.pp` and `nova_api_puppet/1.0.0/actions/run.pp`. Similarly in `node_network_puppet/1.0.0/actions/run.pp`, $db_user, $db_password, $auth_user, $auth_password are used but data comes from hiera, so not a hard-coded password. Similar for $qpid_username, $qpid_password, $rabbit_password in `neutron_puppet/1.0.0/actions/run.pp`. Similar for $auth_user, $auth_password in `neutron_agents_metadata_puppet/1.0.0/actions/run.pp`. Similarly for `$ha_vrrp_auth_password` in `neutron_agents_l3_puppet/1.0.0/actions/run.pp`. Similar for $db_user and $db_password in `keystone_puppet/1.0.0/actions/run.pp` used as `database_connection  => "mysql://$db_user:$db_password@$db_host:$db_port/$db_name",`
+
+
+
+#### Example-14
 
 Location: ``
 
