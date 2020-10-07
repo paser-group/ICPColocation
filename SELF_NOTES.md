@@ -467,11 +467,14 @@ Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/solar-resources-2018-06
 
 3. True positive in `neutron_agents_metadata_puppet/1.0.0/actions/run.pp` ... example: `auth_url => "http://${auth_host}:${auth_port}/v2.0",`
 
-4. In `nova_puppet/1.0.0/actions/run.pp` even though used, $qpid_password, $rabbit_password, $db_password, $db_user comes from hiera()  .. so not hard-coded password. Similarly for $neutron_admin_password and $neutron_admin_username in `nova_neutron_puppet/1.0.0/actions/run.pp`. Similar for $libvirt_inject_password in `nova_compute_libvirt_puppet/1.0.0/actions/update.pp` and `nova_compute_libvirt_puppet/1.0.0/actions/run.pp`. Similar for $admin_user and $admin_password in `nova_api_puppet/1.0.0/actions/update.pp` and `nova_api_puppet/1.0.0/actions/run.pp`. Similarly in `node_network_puppet/1.0.0/actions/run.pp`, $db_user, $db_password, $auth_user, $auth_password are used but data comes from hiera, so not a hard-coded password. Similar for $qpid_username, $qpid_password, $rabbit_password in `neutron_puppet/1.0.0/actions/run.pp`. Similar for $auth_user, $auth_password in `neutron_agents_metadata_puppet/1.0.0/actions/run.pp`. Similarly for `$ha_vrrp_auth_password` in `neutron_agents_l3_puppet/1.0.0/actions/run.pp`. Similar for $db_user and $db_password in `keystone_puppet/1.0.0/actions/run.pp` used as `database_connection  => "mysql://$db_user:$db_password@$db_host:$db_port/$db_name",`
+4. True positive in `glance_registry_puppet/1.0.0/actions/remove.pp` ... example: `keystone_password => 'not important as removed'`. Also in `cinder_puppet/1.0.0/actions/remove.pp` as `rabbit_password => 'not important as removed',`. Also in `cinder_api_puppet/1.0.0/actions/remove.pp` as `keystone_password  => 'not important as removed',`
+
+
+4. In `nova_puppet/1.0.0/actions/run.pp` even though used, $qpid_password, $rabbit_password, $db_password, $db_user comes from hiera()  .. so not hard-coded password. Similarly for $neutron_admin_password and $neutron_admin_username in `nova_neutron_puppet/1.0.0/actions/run.pp`. Similar for $libvirt_inject_password in `nova_compute_libvirt_puppet/1.0.0/actions/update.pp` and `nova_compute_libvirt_puppet/1.0.0/actions/run.pp`. Similar for $admin_user and $admin_password in `nova_api_puppet/1.0.0/actions/update.pp` and `nova_api_puppet/1.0.0/actions/run.pp`. Similarly in `node_network_puppet/1.0.0/actions/run.pp`, $db_user, $db_password, $auth_user, $auth_password are used but data comes from hiera, so not a hard-coded password. Similar for $qpid_username, $qpid_password, $rabbit_password in `neutron_puppet/1.0.0/actions/run.pp`. Similar for $auth_user, $auth_password in `neutron_agents_metadata_puppet/1.0.0/actions/run.pp`. Similarly for `$ha_vrrp_auth_password` in `neutron_agents_l3_puppet/1.0.0/actions/run.pp`. Similar for $db_user and $db_password in `keystone_puppet/1.0.0/actions/run.pp` used as `database_connection  => "mysql://$db_user:$db_password@$db_host:$db_port/$db_name",`. Similar for $db_user and $db_password and $keystone_password and $keystone_user in `glance_registry_puppet/1.0.0/actions/run.pp` and `glance_registry_puppet/1.0.0/actions/update.pp` in `glance_registry_puppet/1.0.0/actions/update.pp`
 
 
 
-#### Example-14
+#### Example-15
 
 Location: ``
 
@@ -485,7 +488,7 @@ Even though there is a SQL-injection like statement, the value is not hard-coded
 from hiera(). This should not be flagged. 
 
 
-#### Example-12
+#### Example-16
 
 Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-scaleio-2018-06/deployment_scripts/puppet/manifests/nova.pp`
 
@@ -500,7 +503,7 @@ if $scaleio['existing_cluster'] {
 
 `client_password` later used in `class {'::scaleio_openstack::nova':}` as `gateway_password`
 
-#### Example-13 
+#### Example-17
 
 Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-scaleio-2018-06/deployment_scripts/puppet/manifests/cluster.pp`
 
@@ -520,7 +523,7 @@ after >50 lines later used as
 in `scaleio::login {'Normal':}`
 
 
-#### Example-14
+#### Example-18
 
 Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-aodh-2018-06/examples/aodh.pp`
 
@@ -542,3 +545,8 @@ class { '::aodh::auth':
 
 `$auth_password` called in `class aodh::auth (){}` and later used as
 `'service_credentials/password' : value => $auth_password, secret => true;` in `aodh_config {}` 
+
+
+#### Example-19
+
+Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-aodh-2018-06/examples/aodh.pp`
