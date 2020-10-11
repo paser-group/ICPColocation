@@ -549,4 +549,105 @@ class { '::aodh::auth':
 
 #### Example-19
 
-Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-aodh-2018-06/examples/aodh.pp`
+Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-pacemaker-2018-06/`
+
+1. In `manifests/new/params.pp`  `$cluster_password` is assigned a value but not used 
+2. In `manifests/stonith/fence_wti.pp` and `manifests/stonith/fence_vmware_soap.pp` and `manifests/stonith/fence_rsb.pp` and `manifests/stonith/fence_ipmilan.pp`. `manifests/stonith/fence_ipdu.pp`, `manifests/stonith/fence_intelmodular.pp`, `manifests/stonith/fence_imm.pp`, `manifests/stonith/fence_ilo4.pp`, `manifests/stonith/fence_ilo3.pp`, `manifests/stonith/fence_ilo2.pp`, `manifests/stonith/fence_ilo.pp`, `manifests/stonith/fence_ilomp.pp`, `manifests/stonith/fence_ifmb.pp`, `manifests/stonith/fence_idrac.pp`, `manifests/stonith/fence_ibmblade.pp`, `manifests/stonith/fence_hpblade.pp`, `manifests/stonith/fence_eps.pp`, `manifests/stonith/fence_eaton_snmp.pp`, `manifests/stonith/fence_drac5.pp`, `manifests/stonith/fence_compute.pp`, `manifests/stonith/fence_cisco_ics.pp`, `manifests/stonith/fence_cisco_mds.pp`, `manifests/stonith/fence_brocade.pp`, `manifests/stonith/fence_bladecenter.pp`,`manifests/stonith/fence_aps.pp`, `manifests/stonith/fence_apc_snmp.pp`,  `manifests/stonith/fence_rvhem.pp`,  `default => "passwd=\"${passwd}\"",` is an example of `$passwd` being used. 
+
+3. In `manifests/stonith/fence_ironic.pp` and `manifests/stonith/fence_amt.pp` , `default => "password=\"${password}\""` is an example of `$password` being used  
+
+4. In `manifests/params.pp` `$hacluster_pwd` has a value that is never used 
+
+5. In `manifests/new.pp` , `$cluster_password` is   a hard-coded password that is used 
+
+#### Example-20
+
+Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-octavia-2018-06/`
+
+1. In `manifests/db/` , `mysql.pp` and `postgresql.pp` , `password_hash => postgresql_password($user, $password),` 
+shows that the detected hard-coded passwords are FPs. However, $user is hard-coded and used as `user => $user,`
+
+2. In `manifests/keystone/authtoken.pp` the following is used which are true positives 
+```
+    username                       => $username,
+    password                       => $password,
+    auth_url                       => $auth_url,
+```
+
+In `manifests/keystone/auth.pp` the following are also true positives: 
+```
+    public_url          => $public_url,
+    internal_url        => $internal_url,
+    admin_url           => $admin_url,
+``` 
+
+In `manifests/service_auth.pp` , `'service_auth/password' : value => $password;`, $password is used
+Similar for `manifests/init.pp` and 
+
+#### Example-21
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-purestorage-cinder-2018-06`
+
+In `deployment_scripts/controller.pp`, `fc_passwd_1 => $plugin_settings["pure_password_1"],` is not a hard-coded password in `class { 'plugin_purestorage_cinder::controller' : }`. 
+`$fc_passwd_1` is later is used in `class plugin_purestorage_cinder::controller (){}` as ` "${fabric_zone_1}/cisco_fc_fabric_password": value => $fc_passwd_1;`
+
+
+#### Example-22
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-manila-2018-06` 
+
+1. In `manifests/backend/`, passwords are passed as parameters and being used for the following Puppet files: 
+
+```
+dellemc_isilon.pp
+hitachi_hnas.pp
+dellemc_unity.pp
+dellemc_vmax.pp
+dellemc_vnx.pp
+netapp.pp
+```
+
+The syntax for passing passwords into any of the Puppet files is expressed as an example for *define manila::backend::dellemc_isilon (){}* and *define manila::backend::netapp (){}* below: 
+
+```
+manila::backend::dellemc_isilon { 'myBackend':
+   driver_handles_share_servers  => false,
+   emc_nas_login                 => 'admin',
+   emc_nas_password              => 'password',
+   emc_nas_server                => <IP address of isilon cluster>,
+   emc_share_backend             => 'isilon',
+}
+```
+
+```
+manila::backend::netapp { 'myBackend':
+   driver_handles_share_servers => true,
+   netapp_login                 => 'clusterAdmin',
+   netapp_password              => 'password',
+   netapp_server_hostname       => 'netapp.mycorp.com',
+   netapp_storage_family        => 'ontap_cluster',
+   netapp_transport_type        => 'https',
+}
+```
+
+Above is similar for `manifests/keystone/auth.pp` and `manifests/keystone/auth2.pp` and `manifests/share/netapp.pp` and `manifests/share/hitachi_hnas.pp` and `manifests/volume/cinder.pp` and `manifests/type.pp`, `manifests/type_set.pp`, `manifests/service_instance.pp` and `manifests/rabbitmq.pp` and `manifests/init.pp` 
+
+2. In `manifests/network/neutron.pp` we see a password being used, but as class parameters `$neutron_admin_password = undef,` is undefined so not a true psoitive 
+
+```
+    'DEFAULT/neutron_admin_username':       value => $neutron_admin_username;
+    'DEFAULT/neutron_admin_password':       value => $neutron_admin_password, secret => true;
+    'DEFAULT/neutron_admin_auth_url':       value => $neutron_admin_auth_url;
+```
+
+#### Example-23
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-rally-2018-06/` 
+
+1. In `example/rally.pp`, `class { '::rally::settings': }` calls `manifests/settings.pp` and `class { '::rally': }`
+
+#### Example-24
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/puppet-watcher-2018-06/` 
+
+1. In `manifests/init.pp`, `$amqp_password = $::os_service_default,` is a false positive 
