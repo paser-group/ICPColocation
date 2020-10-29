@@ -640,14 +640,122 @@ Above is similar for `manifests/keystone/auth.pp` and `manifests/keystone/auth2.
     'DEFAULT/neutron_admin_auth_url':       value => $neutron_admin_auth_url;
 ```
 
-#### Example-23
+
+#### Example-24
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-congress-2018-06/` 
+
+1. In `manifests/db/sync.pp`, `$user = 'congress',` is propagated into `exec { 'congress-db-sync':}` as `user => $user,`
+2. In `manifests/db/mysql.pp`, `password_hash => mysql_password($password)` is a FP , so calling `congress::db::mysql{}` with `$password` is not a TP. Same for `manifests/db/postgresql.pp`
+3. In `manifests/db/mysql.pp`, `$user = 'congress',` is propagated into `::openstacklib::db::mysql {}`, so TP. Same for `manifests/db/postgresql.pp`
+4. In `manifests/keystone/auth.pp`, `$password` and `$auth_name` is propagated as `password => $password` and `auth_name => $auth_name,`. Same for `manifests/keystone/authtoken.pp`, also `$auth_url  = 'http://localhost:5000',` propagated into `keystone::resource::authtoken {}` 
+
+#### Example-25
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-rally-2018-06/` 
 
 1. In `example/rally.pp`, `class { '::rally::settings': }` calls `manifests/settings.pp` and `class { '::rally': }`
 
-#### Example-24
+#### Example-26
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/puppet-watcher-2018-06/` 
 
 1. In `manifests/init.pp`, `$amqp_password = $::os_service_default,` is a false positive 
+
+#### Example-27
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/puppet-swift-2018-06/` 
+
+1. In `manifests/keystone/auth.pp`, `$password`, `$public_url`, `$admin_url`, `$internal_url`, `$interna;_url3`, and `$auth_name` is propagated into `keystone::resource::service_identity {}` and `keystone::resource::service_identity {}`. Same for `manifests/keystone/dispersion.pp` as  `$auth_pass` propagated into `keystone_user {}` 
+
+2. In `manifests/proxy/tempauth.pp`, `'user'    => 'admin',` is a TP. 
+3. In `manifests/proxy/s3token.pp`, `$auth_uri = 'http://127.0.0.1:5000'` is a TP as it propagates into an if block as `$auth_uri_real = $auth_uri`.
+4. In `manifests/proxy/tempauth.pp`, `'user'    => 'admin',` is a TP.   
+5. In `manifests/proxy/ceilometer.pp`, `$auth_uri` and `$auth_url` propagates into   `swift_proxy_config {}` so TP
+6. In `manifests/proxy/authtoken.pp`, the following makes sure that username and password is not hard coded: 
+
+```
+  $auth_url_real = pick($identity_uri, $auth_url)
+  $username_real = pick($admin_user, $username)
+  $project_name_real = pick($admin_tenant_name, $project_name)
+  $password_real = pick($admin_password, $password)
+
+    'filter:authtoken/username': value => $username_real;
+    'filter:authtoken/password': value => $password_real;  
+```
+
+7. In `manifests/test_file.pp`, `$password` is defined but never used 
+8. In `manifests/keymaster.pp`,  `$username` and `$password` is used in `swift_keymaster_config {}`
+9. In `manifests/dispersion.pp`,  `$username` is used as a command lien argument in `"swift -A ${auth_url} --os-username ${auth_user} --os-project-name ${auth_tenant} --os-password ${auth_pass} -V ${auth_version} stat | grep 'Account: '",`
+and `$password` is used in `swift_dispersion_config {}`
+10. In `manifests/bench.pp`,  `$auth_url` and `$swift_user` is used in `swift_bench__config {}`
+11. In `manifests/auth_file.pp`,  `$admin_password` and `$admin_user` is exported as a text file using: 
+```
+    content =>
+  "
+  export ST_USER=${admin_tenant}:${admin_user}
+  export ST_KEY=${admin_password}
+  export ST_AUTH=${auth_url}
+  ",
+```
+in `file { '/root/swiftrc':} `  **VERY INTERESTING. COOL!** 
+
+12. In `tests/site.pp` the following 
+
+```
+  class { '::swift::proxy::authtoken':
+    password  => $swift_admin_password,
+    # assume that the controller host is the swift api server
+    auth_host => $swift_keystone_node,
+  }
+```
+
+calls `class swift::proxy::authtoken(){}` with `password` in `manifests/proxy/authtoken.pp` , which is used in 
+`swift_proxy_config {}` 
+
+
+13. In `tests/all.pp` the following 
+
+```
+class { '::swift::proxy::tempauth':
+  account_user_list => [
+    {
+      'user'    => 'admin',
+      'account' => 'admin',
+      'key'     => 'admin',
+      'groups'  => [ 'admin', 'reseller_admin' ],
+    },
+  ]
+}
+```
+
+calls `class swift::proxy::tempauth(){}` with `account_user_list` in `manifests/proxy/tempauth.pp` , which is used in 
+`class swift::proxy::tempauth () {}` 
+
+
+#### Example-28
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-rally-2018-06/` 
+
+1. In `puppet/modules/ironic/bifrost.pp`, `$ironic_url` , `$ironic_db_password`, `$mysql_password`
+are declared but not used ... so FP . ANything that calls `class ironic::bifrost () {}` with the 3 parameters 
+are also FPs. And in `file { "${git_dest_repo_folder}/playbooks/inventory/group_vars/all":}` hard-coded password 
+is loaded from tempalte file and added as a content 
+
+2. In `puppet/modules/ironic/bifrost.pp`, `$host_ip` is assigned `0.0.0.0` and used in `ironic_config {}`. 
+3. In `manifests/ironic.pp` the following use of `pick()` allows introduction of security smells that are TPs. 
+
+```
+$db_user                    = pick($ironic_hash['db_user'], 'ironic')
+$db_password                = pick($ironic_hash['password'], 'ironic')
+```
+If the first argument does not match, then second argument will be assigned. However in that script `$db_password`
+and `$db_user` are never used so reporting will be FP. 
+
+4. In `manifests/db.pp`, using `pick()` hard-coded values are assigned and then used in `class { 'osnailyfacter::mysql_access':}`
+
+#### Example-29
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ceph-2018-06/` 
+
+1. TODO 
