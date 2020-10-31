@@ -758,4 +758,67 @@ and `$db_user` are never used so reporting will be FP.
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ceph-2018-06/` 
 
-1. TODO 
+1. In `manifests/profile/params.pp` , `  $rgw_keystone_admin_user, $rgw_keystone_admin_password` is defined but not used , so FP 
+2. In `manifests/repo.pp` , `source => 'https://download.ceph.com/keys/release.asc',` is a TP , `id     => '08B73419AC32B4E966C1A330E84AC2C0460F3994',` is a FP , `mirrorlist => "http://mirrors.fedoraproject.org/metalink?repo=epel-${el}&arch=\$basearch",` is a TP 
+
+
+#### Example-30
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-cisco-aci-2018-06/` 
+
+1. In `deployment_scripts/puppet/site.pp` , `admin_username    => $access_hash['user']` and `admin_password    => $access_hash['password'],` are FPs. 
+
+#### Example-31
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-murano-2018-06/` 
+
+1. In `manifests/db/postgresql.pp` , `password_hash => postgresql_password($user, $password),` is a FP.  `$privileges = 'ALL',` is privilege escalation not reproted before , also a TP as used by `::openstacklib::db::postgresql {}`
+
+2. In `manifests/db/mysql.pp` , `password_hash => mysql_password($password),` is a FP 
+
+
+#### Example-32
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-opendaylight-2018-06/` 
+
+1. In `manifests/odl-ml2-configuration.pp` , `$auth_password      = $neutron_config['keystone']['admin_password']` is a FP 
+2. In `manifests/opendaylight/service.pp` `$password` is used in `exec { 'wait-until-odl-ready':} as a command`, TP but not detected 
+
+#### Example-33
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-nova-2018-06/`
+
+1. In `manifests/metadata/novajoin/` , `$password = $::os_service_default,` is a FP. 
+2. In `manifests.network/neutron.pp`, `'neutron/password': value => $neutron_password, secret => true;` ensures secret is not logged in console. Absence of `secret => true` will be a new category called `secret leakage` 
+3. In `manifests/cron/archived_deleted_rows.pp` , `user => pick($user, $::nova::params::nova_user),` is a TP. 
+4. In `examples/nova_wsgi.pp` and `examples/nova_with_pacemaker.pp`, `admin_password => 'a_big_secret'` is passed into `manifests/api/pp` but not used, so FP 
+
+#### Example-34
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-cinder-2018-06/`
+
+1. In `manifests/quota_set.pp` , `$os_password` is a TP as it is assigned as an ENVIRONMENT variable in `environment => $cinder_env,` by using 
+
+```
+$cinder_env = [
+      "OS_TENANT_NAME=${os_tenant_name}",
+      "OS_USERNAME=${os_username}",
+      "OS_PASSWORD=${os_password}",
+      "OS_AUTH_URL=${os_auth_url}",
+    ]
+```
+
+ 
+
+#### Example-35
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-openstack-cookiecutter-2018-06/`
+
+1. Nothign found or already detected 
+
+#### Example-36
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-lma-infrastructure-alerting-2018-06/`
+
+1. 
+
