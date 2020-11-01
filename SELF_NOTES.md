@@ -1006,4 +1006,30 @@ Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-library-2018-06/
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-designate-2018-06/`
 
-1. In
+1. Nothing found or previously reported 
+#### Example-60
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-external-zabbix-2018-06/`
+
+1. In `deployment_scripts/modules/plugin_zabbix/manifests/db/mysql.pp`, `$db_passwd = $mysql_db['root_password']` is used in `$mysql_extras_args` that is later used in `command     => "/usr/bin/mysql ${mysql_extras_args} ${plugin_zabbix::params::db_name} < /tmp/zabbix/schema.sql",`, inside `exec { "${plugin_zabbix::params::db_name}-import":}` 
+#### Example-61
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-murano-2018-06/`
+
+1. Nothing found or already reported 
+#### Example-62
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ironic-2018-06/`
+
+1. In `examples/ironic.pp`, `class { '::ironic::bifrost': }`, passes hard-coded passwords into `class ironic::bifrost (){}` that is located in `manifests/bifrost.pp` . The two passwords `  $ironic_db_password and $mysql_password,` are declared but not used, so FP. 
+#### Example-63
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-barbican-2018-06/`
+
+1. Nothng found or previously reported 
+#### Example-64
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-openstack-integration-2018-06/`
+
+1. Nothng found or previously reported 
+fuel-plugin-ci-2018-06
