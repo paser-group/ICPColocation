@@ -7,26 +7,26 @@
 3. Track the variable or attribute upwards and downwards 
 4. Search within the module 
 
-#### Example-1
+#### Repository-1
 
 `$http_host = '0.0.0.0'` ... no parsing error but `$http_host` is used as a default in `class cdh::hue(` that `inherits cdh::hue::defaults` 
 Source: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/cdh4-2018-06/manifests/` ... `class cdh::hue` is in hue.pp and `cdh::hue::defaults` is in `hue/defaults.pp` 
 In `class cdh::hue(`,  `user { 'hue'` is a true positive. 
 
-#### Example-2 
+#### Repository-2 
 
 In `cdh::oozie`, `$url` is has a valid insecure HTTP, but is not used to setup a server, rather used in 
 `content => "# NOTE:  This file is managed by Puppet. export OOZIE_URL='${url}'",` ... note the usage of ${url} ...
 access to a variable. 
 In `cdh::oozie` ... oozie.pp resides in `/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/cdh4-2018-06/manifests/`
 
-#### Example-3
+#### Repository-3
 
 A hard-coded password `$jdbc_password = 'oozie'` is specified in `cdh::oozie::defaults`, located in `oozie/defaults`, which is used in 
 `cdh::oozie::server` as `$jdbc_password = $cdh::oozie::defaults::jdbc_password`, which is not used anywhere later. 
 
 
-#### Example-4
+#### Repository-4
 
 In `cdh::hive::metastore::mysql` using `command`, an actual user password us used. See below: 
 
@@ -44,7 +44,7 @@ FLUSH PRIVILEGES;\"",
 in `cdh::hive::defaults`. there is hard-coded password for `$jdbc_password` i.e. `$jdbc_password = 'hive'`. 
 
 
-#### Example-5 
+#### Repository-5 
 
   
 Variables or attributes that have HTTP URL first needs to be checked for HTTPS. If exists then report, 
@@ -53,7 +53,7 @@ otherwise do not.
 are examples in `/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/mesos-2018-06/manifests/repo.pp` (`class mesos::repo`).
 
  
-#### Example-6 
+#### Repository-6 
 
 In `class nginx::ssl` located in `/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/nginx-2018-06`
 uses a template file using `template()` for `file{}` `content => template('nginx/ssl.conf.erb')`.
@@ -63,7 +63,7 @@ So we need to check for SSL cipher or SSH keys in ERB files as well.
 
 ### Openstack Exploration, Sep 30 2020 
 
-#### Example-1
+#### Repository-1
 
 Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ec2api-2018-06/sync.pp`
 
@@ -71,21 +71,21 @@ Hard-coded user name (`$system_user = 'ec2api'`) propagated from paramters into 
 `user => $system_user`. 
 
 
-#### Example-2 
+#### Repository-2 
 
 Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ec2api-2018-06/postgresql.pp`
 
 Hard-coded user name (`$user = 'ec2api'`) propagated from parameters into the 
 `::openstacklib::db::postgresql {` body of `password_hash => postgresql_password($user, $password)`. 
 
-#### Example-3
+#### Repository-3
 
 Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ec2api-2018-06/mysql.pp`
 
 Hard-coded user name (`$user = 'ec2api'`) propagated from parameters into the 
 `::openstacklib::db::mysql {` body of `user => $user,`. 
 
-#### Example-4 
+#### Repository-4 
 
 Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ec2api-2018-06/`
 
@@ -93,7 +93,7 @@ Insecure HTTP used in `keystone/auth.pp` (`$public_url = 'http://127.0.0.1:8788'
 `keystone::resource::service_identity` (`public_url => $public_url`). 
 
 
-#### Example-5
+#### Repository-5
 
 Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-plumgrid-2018-06/deployment_scripts/puppet/manifests/plumgrid_nova_compute.pp` 
 
@@ -127,7 +127,7 @@ Another example:
 
 
 
-#### Example-6
+#### Repository-6
 
 Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-plumgrid-2018-06/deployment_scripts/puppet/modules/plumgrid/manifests/init.pp`
 
@@ -136,7 +136,7 @@ Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-plumgrid-20
 
 Also, `$rest_ip = '0.0.0.0',` is not used anywhere in the module (`plumgrid/`) 
 
-#### Example-7
+#### Repository-7
 
 Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-plumgrid-2018-06/deployment_scripts/puppet/modules/plumgrid/manifests`
 
@@ -145,7 +145,7 @@ Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-plumgrid-20
 
 This is not detected by SLIC ... needs better parsing 
 
-#### Example-8
+#### Repository-8
 
 Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-heat-2018-06/manifests/keystone/auth_cfn.pp`
 
@@ -159,7 +159,7 @@ Example of insecure HTTP being assigned
 > admin_url           => $admin_url,
 > internal_url        => $internal_url,
 
-#### Example-9
+#### Repository-9
 
 Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-heat-2018-06/example/site.pp`
 
@@ -202,7 +202,7 @@ inside `class heat::engine (){}`
 So if we have a script that looks like above then we can get a full flow of information of 
 data `whatever-key-you-like` 
 
-#### Example-10 
+#### Repository-10 
 
 Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-neutron-2018-06` 
 
@@ -351,11 +351,11 @@ calls `manifests/plugins/ml2/cisco/uscm.pp` with `ucsm_username` and `ucsm_passw
 `username` and `password`  flows within `$nexus_config,` into `class neutron::plugins::ml2::cisco::nexus(){}` in `manifests/plugins/ml2/cisco/nexus.pp`
 
 
-#### Example-11 
+#### Repository-11 
 
 1. Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-ceilometer-redis-2018-06/deployment_scripts/puppet/modules/redis/tests/init.pp`, `conf_bind => '0.0.0.0'`, used in `init.pp` is used no where ... this is a false positive 
 
-#### Example-12
+#### Repository-12
 
 Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-monasca-2018-06/` 
 
@@ -408,13 +408,13 @@ and in `password_hash => mysql_password($sql_password),` si a false positive
 
 23. In `manifests/agent.pp`, `$password` and `$username` is declared but not assigned, so FP 
 
-#### Example-13
+#### Repository-13
 
 Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-mellanox-2018-06/` 
 
 1. In `deployment_scripts/puppet/manifests` using `'sdn/password': value => "${neo_password}";`  user names and passwords are used but they come from hiera (`$mlnx = hiera('mellanox-plugin')` and `  $neo_password = $mlnx['mlnx_neo_password']`). 
 
-#### Example-14
+#### Repository-14
 
 Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-vitrage-2018-06/` 
 
@@ -457,7 +457,7 @@ which is propagated into `keystone::resource::service_identity {}` in `manifests
 ```
 that is propagated into `vitrage_config {}` in `manifests/auth.pp`
 
-#### Example-15
+#### Repository-15
 
 Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/solar-resources-2018-06/resources/` 
 
@@ -474,7 +474,7 @@ Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/solar-resources-2018-06
 
 
 
-#### Example-15
+#### Repository-15
 
 Location: ``
 
@@ -488,7 +488,7 @@ Even though there is a SQL-injection like statement, the value is not hard-coded
 from hiera(). This should not be flagged. 
 
 
-#### Example-16
+#### Repository-16
 
 Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-scaleio-2018-06/deployment_scripts/puppet/manifests/nova.pp`
 
@@ -503,7 +503,7 @@ if $scaleio['existing_cluster'] {
 
 `client_password` later used in `class {'::scaleio_openstack::nova':}` as `gateway_password`
 
-#### Example-17
+#### Repository-17
 
 Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-scaleio-2018-06/deployment_scripts/puppet/manifests/cluster.pp`
 
@@ -523,7 +523,7 @@ after >50 lines later used as
 in `scaleio::login {'Normal':}`
 
 
-#### Example-18
+#### Repository-18
 
 Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-aodh-2018-06/examples/aodh.pp`
 
@@ -547,7 +547,7 @@ class { '::aodh::auth':
 `'service_credentials/password' : value => $auth_password, secret => true;` in `aodh_config {}` 
 
 
-#### Example-19
+#### Repository-19
 
 Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-pacemaker-2018-06/`
 
@@ -560,7 +560,7 @@ Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-pacemaker-2018-
 
 5. In `manifests/new.pp` , `$cluster_password` is   a hard-coded password that is used 
 
-#### Example-20
+#### Repository-20
 
 Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-octavia-2018-06/`
 
@@ -584,7 +584,7 @@ In `manifests/keystone/auth.pp` the following are also true positives:
 In `manifests/service_auth.pp` , `'service_auth/password' : value => $password;`, $password is used
 Similar for `manifests/init.pp` and 
 
-#### Example-21
+#### Repository-21
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-purestorage-cinder-2018-06`
 
@@ -592,7 +592,7 @@ In `deployment_scripts/controller.pp`, `fc_passwd_1 => $plugin_settings["pure_pa
 `$fc_passwd_1` is later is used in `class plugin_purestorage_cinder::controller (){}` as ` "${fabric_zone_1}/cisco_fc_fabric_password": value => $fc_passwd_1;`
 
 
-#### Example-22
+#### Repository-22
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-manila-2018-06` 
 
@@ -641,7 +641,7 @@ Above is similar for `manifests/keystone/auth.pp` and `manifests/keystone/auth2.
 ```
 
 
-#### Example-24
+#### Repository-24
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-congress-2018-06/` 
 
@@ -650,19 +650,19 @@ Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-congress-2018-
 3. In `manifests/db/mysql.pp`, `$user = 'congress',` is propagated into `::openstacklib::db::mysql {}`, so TP. Same for `manifests/db/postgresql.pp`
 4. In `manifests/keystone/auth.pp`, `$password` and `$auth_name` is propagated as `password => $password` and `auth_name => $auth_name,`. Same for `manifests/keystone/authtoken.pp`, also `$auth_url  = 'http://localhost:5000',` propagated into `keystone::resource::authtoken {}` 
 
-#### Example-25
+#### Repository-25
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-rally-2018-06/` 
 
 1. In `example/rally.pp`, `class { '::rally::settings': }` calls `manifests/settings.pp` and `class { '::rally': }`
 
-#### Example-26
+#### Repository-26
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/puppet-watcher-2018-06/` 
 
 1. In `manifests/init.pp`, `$amqp_password = $::os_service_default,` is a false positive 
 
-#### Example-27
+#### Repository-27
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/puppet-swift-2018-06/` 
 
@@ -733,7 +733,7 @@ calls `class swift::proxy::tempauth(){}` with `account_user_list` in `manifests/
 `class swift::proxy::tempauth () {}` 
 
 
-#### Example-28
+#### Repository-28
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-rally-2018-06/` 
 
@@ -754,7 +754,7 @@ and `$db_user` are never used so reporting will be FP.
 
 4. In `manifests/db.pp`, using `pick()` hard-coded values are assigned and then used in `class { 'osnailyfacter::mysql_access':}`
 
-#### Example-29
+#### Repository-29
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ceph-2018-06/` 
 
@@ -762,13 +762,13 @@ Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ceph-2018-06/`
 2. In `manifests/repo.pp` , `source => 'https://download.ceph.com/keys/release.asc',` is a TP , `id     => '08B73419AC32B4E966C1A330E84AC2C0460F3994',` is a FP , `mirrorlist => "http://mirrors.fedoraproject.org/metalink?repo=epel-${el}&arch=\$basearch",` is a TP 
 
 
-#### Example-30
+#### Repository-30
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-cisco-aci-2018-06/` 
 
 1. In `deployment_scripts/puppet/site.pp` , `admin_username    => $access_hash['user']` and `admin_password    => $access_hash['password'],` are FPs. 
 
-#### Example-31
+#### Repository-31
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-murano-2018-06/` 
 
@@ -777,14 +777,14 @@ Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-murano-2018-06
 2. In `manifests/db/mysql.pp` , `password_hash => mysql_password($password),` is a FP 
 
 
-#### Example-32
+#### Repository-32
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-opendaylight-2018-06/` 
 
 1. In `manifests/odl-ml2-configuration.pp` , `$auth_password      = $neutron_config['keystone']['admin_password']` is a FP 
 2. In `manifests/opendaylight/service.pp` `$password` is used in `exec { 'wait-until-odl-ready':} as a command`, TP but not detected 
 
-#### Example-33
+#### Repository-33
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-nova-2018-06/`
 
@@ -793,7 +793,7 @@ Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-nova-2018-06/`
 3. In `manifests/cron/archived_deleted_rows.pp` , `user => pick($user, $::nova::params::nova_user),` is a TP. 
 4. In `examples/nova_wsgi.pp` and `examples/nova_with_pacemaker.pp`, `admin_password => 'a_big_secret'` is passed into `manifests/api/pp` but not used, so FP 
 
-#### Example-34
+#### Repository-34
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-cinder-2018-06/`
 
@@ -810,27 +810,27 @@ $cinder_env = [
 
  
 
-#### Example-35
+#### Repository-35
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-openstack-cookiecutter-2018-06/`
 
 1. Nothign found or already detected 
 
-#### Example-36
+#### Repository-36
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-lma-infrastructure-alerting-2018-06/`
 
 1. In `deployment_scripts/modules/lma_infra_alerting/manifests/nagios/check_http.pp`, `$password` was used in `$auth_basic_option`
 , which is in turn used in `$command_line`, and then in `nagios::command {}` as `command_line => $command_line`
 
-#### Example-37
+#### Repository-37
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-nsx-t-2018-06/`
 
 1. Nothign found or previously addressed 
 
 
-#### Example-38
+#### Repository-38
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-gnocchi-2018-06/`
 
@@ -839,7 +839,7 @@ Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-gnocchi-2018-0
 
 
 
-#### Example-39
+#### Repository-39
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-onos-2018-06/`
 
@@ -847,7 +847,7 @@ Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-onos-2018
 `$json_hash`, that is used in `$json_message` and then in `command => "/usr/bin/curl -H 'Content-Type: application/json' -X POST \
 -d '${json_message}' \` 
 
-#### Example-40 
+#### Repository-40 
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-lma-collector-2018-06/`
 
@@ -867,14 +867,14 @@ Side point: not all strings are escaped as below:
 
 4. In `manifests/controller.pp` `password                  => hiera('lma::collector::infrastructure_alerting::password'),` is not a hard-coded password, so FP 
 
-#### Example-41
+#### Repository-41
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-midonet-2018-06/`
 
 1. Nothing found or reported previously 
 
 
-#### Example-42
+#### Repository-42
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-bigswitch-2018-06/`
 
@@ -882,12 +882,12 @@ Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-bigswitch
 
 
 
-#### Example-43
+#### Repository-43
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-qdr-2018-06/`
 
 1. Nothing found or reported previously 
-#### Example-44
+#### Repository-44
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-trove-2018-06/`
 
@@ -897,68 +897,68 @@ in `manifests/db/mysql.pp`
 2. In `examples/site.pp`, `class { '::trove::keystone::auth':}` uses ` password`, that is passed into `class trove::keystone::auth (){}` in `keystone/auth.pp`
 
 
-#### Example-45
+#### Repository-45
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-datera-cinder-2018-06/`
 
 1. Nothing found or previously reported 
-#### Example-46
+#### Repository-46
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-manila-2018-06/`
 
 1. Nothing found or previously reported 
-#### Example-47
+#### Repository-47
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-influxdb-grafana-2018-06/`
 
 1. Nothing found or previously reported 
-#### Example-48
+#### Repository-48
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-mistral-2018-06/`
 
 1. Nothing found or previously reported 
-#### Example-49
+#### Repository-49
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-zaqar-2018-06/`
 
 1. Nothing found or previously reported 
-#### Example-49
+#### Repository-49
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-elasticsearch-kibana-2018-06/`
 
 1. Nothing found or previously reported 
-#### Example-50
+#### Repository-50
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-magnum-2018-06/`
 
 1. In `examples/magnum.pp`, password is passed as `class { '::magnum::db::mysql':` in `class magnum::db::mysql(){}` located at `manifests/db/mysql.pp`. Similarly,  `domain_password => 'oh_my_no_secret',` is used in `class { '::magnum::keystone::domain': }`
 that calls `class magnum::keystone::domain () {}` in `manifests/keystone/domain.pp`. Eventually the password is used in `magnum_config {}` 
 
-#### Example-51
+#### Repository-51
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-oslo-2018-06/`
 
 1. Nothing found or identified previously 
 
-#### Example-52
+#### Repository-52
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-sahara-2018-06/`
 
 1. In `examples/basic.pp` , `host => '0.0.0.0',` is passed into `manifests/init.pp` through `class sahara(){}`, which is eventually used in `sahara_config {}`
 
 
-#### Example-53
+#### Repository-53
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-6wind-virtual-accelerator-2018-06/`
 
 1. Nothing found or identified previously 
-#### Example-54
+#### Repository-54
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-midonet-2018-06/`
 
 1. In `manifests/repo/centos.pp`, `$mem_password` and `$mem_username` are used in `$midonet_core_repo_url      = "http://${mem_username}:${mem_password}@${midonet::params::midonet_repo_baseurl}/mem-${mem_version}/${midonet_stage}/el${::operatingsystemmajrelease}"` , which is later used in `yumrepo {}`
 
-#### Example-55
+#### Repository-55
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/packstack-2018-06/`
 
@@ -967,13 +967,13 @@ Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/packstack-2018-06/`
 2. In `manifests/keystone/gnochhi.pp` `internal_url => "http://${gnocchi_keystone_host_url}:8041",` is a TP, as `HTTP` is directly 
 used and assigned to an attribute.  
 
-#### Example-56
+#### Repository-56
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-glance-2018-06/`
 
 1. Nothing found or already reported 
 
-#### Example-57
+#### Repository-57
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-keystone-2018-06/`
 
@@ -987,7 +987,7 @@ in `keystone::resource::service_identity {}` inside `manifests/endpoint.pp`
 
 
 
-#### Example-58
+#### Repository-58
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-library-2018-06/`
 
@@ -1002,34 +1002,65 @@ Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-library-2018-06/
 5. `$rabbit_password      = $murano_hash['rabbit_password']` not a hard-coded password and used in `command => "rabbitmqctl -n '${rabbit_node_name}' add_user '${rabbit_user}' '${rabbit_password}'",` for `exec { 'create_murano_user' :`
 
 
-#### Example-59
+#### Repository-59
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-designate-2018-06/`
 
 1. Nothing found or previously reported 
-#### Example-60
+#### Repository-60
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-external-zabbix-2018-06/`
 
 1. In `deployment_scripts/modules/plugin_zabbix/manifests/db/mysql.pp`, `$db_passwd = $mysql_db['root_password']` is used in `$mysql_extras_args` that is later used in `command     => "/usr/bin/mysql ${mysql_extras_args} ${plugin_zabbix::params::db_name} < /tmp/zabbix/schema.sql",`, inside `exec { "${plugin_zabbix::params::db_name}-import":}` 
-#### Example-61
+#### Repository-61
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-murano-2018-06/`
 
 1. Nothing found or already reported 
-#### Example-62
+#### Repository-62
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ironic-2018-06/`
 
 1. In `examples/ironic.pp`, `class { '::ironic::bifrost': }`, passes hard-coded passwords into `class ironic::bifrost (){}` that is located in `manifests/bifrost.pp` . The two passwords `  $ironic_db_password and $mysql_password,` are declared but not used, so FP. 
-#### Example-63
+#### Repository-63
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-barbican-2018-06/`
 
 1. Nothng found or previously reported 
-#### Example-64
+#### Repository-64
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-openstack-integration-2018-06/`
 
 1. Nothng found or previously reported 
-fuel-plugin-ci-2018-06
+#### Repository-65
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-ci-2018-06/`
+
+1. Nothng found or previously reported 
+
+#### Repository-66
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-tripleo-2018-06/`
+
+1. In `manifests/profile/base/designate/api.pp`, `$listen_ip      = '0.0.0.0',` is used in `$listen_uri = normalize_ip_for_uri($listen_ip)` and then in `class { '::designate::api': }` as `listen => "${listen_uri}:${listen_port}",`
+
+
+#### Repository-67
+
+Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ceilometer-2018-06`
+
+1. In `examples/site.pp`, the following 
+```
+  class { '::ceilometer::agent::auth':
+    auth_url      => 'http://localhost:5000/v2.0',
+    auth_password => 'tralalerotralala'
+  }
+```
+
+calls `ceilometer_config {}` inside `manifests/agent/auth.pp` . This is a TP 
+
+#### Repository-68
+
+Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-contrail-2018-06`
+
+1. Nothng found or previously reported 
