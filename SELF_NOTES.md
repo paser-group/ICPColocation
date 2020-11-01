@@ -820,5 +820,87 @@ Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-openstack-cook
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-lma-infrastructure-alerting-2018-06/`
 
-1. 
+1. In `deployment_scripts/modules/lma_infra_alerting/manifests/nagios/check_http.pp`, `$password` was used in `$auth_basic_option`
+, which is in turn used in `$command_line`, and then in `nagios::command {}` as `command_line => $command_line`
 
+#### Example-37
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-nsx-t-2018-06/`
+
+1. Nothign found or previously addressed 
+
+
+#### Example-38
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-gnocchi-2018-06/`
+
+1. In `examples/site.pp` `class { '::gnocchi::keystone::auth':}` has `password`, which is passed into `manifests/keystone/auth.pp` as
+` keystone::resource::service_identity {}` 
+
+
+
+#### Example-39
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-onos-2018-06/`
+
+1. In `deployment_scripts/puppet/manifests/onos-dashboard.pp`, `$password` used in  `$dashboard_desc`, which is used in 
+`$json_hash`, that is used in `$json_message` and then in `command => "/usr/bin/curl -H 'Content-Type: application/json' -X POST \
+-d '${json_message}' \` 
+
+#### Example-40 
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-lma-collector-2018-06/`
+
+1. In `deployment_scripts/puppet/manifests/onos-dashboard.pp`,
+
+Side point: not all strings are escaped as below: 
+```
+  $config = {
+    'Username' => "\"${username}\"",
+    'Password' => "\"${password}\"",
+  }
+```
+
+2. In `deployment_scripts/puppet/modules/heka/manifests/dashboard.pp`, is `$$dashboard_address` declared but not used. 
+
+3. In `manifests/hiera_override.pp`, `$mysql_password = $nova['db_password']` is not a hard-coded password, so FP 
+
+4. In `manifests/controller.pp` `password                  => hiera('lma::collector::infrastructure_alerting::password'),` is not a hard-coded password, so FP 
+
+#### Example-41
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-midonet-2018-06/`
+
+1. Nothing found or reported previously 
+
+
+#### Example-42
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-bigswitch-2018-06/`
+
+1. Nothing found or reported previously 
+
+
+
+#### Example-43
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-qdr-2018-06/`
+
+1. Nothing found or reported previously 
+#### Example-44
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-trove-2018-06/`
+
+1. In `examples/site.pp`, `class { '::trove::db::mysql':}` uses `password`, that is passed into `class trove::db::mysql(){}`
+in `manifests/db/mysql.pp` 
+
+2. In `examples/site.pp`, `class { '::trove::keystone::auth':}` uses ` password`, that is passed into `class trove::keystone::auth (){}` in `keystone/auth.pp`
+
+
+#### Example-45
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-datera-cinder-2018-06/`
+
+1. Nothing found or previously reported 
+
+fuel-plugin-manila-2018-06
