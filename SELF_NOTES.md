@@ -902,5 +902,108 @@ in `manifests/db/mysql.pp`
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-datera-cinder-2018-06/`
 
 1. Nothing found or previously reported 
+#### Example-46
 
-fuel-plugin-manila-2018-06
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-manila-2018-06/`
+
+1. Nothing found or previously reported 
+#### Example-47
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-influxdb-grafana-2018-06/`
+
+1. Nothing found or previously reported 
+#### Example-48
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-mistral-2018-06/`
+
+1. Nothing found or previously reported 
+#### Example-49
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-zaqar-2018-06/`
+
+1. Nothing found or previously reported 
+#### Example-49
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-elasticsearch-kibana-2018-06/`
+
+1. Nothing found or previously reported 
+#### Example-50
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-magnum-2018-06/`
+
+1. In `examples/magnum.pp`, password is passed as `class { '::magnum::db::mysql':` in `class magnum::db::mysql(){}` located at `manifests/db/mysql.pp`. Similarly,  `domain_password => 'oh_my_no_secret',` is used in `class { '::magnum::keystone::domain': }`
+that calls `class magnum::keystone::domain () {}` in `manifests/keystone/domain.pp`. Eventually the password is used in `magnum_config {}` 
+
+#### Example-51
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-oslo-2018-06/`
+
+1. Nothing found or identified previously 
+
+#### Example-52
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-sahara-2018-06/`
+
+1. In `examples/basic.pp` , `host => '0.0.0.0',` is passed into `manifests/init.pp` through `class sahara(){}`, which is eventually used in `sahara_config {}`
+
+
+#### Example-53
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-6wind-virtual-accelerator-2018-06/`
+
+1. Nothing found or identified previously 
+#### Example-54
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-midonet-2018-06/`
+
+1. In `manifests/repo/centos.pp`, `$mem_password` and `$mem_username` are used in `$midonet_core_repo_url      = "http://${mem_username}:${mem_password}@${midonet::params::midonet_repo_baseurl}/mem-${mem_version}/${midonet_stage}/el${::operatingsystemmajrelease}"` , which is later used in `yumrepo {}`
+
+#### Example-55
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/packstack-2018-06/`
+
+1. In `manifests/nova/api.pp`, passwords that se hiera are not hard-coded, so should be excluded `$admin_password = hiera('CONFIG_NOVA_KS_PW')` is later used in `class {'::nova::keystone::authtoken':}`
+
+2. In `manifests/keystone/gnochhi.pp` `internal_url => "http://${gnocchi_keystone_host_url}:8041",` is a TP, as `HTTP` is directly 
+used and assigned to an attribute.  
+
+#### Example-56
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-glance-2018-06/`
+
+1. Nothing found or already reported 
+
+#### Example-57
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-keystone-2018-06/`
+
+1. In `examples/v3_basic.pp`, `admin_token         => 'admin_token',` in `class { '::keystone': }` calls `class keystone() {}`
+in `keystone_config {}` inside `manifests/init.pp` 
+
+2. In `examples/v3_basic.pp`, `public_url => 'http://127.0.0.1:5000/',` in `class keystone::endpoint (){}` calls `class keystone() {}`
+in `keystone::resource::service_identity {}` inside `manifests/endpoint.pp` 
+
+3. In `examples/v3_basic.pp`, `password => 'a_big_secret',',` in `class { '::keystone::roles::admin':}` calls `class keystone::roles::admin(){}` in `keystone_user {}` inside `roles/admin.pp` 
+
+
+
+#### Example-58
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-library-2018-06/`
+
+1. In `deplyoment/puppet/fuel/cluster/manifests/mysql.pp`, `$password',` used in `$init_file_contents`, which is later used in  `command => "echo \"${init_file_contents}\" > /tmp/wsrep-init-file",` inside `exec { 'create-init-file': }` 
+
+2. In `deplyoment/puppet/fuel/manifests/ostf/auth.pp`, `$password         = $::fuel::params::keystone_ostf_password,` is a FP 
+
+3. In `deplyoment/puppet/fuel/manifests/puppetsync.pp`, `$bind_address  = '0.0.0.0',` is assigned but not assigned, so FP. 
+
+4. `$admin_password            = dig44($neutron_config, ['keystone', 'admin_password'])` is a FP in `deplyoment/puppet/fuel/manifests/openstack_tasks/manifests/openstack_network/server_config.pp`
+
+5. `$rabbit_password      = $murano_hash['rabbit_password']` not a hard-coded password and used in `command => "rabbitmqctl -n '${rabbit_node_name}' add_user '${rabbit_user}' '${rabbit_password}'",` for `exec { 'create_murano_user' :`
+
+
+#### Example-59
+
+Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-designate-2018-06/`
+
+1. In
