@@ -94,8 +94,6 @@ if __name__=='__main__':
     full_file_as_str = readAsStr( sample_parser_output_file )
     locations, full_content_as_str = getContentWithStack( full_file_as_str )
     dict_of_attribs = getAttributes( locations, full_content_as_str  )
-    # print(dict_of_attribs) 
     dict_of_variables = getVars( locations, full_content_as_str )
-    # print(dict_of_variables) 
     dict_of_resources = getResources( locations, full_content_as_str ) 
 
