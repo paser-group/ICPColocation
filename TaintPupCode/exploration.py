@@ -65,7 +65,10 @@ def getResoName( reso_locs, reso_str, the_name = 'DEFAULT_NAME' ):
             the_name = splitted_strs[0]
     return the_name
 
-
+def getResoType(reso_str):
+    reso_kw =  reso_str.split('\n')[0]
+    reso_type = reso_kw.split(' ')[-1] 
+    return reso_type 
 
 def getResources(all_locs, all_as_str):
     resoDict = {}
@@ -76,10 +79,13 @@ def getResources(all_locs, all_as_str):
             reso_index += 1 
             reso_locs,  reso_content = getContentWithStack( loc_str  )  
             attrib_per_reso_dict = getAttributes( reso_locs, reso_content )
+            # print(reso_content) 
             reso_name  = getResoName( reso_locs, reso_content )
-            # print(loc_tup[0], loc_tup[-1] , reso_name)
+            reso_type  = getResoType( reso_content )
+            # print(loc_tup[0], loc_tup[-1] , reso_name, reso_type)
             # print( attrib_per_reso_dict )     
-            resoDict[ reso_index ] = ( reso_name,  loc_tup[0], loc_tup[-1], attrib_per_reso_dict  )
+            resoDict[ reso_index ] = ( reso_name, reso_type,  loc_tup[0], loc_tup[-1], attrib_per_reso_dict  )
+            # print('#'*10)
     return resoDict     
 
 
