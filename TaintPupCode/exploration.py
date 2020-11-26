@@ -3,6 +3,8 @@ Akond Rahman
 Nov 25, 2020 
 Explore Puppet Parser Output 
 '''
+import os 
+import subprocess 
 
 
 def readAsStr(file_):
@@ -34,7 +36,7 @@ def getAttributes(all_locs, all_as_str):
     attribDict = {}
     for loc_tup in all_locs:
         loc_str = all_as_str[loc_tup[0]+1:loc_tup[-1]]  
-        if '\n' not in loc_str: 
+        if '\n' not in loc_str and (loc_str.count('=>') == 1 ) : # last check to handle weirdos like ? $::l23_os (/(?i:redhat7|centos7)/ => false) (:default => true)
             if '=>' in loc_str:
                 # print(loc_tup[0], loc_tup[-1], loc_str) 
                 key_, value_ = loc_str.split('=>')
@@ -48,7 +50,7 @@ def getVars(all_locs, all_as_str):
     for loc_tup in all_locs:
         loc_str = all_as_str[loc_tup[0]+1:loc_tup[-1]]  
         if '\n' not in loc_str: 
-            if '=' in loc_str and '=>' not in loc_str: 
+            if '=' in loc_str and '=>' not in loc_str : 
                 rest_str = loc_str.replace('=', '')
                 rest_str = rest_str[1:]
                 key_, val_ = rest_str.split(' ')[0], ' '.join(rest_str.split(' ')[1:] )
@@ -89,11 +91,54 @@ def getResources(all_locs, all_as_str):
     return resoDict     
 
 
-if __name__=='__main__':
-    sample_parser_output_file = 'sample.puppet.parser.txt' 
+def sampleMiner(sample_parser_output_file):
+    # sample_parser_output_file = 'sample.puppet.parser.txt' 
     full_file_as_str = readAsStr( sample_parser_output_file )
     locations, full_content_as_str = getContentWithStack( full_file_as_str )
     dict_of_attribs = getAttributes( locations, full_content_as_str  )
     dict_of_variables = getVars( locations, full_content_as_str )
-    dict_of_resources = getResources( locations, full_content_as_str ) 
+    print(dict_of_variables) 
+    dict_of_resources = getResources( locations, full_content_as_str )
+    print( dict_of_resources )     
+
+def getPuppetFiles(path_to_dir):
+    valid_  = [] 
+    for root_, dirs, files_ in os.walk( path_to_dir ):
+       for file_ in files_:
+           full_p_file = os.path.join(root_, file_)
+           if(os.path.exists(full_p_file)):
+             if (full_p_file.endswith('.pp')):
+               valid_.append(full_p_file)
+    return valid_ 
+
+def executeParser(pp_file):
+    print('Analyzing:', pp_file)
+    TEMP_LOG_FILE = 'temp.output.from.parser.txt'
+    command2exec = 'puppet parser  dump --render-as console' +  ' ' + pp_file + ' ' + '>' + ' ' + TEMP_LOG_FILE 
+    subprocess.check_output(['bash', '-c', command2exec])
+    # try:
+    #     command2exec = 'puppet parser  dump --render-as console' +  ' ' + pp_file + ' ' + '>' + ' ' + TEMP_LOG_FILE 
+    #     # print(command2exec )
+    #     # subprocess.check_output([constants.BASH_CMD, constants.BASH_FLAG, command2exec])
+    # except subprocess.CalledProcessError as e_:
+    #     print( str(e_) )
+    num_lines = sum(1 for line in open( TEMP_LOG_FILE , 'r'))
+    print(num_lines) 
+    sampleMiner( TEMP_LOG_FILE  )
+    os.remove( TEMP_LOG_FILE )
+    print('|'*50)
+
+
+
+def generator(dir_):
+    all_pupp_files = getPuppetFiles(  dir_ )
+    for pupp_file in all_pupp_files:
+        executeParser( pupp_file )  
+
+
+if __name__=='__main__':
+    # sampleMiner()
+    dataset_dir = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/'
+    generator(dataset_dir) 
+
 
