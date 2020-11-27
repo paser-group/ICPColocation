@@ -97,7 +97,7 @@ def sampleMiner(sample_parser_output_file):
     locations, full_content_as_str = getContentWithStack( full_file_as_str )
     dict_of_attribs = getAttributes( locations, full_content_as_str  )
     dict_of_variables = getVars( locations, full_content_as_str )
-    print(dict_of_variables) 
+    # print(dict_of_variables) 
     dict_of_resources = getResources( locations, full_content_as_str )
     print( dict_of_resources )     
 
@@ -126,7 +126,7 @@ def executeParser(pp_file):
     print(num_lines) 
     sampleMiner( TEMP_LOG_FILE  )
     os.remove( TEMP_LOG_FILE )
-    print('|'*50)
+    print('|'*100)
 
 
 
@@ -138,7 +138,9 @@ def generator(dir_):
 
 if __name__=='__main__':
     # sampleMiner()
-    dataset_dir = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/'
+    # dataset_dir = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/'
+    # dataset_dir = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/mozi-pupp/'
+    dataset_dir = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/'    
     generator(dataset_dir) 
 
 
