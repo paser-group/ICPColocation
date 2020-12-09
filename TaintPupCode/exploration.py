@@ -137,10 +137,11 @@ def generator(dir_):
 
 
 if __name__=='__main__':
-    # sampleMiner()
+    sampleMiner('sample.puppet.parser.txt')
+
     # dataset_dir = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/'
     # dataset_dir = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/mozi-pupp/'
-    dataset_dir = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/'    
-    generator(dataset_dir) 
+    # dataset_dir = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/'    
+    # generator(dataset_dir) 
 
 
