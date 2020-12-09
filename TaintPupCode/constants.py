@@ -22,6 +22,7 @@ CLASS_KEYWORD    = 'class'
 INHERITS_KEYWORD = 'inherits'
 ARAMETERS_KEYWORD = 'arameters'
 PARAMETERS_KEYWORD = 'parameters'
+BLOCK_KEYWORD = 'block'
 
 
 TEMP_LOG_FILE = 'temp.output.from.parser.txt'
@@ -33,3 +34,6 @@ WHITESPACE_SYMBOL = ' '
 ARROWHEAD_SYMBOL = '->'
 EQUAL_SYMBOL = '='
 NULL_SYMBOL = ''
+PP_EXTENSION = '.pp'
+
+ANALYZING_KEYWORD = 'ANALYZING ...'

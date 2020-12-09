@@ -103,14 +103,17 @@ def getResources(all_locs, all_as_str):
 
 
 def getClassName( all_locs, all_strs , class_name = constants.DEFAULT_CLASS_NAME, inherit_name = constants.DEFAULT_INHERIT_NAME ):
-    name_start_pos, name_end_pos = all_locs[0]
-    temp_inherit_name = all_strs[name_start_pos + 1 :name_end_pos]
-    temp_class_name = all_strs[0 : name_start_pos ]
-    if ( constants.CLASS_KEYWORD in temp_class_name ):
-        class_name = class_name.replace( constants.CLASS_KEYWORD, constants.NULL_SYMBOL  )        
-    if ( constants.INHERITS_KEYWORD in temp_inherit_name ):
-        inherit_name = inherit_name.replace( constants.INHERITS_KEYWORD, constants.NULL_SYMBOL  )        
-    class_name,  inherit_name = class_name.strip() ,  inherit_name.strip()
+    if(len(all_locs) > 0 ):
+        name_start_pos, name_end_pos = all_locs[0]
+        temp_inherit_name = all_strs[name_start_pos + 1 :name_end_pos]
+        temp_class_name = all_strs[0 : name_start_pos ]
+        if ( constants.CLASS_KEYWORD in temp_class_name ):
+            class_name = temp_class_name
+            class_name = class_name.replace( constants.CLASS_KEYWORD, constants.NULL_SYMBOL  )        
+        if ( constants.INHERITS_KEYWORD in temp_inherit_name ):
+            inherit_name = temp_inherit_name
+            inherit_name = inherit_name.replace( constants.INHERITS_KEYWORD, constants.NULL_SYMBOL  )        
+        class_name,  inherit_name = class_name.strip() ,  inherit_name.strip()
     return  class_name,  inherit_name
 
 
@@ -125,23 +128,29 @@ def getClasses(all_locs, all_as_str):
             class_name, inherit_name = getClassName( class_locs, class_content ) 
             var_per_class_dict = getVars( class_locs, class_content )  
             '''
-            Needed to handle arameters and parameters 
+            Needed to handle arameters and parameters and block 
             '''
             if constants.ARAMETERS_KEYWORD in var_per_class_dict: del var_per_class_dict[ constants.ARAMETERS_KEYWORD ]          
             if constants.PARAMETERS_KEYWORD in var_per_class_dict: del var_per_class_dict[ constants.PARAMETERS_KEYWORD ]
+            if (constants.PARAMETERS_KEYWORD in class_name or constants.BLOCK_KEYWORD in class_name ) and (constants.WHITESPACE_SYMBOL in class_name): 
+                class_name = class_name.split(constants.WHITESPACE_SYMBOL)[0]  
             classDict[ class_index ] = ( class_name, inherit_name, loc_tup[0], loc_tup[-1], var_per_class_dict )
     return classDict    
 
 def mineParseOutput(parser_output_file):
     full_file_as_str = readAsStr( parser_output_file )
-    # print(full_file_as_str) 
+    print(full_file_as_str) 
     locations, full_content_as_str = getContentWithStack( full_file_as_str )
-    dict_of_resources = getResources( locations, full_content_as_str )
-    dict_of_classes  = getClasses( locations, full_content_as_str ) 
-    print( dict_of_classes )  
+    dict_of_resources              = getResources( locations, full_content_as_str )
+    dict_of_classes                = getClasses( locations, full_content_as_str ) 
+    dict_of_all_attribs            = getAttributes( locations, full_content_as_str  )
+    dict_of_all_variables          = getVars( locations, full_content_as_str )
+
+    # print( dict_of_classes )  
 
 
 def executeParser(pp_file):
+    print(constants.ANALYZING_KEYWORD + pp_file ) 
     try:
         command2exec = constants.NATIVE_PUPPET_PARSER_CMD +  constants.WHITESPACE_SYMBOL + pp_file + constants.WHITESPACE_SYMBOL + constants.REDIRECT_SYMBOL + constants.WHITESPACE_SYMBOL + constants.TEMP_LOG_FILE 
         subprocess.check_output([constants.BASH_CMD, constants.BASH_FLAG, command2exec])
