@@ -82,15 +82,30 @@ def finalizeHTTP(attr_dict, dict_vars):
             output_variable_dict[var_name] = (var_value, var_ascii) 
     return http_count, output_attrib_dict, output_variable_dict # dict will help in taint tracking 
 
+def finalizeWeakEncrypt(func_dict):
+    weak_count  = 0 
+    weak_dict   = {}
+    for func_count, func_data in func_dict.items():
+        func_name = func_data[0] 
+        if constants.MD5_KEYWORD in func_name: 
+            weak_dict += 1 
+            weak_dict[weak_count] = func_name , constants.MD5_KEYWORD            
+        elif  constants.SHA1_KEYWORD in func_name:
+            weak_dict += 1 
+            weak_dict[weak_count] = func_name, constants.SHA1_KEYWORD
+    return weak_dict
+
+
 def orchestrate(dir_):
     all_pupp_files = getPuppetFiles(  dir_ )
     for pupp_file in all_pupp_files:
-        dict_reso, dict_clas, dict_all_attr, dict_all_vari, dict_switch, list_susp_comm = parser.executeParser( pupp_file ) 
+        dict_reso, dict_clas, dict_all_attr, dict_all_vari, dict_switch, list_susp_comm, dict_func = parser.executeParser( pupp_file ) 
         susp_cnt       = finalizeSusps( list_susp_comm )
         switch_cnt     = finalizeSwitches( dict_switch )
         invalid_ip_cnt, invalid_ip_dict_attr, invalid_ip_dict_vars  = finalizeInvalidIPs( dict_all_attr, dict_all_vari ) 
         http_cnt , http_dict_attr, http_dict_vars = finalizeHTTP( dict_all_attr, dict_all_vari )
-        print( pupp_file, susp_cnt, switch_cnt , invalid_ip_cnt, http_cnt, http_dict_attr , http_dict_vars)  
+        weak_crypt_dic = finalizeWeakEncrypt( dict_func ) 
+        print( pupp_file, susp_cnt, switch_cnt , invalid_ip_cnt, http_cnt, weak_crypt_dic )   
         print('-'*100)
 
 

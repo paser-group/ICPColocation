@@ -30,6 +30,9 @@ WHEN_KEYWORD = 'when'
 CASE_DEFAULT_KEYWORD = ':default'
 IP_ADDRESS_PATTERN = '0.0.0.0'
 HTTP_PATTERN = 'http://'
+INVOKE_KEYWORD = 'invoke'
+MD5_KEYWORD = 'md5'
+SHA1_KEYWORD = 'sha1'
 
 
 TEMP_LOG_FILE = 'temp.output.from.parser.txt'

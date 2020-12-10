@@ -167,6 +167,22 @@ def getCaseWhenBlock(locs, contents):
     return case_block_dict 
 
 
+def getFunctions( locs, texts  ):
+    func_dict = {}
+    func_index = 0 
+    for loc_tup in locs:
+        loc_str = texts[loc_tup[0]+1:loc_tup[-1]] 
+        if constants.INVOKE_KEYWORD in loc_str :
+            func_locs, func_content = getContentWithStack( loc_str )  
+            if(len( func_locs ) == 0 ):
+                if( constants.INVOKE_KEYWORD in func_content ) and (constants.INCLUDE_KEYWORD not in func_content) :
+                    func_index += 1 
+                    func_content = func_content.replace(constants.INVOKE_KEYWORD, constants.NULL_SYMBOL) 
+                    func_name    = func_content.split(constants.WHITESPACE_SYMBOL)[1].strip() 
+                    func_parms   = func_content.split(constants.WHITESPACE_SYMBOL)[2:] 
+                    func_dict[func_index] = (func_name, func_parms) 
+    return func_dict 
+
 
 def mineParseOutput(parser_output_file):
     full_file_as_str = readAsStr( parser_output_file )
@@ -179,8 +195,10 @@ def mineParseOutput(parser_output_file):
     dict_of_all_variables          = getVars( locations, full_content_as_str )
     dict_of_switch_cases           = getCaseWhenBlock( locations, full_content_as_str )
     list_of_susp_comments          = getSuspComments( parser_output_file )
+    dict_of_funcs                  = getFunctions( locations, full_content_as_str )
 
-    return dict_of_resources, dict_of_classes, dict_of_all_attribs, dict_of_all_variables, dict_of_switch_cases, list_of_susp_comments 
+    # print(dict_of_funcs) 
+    return dict_of_resources, dict_of_classes, dict_of_all_attribs, dict_of_all_variables, dict_of_switch_cases, list_of_susp_comments , dict_of_funcs
 
 
 def executeParser(pp_file):
