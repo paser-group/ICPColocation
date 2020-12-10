@@ -29,6 +29,7 @@ INCLUDE_KEYWORD = 'include'
 WHEN_KEYWORD = 'when'
 CASE_DEFAULT_KEYWORD = ':default'
 IP_ADDRESS_PATTERN = '0.0.0.0'
+HTTP_PATTERN = 'http://'
 
 
 TEMP_LOG_FILE = 'temp.output.from.parser.txt'

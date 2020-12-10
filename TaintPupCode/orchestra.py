@@ -39,8 +39,10 @@ def sanitizeConfigVals(config_data):
     data_ascii = config_data 
     if(constants.IP_ADDRESS_PATTERN in config_data):
         config_data = config_data.replace(constants.COLON_SYMBOL, constants.NULL_SYMBOL)
-        data_value =  config_data.strip() 
-        data_ascii = sum([ ord(y_) for y_ in data_value ])     
+    elif(  constants.HTTP_PATTERN in config_data ):
+        config_data = config_data.replace(constants.WHITESPACE_SYMBOL, constants.NULL_SYMBOL)
+    data_value =  config_data.strip() 
+    data_ascii = sum([ ord(y_) for y_ in data_value ])     
     return data_ascii
 
 
@@ -63,7 +65,22 @@ def finalizeInvalidIPs(attr_dict, dict_vars):
             output_variable_dict[var_name] = (var_value, var_ascii) 
     return invalid_ip_count, output_attrib_dict, output_variable_dict # dict will help in taint tracking 
 
-
+def finalizeHTTP(attr_dict, dict_vars):
+    http_count = 0 
+    output_attrib_dict, output_variable_dict = {}, {}
+    for attr_name, attr_data in attr_dict.items():
+        attr_value = attr_data[-1]
+        attr_ascii = sanitizeConfigVals( attr_value )
+        if (attr_ascii >= 600) and ( constants.HTTP_PATTERN in attr_value): # 600 is the total of 'http://'
+            http_count += 1 
+            output_attrib_dict[attr_name] = (attr_value, attr_ascii)  # keeping ascii for debugging in taint tracking 
+    for var_name, var_data in dict_vars.items():
+        var_value = var_data[-1]
+        var_ascii = sanitizeConfigVals( var_value )
+        if (var_ascii >= 600) and ( constants.HTTP_PATTERN in var_value): # 600 is the total of 'http://'
+            http_count += 1 
+            output_variable_dict[var_name] = (var_value, var_ascii) 
+    return http_count, output_attrib_dict, output_variable_dict # dict will help in taint tracking 
 
 def orchestrate(dir_):
     all_pupp_files = getPuppetFiles(  dir_ )
@@ -72,7 +89,8 @@ def orchestrate(dir_):
         susp_cnt       = finalizeSusps( list_susp_comm )
         switch_cnt     = finalizeSwitches( dict_switch )
         invalid_ip_cnt, invalid_ip_dict_attr, invalid_ip_dict_vars  = finalizeInvalidIPs( dict_all_attr, dict_all_vari ) 
-        print( pupp_file, susp_cnt, switch_cnt , invalid_ip_cnt ) 
+        http_cnt , http_dict_attr, http_dict_vars = finalizeHTTP( dict_all_attr, dict_all_vari )
+        print( pupp_file, susp_cnt, switch_cnt , invalid_ip_cnt, http_cnt, http_dict_attr , http_dict_vars)  
         print('-'*100)
 
 
