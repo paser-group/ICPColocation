@@ -48,38 +48,32 @@ def sanitizeConfigVals(config_data):
 
 
 def finalizeInvalidIPs(attr_dict, dict_vars):
-    invalid_ip_count = 0 
     output_attrib_dict, output_variable_dict = {}, {}
     for attr_name, attr_data in attr_dict.items():
         attr_value = attr_data[-1]
         attr_ascii = sanitizeConfigVals( attr_value )
         if attr_ascii == 330 or attr_ascii == 425: # 330 is the total of '0.0.0.0', 425  is the total of '0.0.0.0/0'
-            invalid_ip_count += 1 
             output_attrib_dict[attr_name] = (attr_value, attr_ascii)  # keeping ascii for debugging in taint tracking 
     for var_name, var_data in dict_vars.items():
         var_value = var_data[-1]
         var_ascii = sanitizeConfigVals( var_value )
         if var_ascii == 330 or var_ascii == 425:  
-            invalid_ip_count += 1 
             output_variable_dict[var_name] = (var_value, var_ascii) 
-    return invalid_ip_count, output_attrib_dict, output_variable_dict # dict will help in taint tracking 
+    return  output_attrib_dict, output_variable_dict # dict will help in taint tracking 
 
 def finalizeHTTP(attr_dict, dict_vars):
-    http_count = 0 
     output_attrib_dict, output_variable_dict = {}, {}
     for attr_name, attr_data in attr_dict.items():
         attr_value = attr_data[-1]
         attr_ascii = sanitizeConfigVals( attr_value )
         if (attr_ascii >= 600) and ( constants.HTTP_PATTERN in attr_value): # 600 is the total of 'http://'
-            http_count += 1 
             output_attrib_dict[attr_name] = (attr_value, attr_ascii)  # keeping ascii for debugging in taint tracking 
     for var_name, var_data in dict_vars.items():
         var_value = var_data[-1]
         var_ascii = sanitizeConfigVals( var_value )
         if (var_ascii >= 600) and ( constants.HTTP_PATTERN in var_value): # 600 is the total of 'http://'
-            http_count += 1 
             output_variable_dict[var_name] = (var_value, var_ascii) 
-    return http_count, output_attrib_dict, output_variable_dict # dict will help in taint tracking 
+    return output_attrib_dict, output_variable_dict # dict will help in taint tracking 
 
 def finalizeWeakEncrypt(func_dict):
     weak_count  = 0 
@@ -104,7 +98,14 @@ def checkIfValidSecret(single_config_val):
             flag2Ret = True 
     return flag2Ret
 
-
+def checkIfEmptyPass(single_config_val):
+    flag2Ret = False 
+    if ( any(x_ in single_config_val for x_ in constants.INVALID_SECRET_CONFIG_VALUES ) ):
+        flag2Ret = False 
+    else:
+        if(  len(single_config_val) == 2 ) and ( constants.QUOTE_SYMBOL in single_config_val ) : ## we want to detect stuff like $password = ''
+            flag2Ret = True 
+    return flag2Ret
 
 def finalizeHardCodedSecrets( attr_dict, vars_dict ):
     secret_attr_dict , secret_var_dict = {}, {} 
@@ -128,19 +129,37 @@ def finalizeHardCodedSecrets( attr_dict, vars_dict ):
             secret_var_dict[var_name] = var_value, constants.OUTPUT_TOKEN_KW
     return secret_attr_dict, secret_var_dict  
 
+def finalizeEmptyPassword( attr_dict, vars_dict ):
+    empty_attr_dict , empty_var_dict = {}, {} 
+    for attr_name, attr_data in attr_dict.items():
+        attr_value = attr_data[-1]
+        attr_name  = attr_name.strip() 
+        if(any(x_ in attr_name for x_ in constants.SECRET_PASSWORD_LIST )) and (checkIfEmptyPass ( attr_value ) ):        
+            empty_attr_dict[attr_name] =  attr_value, constants.OUTPUT_EMPTY_KW
+    for var_name, var_data in vars_dict.items():
+        var_value  = var_data[-1]
+        var_name   = var_name.strip() 
+        if(any(x_ in var_name for x_ in constants.SECRET_PASSWORD_LIST )) and (checkIfEmptyPass ( var_value ) ):        
+            empty_var_dict[var_name] = var_value, constants.OUTPUT_EMPTY_KW
+    return empty_attr_dict, empty_var_dict  
+
 def orchestrate(dir_):
     all_pupp_files = getPuppetFiles(  dir_ )
     for pupp_file in all_pupp_files:
         dict_reso, dict_clas, dict_all_attr, dict_all_vari, dict_switch, list_susp_comm, dict_func = parser.executeParser( pupp_file ) 
         susp_cnt       = finalizeSusps( list_susp_comm )
         switch_cnt     = finalizeSwitches( dict_switch )
-        invalid_ip_cnt, invalid_ip_dict_attr, invalid_ip_dict_vars  = finalizeInvalidIPs( dict_all_attr, dict_all_vari ) 
-        http_cnt , http_dict_attr, http_dict_vars = finalizeHTTP( dict_all_attr, dict_all_vari )
+        invalid_ip_dict_attr, invalid_ip_dict_vars  = finalizeInvalidIPs( dict_all_attr, dict_all_vari ) 
+        tot_invalid_ip_cnt = len(invalid_ip_dict_attr) + len(invalid_ip_dict_vars)
+        http_dict_attr, http_dict_vars = finalizeHTTP( dict_all_attr, dict_all_vari )
+        tot_http_cnt = len(http_dict_attr) + len(http_dict_vars)
         weak_crypt_dic = finalizeWeakEncrypt( dict_func ) 
         secret_dict_attr, secret_dict_vars = finalizeHardCodedSecrets( dict_all_attr, dict_all_vari )
         total_secret_count = len(secret_dict_attr) + len(secret_dict_vars) 
+        empty_pwd_attr, empty_pwd_vars = finalizeEmptyPassword( secret_dict_attr, secret_dict_vars  )
+        tot_empty_pass_count = len( empty_pwd_attr ) + len(empty_pwd_vars)
 
-        print( pupp_file, susp_cnt, switch_cnt , invalid_ip_cnt, http_cnt, len(weak_crypt_dic )  , total_secret_count , secret_dict_vars  )
+        print( pupp_file, susp_cnt, switch_cnt , tot_invalid_ip_cnt, tot_http_cnt, len(weak_crypt_dic )  , total_secret_count , tot_empty_pass_count  )
         print('-'*100)
 
 

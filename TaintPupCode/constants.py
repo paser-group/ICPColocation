@@ -54,4 +54,5 @@ ANALYZING_KEYWORD = 'ANALYZING ...'
 OUTPUT_PASS_KW    = 'PASSWORD'
 OUTPUT_USER_KW    = 'USERNAME'
 OUTPUT_TOKEN_KW   = 'API_KEY'
+OUTPUT_EMPTY_KW   = 'EMPTY_PASSWORD'
 CASE_WHEN_HEURISTIC = 100 ## the heuritic is case and when will appear within the first 100 characters 
