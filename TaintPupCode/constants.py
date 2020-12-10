@@ -23,6 +23,9 @@ INHERITS_KEYWORD = 'inherits'
 ARAMETERS_KEYWORD = 'arameters'
 PARAMETERS_KEYWORD = 'parameters'
 BLOCK_KEYWORD = 'block'
+CASE_KEYWORD = 'case'
+INCLUDE_KEYWORD = 'include' 
+WHEN_KEYWORD = 'when'
 
 
 TEMP_LOG_FILE = 'temp.output.from.parser.txt'
@@ -37,3 +40,4 @@ NULL_SYMBOL = ''
 PP_EXTENSION = '.pp'
 
 ANALYZING_KEYWORD = 'ANALYZING ...'
+CASE_WHEN_HEURISTIC = 100 ## the heuritic is case and when will appear within the first 100 characters 

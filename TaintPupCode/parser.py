@@ -137,16 +137,48 @@ def getClasses(all_locs, all_as_str):
             classDict[ class_index ] = ( class_name, inherit_name, loc_tup[0], loc_tup[-1], var_per_class_dict )
     return classDict    
 
+def getWhenBlock(case_locations, case_full_content):
+    when_block_dict = {}
+    when_block_index = 0 
+    for loc_tup in case_locations:
+        loc_str = case_full_content[loc_tup[0]+1:loc_tup[-1]] 
+        if constants.WHEN_KEYWORD in loc_str[0:loc_tup[0] ] and constants.CASE_KEYWORD not in loc_str[0:loc_tup[0] ] :         
+            when_block_index += 1 
+            when_locs, when_content = getContentWithStack( loc_str )    
+            '''
+            as we are interested to see branches within the switch case statement 
+            we will just taje the first level of when block by using the first tuple in the location list 
+            '''
+            first_level_when_block = getContentWithStack( when_content[when_locs[0][0] : when_locs[0][-1] ]   )
+            when_block_dict[when_block_index] = first_level_when_block
+    return when_block_dict 
+
+def getCaseWhenBlock(locs, contents):
+    case_block_dict = {}
+    case_block_index = 0 
+    for loc_tup in locs:
+        loc_str = contents[loc_tup[0]+1:loc_tup[-1]] 
+        if constants.CASE_KEYWORD in loc_str :         
+            case_block_index += 1 
+            case_locs, case_content = getContentWithStack( loc_str )
+            if( constants.CASE_KEYWORD in case_content[0:case_locs[0][0]]):
+                whensDict = getWhenBlock(case_locs,  loc_str ) 
+                case_block_dict[case_block_index] = (case_locs, case_content, whensDict)
+    return case_block_dict 
+
+
+
 def mineParseOutput(parser_output_file):
     full_file_as_str = readAsStr( parser_output_file )
-    print(full_file_as_str) 
+    # print(full_file_as_str) 
     locations, full_content_as_str = getContentWithStack( full_file_as_str )
     dict_of_resources              = getResources( locations, full_content_as_str )
     dict_of_classes                = getClasses( locations, full_content_as_str ) 
     dict_of_all_attribs            = getAttributes( locations, full_content_as_str  )
     dict_of_all_variables          = getVars( locations, full_content_as_str )
+    dict_of_switch_cases           = getCaseWhenBlock( locations, full_content_as_str )
 
-    # print( dict_of_classes )  
+    print( dict_of_switch_cases )  
 
 
 def executeParser(pp_file):
