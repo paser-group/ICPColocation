@@ -208,7 +208,6 @@ def executeParser(pp_file):
     except subprocess.CalledProcessError as e_:
         print( str(e_) )
     num_lines = sum(1 for line in open( constants.TEMP_LOG_FILE , constants.FILE_READ_MODE ))
-    # print(num_lines) 
     parseResults = mineParseOutput( constants.TEMP_LOG_FILE )
     os.remove( constants.TEMP_LOG_FILE )
     return parseResults 

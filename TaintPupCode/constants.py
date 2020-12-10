@@ -10,7 +10,7 @@ COMMENT_SYMBOL = '#'
 LPAREN_SYMBOL = '('
 RPAREN_SYMBOL = ')'
 ATTRIBUTE_SYMBOL = '=>'
-COLON_SYMBOL = "'"
+QUOTE_SYMBOL = "'"
 
 
 CWE_SUSP_COMMENT_LIST      = ['hack', 'fixme', 'later', 'todo', 'to-do', 'bug'  ]
@@ -33,6 +33,10 @@ HTTP_PATTERN = 'http://'
 INVOKE_KEYWORD = 'invoke'
 MD5_KEYWORD = 'md5'
 SHA1_KEYWORD = 'sha1'
+SECRET_PASSWORD_LIST = ['pwd', 'password']
+SECRET_USER_LIST = ['user']
+SECRET_KEY_LIST = ['key', 'crypt', 'secret']
+INVALID_SECRET_CONFIG_VALUES = ['$', ':undef', INVOKE_KEYWORD, '[]', '/' ]  
 
 
 TEMP_LOG_FILE = 'temp.output.from.parser.txt'
@@ -47,4 +51,7 @@ NULL_SYMBOL = ''
 PP_EXTENSION = '.pp'
 
 ANALYZING_KEYWORD = 'ANALYZING ...'
+OUTPUT_PASS_KW    = 'PASSWORD'
+OUTPUT_USER_KW    = 'USERNAME'
+OUTPUT_TOKEN_KW   = 'API_KEY'
 CASE_WHEN_HEURISTIC = 100 ## the heuritic is case and when will appear within the first 100 characters 
