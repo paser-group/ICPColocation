@@ -22,8 +22,8 @@ def readAsStr(file_):
     return full_str
 
 
-def parseComments( file_ ):  
-    output_dict , comment_files = {}, []
+def getSuspComments( file_ ):  
+    comment_files =  []
     data_as_ls = getContentAsList( file_ )  
     comment_as_ls = [z for z in data_as_ls if constants.COMMENT_SYMBOL in z] 
     for comment in comment_as_ls:
@@ -31,8 +31,7 @@ def parseComments( file_ ):
         if(any(x_ in comment for x_ in constants.CWE_SUSP_COMMENT_LIST )) and ( constants.DEBUG_KW not in comment ) :
             comment_files.append(  comment )
     
-    output_dict[file_] = comment_files
-    return output_dict 
+    return comment_files  
 
 def getContentWithStack( parsed_out_file_str ):
     paren_stack = [] 
@@ -161,9 +160,10 @@ def getCaseWhenBlock(locs, contents):
         if constants.CASE_KEYWORD in loc_str :         
             case_block_index += 1 
             case_locs, case_content = getContentWithStack( loc_str )
-            if( constants.CASE_KEYWORD in case_content[0:case_locs[0][0]]):
-                whensDict = getWhenBlock(case_locs,  loc_str ) 
-                case_block_dict[case_block_index] = (case_locs, case_content, whensDict)
+            if(len(case_locs) > 0):
+                if( constants.CASE_KEYWORD in case_content[0:case_locs[0][0]]):
+                    whensDict = getWhenBlock(case_locs,  loc_str ) 
+                    case_block_dict[case_block_index] = (case_locs, case_content, whensDict)
     return case_block_dict 
 
 
@@ -172,13 +172,15 @@ def mineParseOutput(parser_output_file):
     full_file_as_str = readAsStr( parser_output_file )
     # print(full_file_as_str) 
     locations, full_content_as_str = getContentWithStack( full_file_as_str )
+    
     dict_of_resources              = getResources( locations, full_content_as_str )
     dict_of_classes                = getClasses( locations, full_content_as_str ) 
     dict_of_all_attribs            = getAttributes( locations, full_content_as_str  )
     dict_of_all_variables          = getVars( locations, full_content_as_str )
     dict_of_switch_cases           = getCaseWhenBlock( locations, full_content_as_str )
+    list_of_susp_comments          = getSuspComments( parser_output_file )
 
-    print( dict_of_switch_cases )  
+    return dict_of_resources, dict_of_classes, dict_of_all_attribs, dict_of_all_variables, dict_of_switch_cases, list_of_susp_comments 
 
 
 def executeParser(pp_file):
@@ -190,13 +192,11 @@ def executeParser(pp_file):
         print( str(e_) )
     num_lines = sum(1 for line in open( constants.TEMP_LOG_FILE , constants.FILE_READ_MODE ))
     # print(num_lines) 
-    mineParseOutput( constants.TEMP_LOG_FILE )
+    parseResults = mineParseOutput( constants.TEMP_LOG_FILE )
     os.remove( constants.TEMP_LOG_FILE )
+    return parseResults 
 
 
 if __name__=='__main__':
     test_pp_file = 'test.api.pp'
-    
-    # file_comment_dict = parseComments( test_pp_file )
-
     executeParser( test_pp_file )

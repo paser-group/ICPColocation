@@ -26,6 +26,7 @@ BLOCK_KEYWORD = 'block'
 CASE_KEYWORD = 'case'
 INCLUDE_KEYWORD = 'include' 
 WHEN_KEYWORD = 'when'
+CASE_DEFAULT_KEYWORD = ':default'
 
 
 TEMP_LOG_FILE = 'temp.output.from.parser.txt'
