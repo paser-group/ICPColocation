@@ -184,7 +184,6 @@ def mineParseOutput(parser_output_file):
 
 
 def executeParser(pp_file):
-    print(constants.ANALYZING_KEYWORD + pp_file ) 
     try:
         command2exec = constants.NATIVE_PUPPET_PARSER_CMD +  constants.WHITESPACE_SYMBOL + pp_file + constants.WHITESPACE_SYMBOL + constants.REDIRECT_SYMBOL + constants.WHITESPACE_SYMBOL + constants.TEMP_LOG_FILE 
         subprocess.check_output([constants.BASH_CMD, constants.BASH_FLAG, command2exec])

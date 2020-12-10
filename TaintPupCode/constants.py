@@ -10,6 +10,7 @@ COMMENT_SYMBOL = '#'
 LPAREN_SYMBOL = '('
 RPAREN_SYMBOL = ')'
 ATTRIBUTE_SYMBOL = '=>'
+COLON_SYMBOL = "'"
 
 
 CWE_SUSP_COMMENT_LIST      = ['hack', 'fixme', 'later', 'todo', 'to-do', 'bug'  ]
@@ -27,6 +28,7 @@ CASE_KEYWORD = 'case'
 INCLUDE_KEYWORD = 'include' 
 WHEN_KEYWORD = 'when'
 CASE_DEFAULT_KEYWORD = ':default'
+IP_ADDRESS_PATTERN = '0.0.0.0'
 
 
 TEMP_LOG_FILE = 'temp.output.from.parser.txt'

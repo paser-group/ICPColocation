@@ -35,13 +35,45 @@ def finalizeSwitches( dic_ ):
     return no_default_count
 
 
+def sanitizeConfigVals(config_data):
+    data_ascii = config_data 
+    if(constants.IP_ADDRESS_PATTERN in config_data):
+        config_data = config_data.replace(constants.COLON_SYMBOL, constants.NULL_SYMBOL)
+        data_value =  config_data.strip() 
+        data_ascii = sum([ ord(y_) for y_ in data_value ])     
+    return data_ascii
+
+
+
+
+def finalizeInvalidIPs(attr_dict, dict_vars):
+    invalid_ip_count = 0 
+    output_attrib_dict, output_variable_dict = {}, {}
+    for attr_name, attr_data in attr_dict.items():
+        attr_value = attr_data[-1]
+        attr_ascii = sanitizeConfigVals( attr_value )
+        if attr_ascii == 330: # 330 is the total of '0.0.0.0'
+            invalid_ip_count += 1 
+            output_attrib_dict[attr_name] = (attr_value, attr_ascii)  # keeping ascii for debugging in taint tracking 
+    for var_name, var_data in dict_vars.items():
+        var_value = var_data[-1]
+        var_ascii = sanitizeConfigVals( var_value )
+        if var_ascii == 330: # 330 is the total of '0.0.0.0'
+            invalid_ip_count += 1 
+            output_variable_dict[var_name] = (var_value, var_ascii) 
+    return invalid_ip_count, output_attrib_dict, output_variable_dict # dict will help in taint tracking 
+
+
+
 def orchestrate(dir_):
     all_pupp_files = getPuppetFiles(  dir_ )
     for pupp_file in all_pupp_files:
         dict_reso, dict_clas, dict_all_attr, dict_all_vari, dict_switch, list_susp_comm = parser.executeParser( pupp_file ) 
-        susp_count   = finalizeSusps( list_susp_comm )
-        switch_count = finalizeSwitches( dict_switch )
-        print( pupp_file, susp_count, switch_count )
+        susp_cnt       = finalizeSusps( list_susp_comm )
+        switch_cnt     = finalizeSwitches( dict_switch )
+        invalid_ip_cnt, invalid_ip_dict_attr, invalid_ip_dict_vars  = finalizeInvalidIPs( dict_all_attr, dict_all_vari ) 
+        print( pupp_file, susp_cnt, switch_cnt , invalid_ip_cnt ) 
+        print('-'*100)
 
 
 if __name__=='__main__':
