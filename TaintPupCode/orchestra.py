@@ -9,6 +9,7 @@ import parser
 import os 
 from collections import Counter 
 import graph 
+import requests 
 
 def getPuppetFiles(path_to_dir):
     valid_  = [] 
@@ -62,17 +63,41 @@ def finalizeInvalidIPs(attr_dict, dict_vars):
             output_variable_dict[var_name] = (var_value, var_ascii) 
     return  output_attrib_dict, output_variable_dict # dict will help in taint tracking 
 
+def extraHTTPCheck(_valu):
+    flag_ = True
+    if(constants.LOCALHOST_KEYWORD in _valu) or (constants.CONCAT_KEYWORD in _valu) or ( constants.LOCAL_IP in _valu):
+        flag_ = True 
+    else: 
+        third_slash_loc, cnt  = 0 , 0
+        for z in range( len(_valu) ):
+            if _valu[z] == constants.SLASH_SYMBOL :
+                cnt += 1 
+            if cnt == 3: 
+                third_slash_loc = z 
+        url_string = _valu[0:z]
+        url_list   = url_string.split(constants.COLON_SYMBOL)
+        http_part  = url_list[0] + constants.AN_S + constants.COLON_SYMBOL
+        url_string = http_part + constants.NULL_SYMBOL.join( url_list[1:] )
+        try:
+            r = requests.head( url_string  ) 
+            if r.status_code < 400:
+                flag_ = True 
+        except Exception as e_:
+            flag_ = False 
+
+    return flag_
+
 def finalizeHTTP(attr_dict, dict_vars):
     output_attrib_dict, output_variable_dict = {}, {}
     for attr_name, attr_data in attr_dict.items():
         attr_value = attr_data[-1]
         attr_ascii = sanitizeConfigVals( attr_value )
-        if (attr_ascii >= 600) and ( constants.HTTP_PATTERN in attr_value): # 600 is the total of 'http://'
+        if (attr_ascii >= 600) and ( constants.HTTP_PATTERN in attr_value) and (extraHTTPCheck( attr_value ) ): # 600 is the total of 'http://'
             output_attrib_dict[attr_name] = (attr_value, attr_ascii)  # keeping ascii for debugging in taint tracking 
     for var_name, var_data in dict_vars.items():
         var_value = var_data[-1]
         var_ascii = sanitizeConfigVals( var_value )
-        if (var_ascii >= 600) and ( constants.HTTP_PATTERN in var_value): # 600 is the total of 'http://'
+        if (var_ascii >= 600) and ( constants.HTTP_PATTERN in var_value) and (extraHTTPCheck( var_value) ): # 600 is the total of 'http://'
             output_variable_dict[var_name] = (var_value, var_ascii) 
     return output_attrib_dict, output_variable_dict # dict will help in taint tracking 
 
@@ -214,12 +239,14 @@ def orchestrateWithTaint(dir_):
         empty_pwd_taint_dict           = graph.trackTaint( constants.OUTPUT_EMPTY_KW, empty_pwd_vars, dict_all_attr, dict_all_vari )        
 
 
-        # print(   invalid_ip_dict_vars , invalid_ip_taint_dict ) 
-        # print(   http_dict_vars , http_taint_dict ) 
+        # print( 'INVALID_IP:::ATTR:{} constants.NEWLINE_CONSTANT DETCTED_DICT:{} constants.NEWLINE_CONSTANT TAINTED_DICT:{}'.format( invalid_ip_dict_attr,  invalid_ip_dict_vars , invalid_ip_taint_dict )  )
+        # print( 'HTTP:::DETECTED_DICT:{} constants.NEWLINE_CONSTANT TAINTED_DICT:{}'.format( http_dict_vars, http_taint_dict )  )
         # print( empty_pwd_vars, empty_pwd_taint_dict ) 
-        # print( secret_dict_vars, secret_taint_dict ) 
+        # print( 'SECRETS:::DETECTED_DICT:{} constants.NEWLINE_CONSTANT TAINTED_DICT:{}'.format( secret_dict_vars, secret_taint_dict )  )
         print( pupp_file )
         print('-'*100)
+
+        
 
 
 if __name__=='__main__':

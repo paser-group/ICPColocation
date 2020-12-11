@@ -11,4 +11,4 @@ if __name__=='__main__':
     # dataset_dir = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/' 
     # 
 
-    orchestra.orchestrate( dataset_dir )    
+    orchestra.orchestrateWithTaint( dataset_dir )    

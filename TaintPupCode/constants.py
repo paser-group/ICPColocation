@@ -12,6 +12,9 @@ RPAREN_SYMBOL = ')'
 ATTRIBUTE_SYMBOL = '=>'
 QUOTE_SYMBOL = "'"
 DOLLAR_SYMBOL  = '$'
+SLASH_SYMBOL = '/'
+COLON_SYMBOL = ':'
+AN_S         = 's'
 
 
 CWE_SUSP_COMMENT_LIST      = ['hack', 'fixme', 'later', 'todo', 'to-do', 'bug'  ]
@@ -40,6 +43,8 @@ SECRET_KEY_LIST = ['key', 'crypt', 'secret']
 INVALID_SECRET_CONFIG_VALUES = [DOLLAR_SYMBOL, ':undef', INVOKE_KEYWORD, '[]', '/' ]  
 ADMIN_KEYWORD = 'admin'
 CONCAT_KEYWORD = 'cat'
+LOCALHOST_KEYWORD  = 'localhost'
+LOCAL_IP           = '127'
 
 
 TEMP_LOG_FILE = 'temp.output.from.parser.txt'

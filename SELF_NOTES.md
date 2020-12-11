@@ -13,6 +13,8 @@
 Source: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/cdh4-2018-06/manifests/` ... `class cdh::hue` is in hue.pp and `cdh::hue::defaults` is in `hue/defaults.pp` 
 In `class cdh::hue(`,  `user { 'hue'` is a true positive. 
 
+> Will need cross script tracking. TODO. 
+
 #### Repository-2 
 
 In `cdh::oozie`, `$url` is has a valid insecure HTTP, but is not used to setup a server, rather used in 
@@ -20,10 +22,14 @@ In `cdh::oozie`, `$url` is has a valid insecure HTTP, but is not used to setup a
 access to a variable. 
 In `cdh::oozie` ... oozie.pp resides in `/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/cdh4-2018-06/manifests/`
 
+> Has been addressed in TaintPup 
+
 #### Repository-3
 
 A hard-coded password `$jdbc_password = 'oozie'` is specified in `cdh::oozie::defaults`, located in `oozie/defaults`, which is used in 
 `cdh::oozie::server` as `$jdbc_password = $cdh::oozie::defaults::jdbc_password`, which is not used anywhere later. 
+
+> Has been addressed in TaintPup 
 
 
 #### Repository-4
@@ -44,6 +50,8 @@ FLUSH PRIVILEGES;\"",
 in `cdh::hive::defaults`. there is hard-coded password for `$jdbc_password` i.e. `$jdbc_password = 'hive'`. 
 
 
+> Will need cross script tracking. TODO. 
+
 #### Repository-5 
 
   
@@ -52,6 +60,8 @@ otherwise do not.
 `location  => "http://repos.mesosphere.io/` and `source  => "http://repos.mesosphere.io/el/${osrel}/noarch/RPMS/`
 are examples in `/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/mesos-2018-06/manifests/repo.pp` (`class mesos::repo`).
 
+> Has been addressed in TaintPup 
+
  
 #### Repository-6 
 
@@ -59,6 +69,8 @@ In `class nginx::ssl` located in `/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp
 uses a template file using `template()` for `file{}` `content => template('nginx/ssl.conf.erb')`.
 The ERB file has a hard-coded SSL cipher that is an example of a hard-coded secret. 
 So we need to check for SSL cipher or SSH keys in ERB files as well. 
+
+> Upon further inspection the content of the template file is not a hard-coded secret , rather what ciphers need to be enabled. We will not tackle this. 
 
 
 ### Openstack Exploration, Sep 30 2020 
@@ -70,6 +82,8 @@ Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ec2api-2018-06/
 Hard-coded user name (`$system_user = 'ec2api'`) propagated from paramters into the `exec`
 `user => $system_user`. 
 
+> Has beed addressed in TaintPup 
+
 
 #### Repository-2 
 
@@ -78,6 +92,8 @@ Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ec2api-2018-06/
 Hard-coded user name (`$user = 'ec2api'`) propagated from parameters into the 
 `::openstacklib::db::postgresql {` body of `password_hash => postgresql_password($user, $password)`. 
 
+> Has beed addressed in TaintPup 
+
 #### Repository-3
 
 Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ec2api-2018-06/mysql.pp`
@@ -85,12 +101,16 @@ Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ec2api-2018-06/
 Hard-coded user name (`$user = 'ec2api'`) propagated from parameters into the 
 `::openstacklib::db::mysql {` body of `user => $user,`. 
 
+> Has beed addressed in TaintPup 
+
 #### Repository-4 
 
 Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ec2api-2018-06/`
 
 Insecure HTTP used in `keystone/auth.pp` (`$public_url = 'http://127.0.0.1:8788'`). Propagates to
 `keystone::resource::service_identity` (`public_url => $public_url`). 
+
+> Has beed addressed in TaintPup 
 
 
 #### Repository-5
@@ -125,7 +145,7 @@ Another example:
 > $configure_user = true,
 
 
-
+> Has beed addressed in TaintPup 
 
 #### Repository-6
 
@@ -136,6 +156,9 @@ Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-plumgrid-20
 
 Also, `$rest_ip = '0.0.0.0',` is not used anywhere in the module (`plumgrid/`) 
 
+
+> First part will need cross script tracking. Second part addressed in TaintPup 
+
 #### Repository-7
 
 Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-plumgrid-2018-06/deployment_scripts/puppet/modules/plumgrid/manifests`
@@ -144,6 +167,8 @@ Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-plumgrid-20
 > target => "${lxc_data_path}/root/.ssh/authorized_keys" 
 
 This is not detected by SLIC ... needs better parsing 
+
+> Upon further inspection we see that even though the path of the less are exposed, they are not hard-coded secrets as there is not way to know unless we have permissions of the folder. We will skip this. 
 
 #### Repository-8
 
@@ -158,6 +183,8 @@ Example of insecure HTTP being assigned
 > public_url          => $public_url,
 > admin_url           => $admin_url,
 > internal_url        => $internal_url,
+
+> Addressed in TaintPup 
 
 #### Repository-9
 
@@ -201,6 +228,8 @@ inside `class heat::engine (){}`
 
 So if we have a script that looks like above then we can get a full flow of information of 
 data `whatever-key-you-like` 
+
+> Will need cross-script tracking. TODO 
 
 #### Repository-10 
 
@@ -354,6 +383,8 @@ calls `manifests/plugins/ml2/cisco/uscm.pp` with `ucsm_username` and `ucsm_passw
 #### Repository-11 
 
 1. Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-ceilometer-redis-2018-06/deployment_scripts/puppet/modules/redis/tests/init.pp`, `conf_bind => '0.0.0.0'`, used in `init.pp` is used no where ... this is a false positive 
+
+> Actually it is a true positive as 0.0.0.0 is assigned than attribute meaning it will be executed . Addressed in TaintPup. 
 
 #### Repository-12
 

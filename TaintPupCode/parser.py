@@ -73,7 +73,8 @@ def getVars(all_locs, all_as_str):
                 rest_str = loc_str.replace(constants.EQUAL_SYMBOL, constants.NULL_SYMBOL) 
                 rest_str = rest_str[1:]
                 key_, val_ = rest_str.split(constants.WHITESPACE_SYMBOL)[0], constants.WHITESPACE_SYMBOL.join(rest_str.split(constants.WHITESPACE_SYMBOL)[1:] )
-                varDict[key_] = ( loc_tup[0], loc_tup[1], val_  )
+                if (key_ != constants.ARAMETERS_KEYWORD ) and (key_!= constants.PARAMETERS_KEYWORD):
+                    varDict[key_] = ( loc_tup[0], loc_tup[1], val_  )
     return varDict 
 
 def getResoName( reso_locs, reso_str, the_name = constants.DEFAULT_RESO_NAME ):
