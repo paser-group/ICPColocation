@@ -51,6 +51,10 @@ def getAttributes(all_locs, all_as_str):
     for loc_tup in all_locs:
         loc_str = all_as_str[loc_tup[0]+1:loc_tup[-1]]  
         if  (loc_str.count( constants.ATTRIBUTE_SYMBOL ) == 1 ) : 
+            '''
+            newlines are messy for attributes 
+            only allw newlines that have string cotenation operation 
+            '''
             if ( constants.NEWLINE_CONSTANT  in loc_str and constants.CONCAT_KEYWORD in loc_str) or (constants.NEWLINE_CONSTANT not in loc_str) :
                 if constants.ATTRIBUTE_SYMBOL in loc_str:
                     # print(loc_tup[0], loc_tup[-1], loc_str) 

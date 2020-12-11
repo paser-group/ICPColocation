@@ -95,7 +95,7 @@ def checkIfValidSecret(single_config_val):
     if ( any(x_ in config_val for x_ in constants.INVALID_SECRET_CONFIG_VALUES ) ):
         flag2Ret = False 
     else:
-        if(  len(config_val) > 0 ) and ( constants.QUOTE_SYMBOL in config_val ) :
+        if(  len(config_val) > 2 ) and ( constants.QUOTE_SYMBOL in config_val ) :
             flag2Ret = True 
     return flag2Ret
 
@@ -104,6 +104,7 @@ def checkIfEmptyPass(single_config_val):
     if ( any(x_ in single_config_val for x_ in constants.INVALID_SECRET_CONFIG_VALUES ) ):
         flag2Ret = False 
     else:
+        single_config_val = single_config_val.strip() 
         if(  len(single_config_val) == 2 ) and ( constants.QUOTE_SYMBOL in single_config_val ) : ## we want to detect stuff like $password = ''
             flag2Ret = True 
     return flag2Ret
@@ -207,11 +208,16 @@ def orchestrateWithTaint(dir_):
         http_taint_dict = graph.trackTaint( constants.OUTPUT_HTTP_KW, http_dict_vars, dict_all_attr, dict_all_vari )
 
         secret_dict_attr, secret_dict_vars = finalizeHardCodedSecrets( dict_all_attr, dict_all_vari )
-        
-        empty_pwd_attr, empty_pwd_vars = finalizeEmptyPassword( dict_all_attr, dict_all_vari  )
+        secret_taint_dict                  = graph.trackTaint( constants.OUTPUT_SECRET_KW, secret_dict_vars, dict_all_attr, dict_all_vari )
 
-        print(   invalid_ip_dict_vars , invalid_ip_taint_dict ) 
-        print(   http_dict_vars , http_taint_dict ) 
+        empty_pwd_attr, empty_pwd_vars = finalizeEmptyPassword( dict_all_attr, dict_all_vari  )
+        empty_pwd_taint_dict           = graph.trackTaint( constants.OUTPUT_EMPTY_KW, empty_pwd_vars, dict_all_attr, dict_all_vari )        
+
+
+        # print(   invalid_ip_dict_vars , invalid_ip_taint_dict ) 
+        # print(   http_dict_vars , http_taint_dict ) 
+        # print( empty_pwd_vars, empty_pwd_taint_dict ) 
+        # print( secret_dict_vars, secret_taint_dict ) 
         print( pupp_file )
         print('-'*100)
 

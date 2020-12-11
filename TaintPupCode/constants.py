@@ -61,5 +61,6 @@ OUTPUT_EMPTY_KW          = 'EMPTY_PASSWORD'
 OUTPUT_DEFAULT_ADMIN_KW  = 'DEFAULT_ADMIN'
 OUTPUT_INVALID_IP_KW     = 'INVALID_IP_ADDRESS' 
 OUTPUT_HTTP_KW           = 'INSECURE_HTTP' 
+OUTPUT_SECRET_KW         = 'HARD_CODED_SECRET' 
 
 CASE_WHEN_HEURISTIC = 100 ## the heuritic is case and when will appear within the first 100 characters 
