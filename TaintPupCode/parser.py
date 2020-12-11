@@ -50,13 +50,14 @@ def getAttributes(all_locs, all_as_str):
     attribDict = {}
     for loc_tup in all_locs:
         loc_str = all_as_str[loc_tup[0]+1:loc_tup[-1]]  
-        if constants.NEWLINE_CONSTANT not in loc_str and (loc_str.count( constants.ATTRIBUTE_SYMBOL ) == 1 ) : 
-            if constants.ATTRIBUTE_SYMBOL in loc_str:
-                # print(loc_tup[0], loc_tup[-1], loc_str) 
-                key_, value_ = loc_str.split( constants.ATTRIBUTE_SYMBOL  )
-                key_, value_ = key_.strip(), value_.strip()
-                attribDict[key_] = (loc_tup[0], loc_tup[-1], value_) 
-                # print('='*25) 
+        if  (loc_str.count( constants.ATTRIBUTE_SYMBOL ) == 1 ) : 
+            if ( constants.NEWLINE_CONSTANT  in loc_str and constants.CONCAT_KEYWORD in loc_str) or (constants.NEWLINE_CONSTANT not in loc_str) :
+                if constants.ATTRIBUTE_SYMBOL in loc_str:
+                    # print(loc_tup[0], loc_tup[-1], loc_str) 
+                    key_, value_ = loc_str.split( constants.ATTRIBUTE_SYMBOL  )
+                    key_, value_ = key_.strip(), value_.strip()
+                    attribDict[key_] = (loc_tup[0], loc_tup[-1], value_) 
+                    # print('='*25) 
     return attribDict
 
 def getVars(all_locs, all_as_str): 

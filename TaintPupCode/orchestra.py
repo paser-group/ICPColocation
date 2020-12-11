@@ -8,6 +8,7 @@ import constants
 import parser 
 import os 
 from collections import Counter 
+import graph 
 
 def getPuppetFiles(path_to_dir):
     valid_  = [] 
@@ -143,26 +144,80 @@ def finalizeEmptyPassword( attr_dict, vars_dict ):
             empty_var_dict[var_name] = var_value, constants.OUTPUT_EMPTY_KW
     return empty_attr_dict, empty_var_dict  
 
-def orchestrate(dir_):
+def checkIfAdmin(single_config_val):
+    flag2Ret = False 
+    if ( any(x_ in single_config_val for x_ in constants.INVALID_SECRET_CONFIG_VALUES ) ):
+        flag2Ret = False 
+    else:
+        if(  len(single_config_val) > 0 ) and ( constants.QUOTE_SYMBOL in single_config_val )  and ( constants.ADMIN_KEYWORD in single_config_val) : 
+            flag2Ret = True 
+    return flag2Ret
+
+def finalizeDefaults( vars_dict ):
+    default_var_dict = {} 
+    for var_name, var_data in vars_dict.items():
+        var_value  = var_data[-1]
+        var_name   = var_name.strip() 
+        if(any(x_ in var_name for x_ in constants.SECRET_USER_LIST )) and (checkIfAdmin ( var_value ) ):        
+            default_var_dict[var_name] = var_value, constants.OUTPUT_DEFAULT_ADMIN_KW 
+    return default_var_dict      
+
+def orchestrateWithoutTaint(dir_):
     all_pupp_files = getPuppetFiles(  dir_ )
     for pupp_file in all_pupp_files:
         dict_reso, dict_clas, dict_all_attr, dict_all_vari, dict_switch, list_susp_comm, dict_func = parser.executeParser( pupp_file ) 
+
         susp_cnt       = finalizeSusps( list_susp_comm )
         switch_cnt     = finalizeSwitches( dict_switch )
+        weak_crypt_dic = finalizeWeakEncrypt( dict_func ) 
+        default_admin_dict   = finalizeDefaults( dict_all_vari )
+
         invalid_ip_dict_attr, invalid_ip_dict_vars  = finalizeInvalidIPs( dict_all_attr, dict_all_vari ) 
         tot_invalid_ip_cnt = len(invalid_ip_dict_attr) + len(invalid_ip_dict_vars)
+
         http_dict_attr, http_dict_vars = finalizeHTTP( dict_all_attr, dict_all_vari )
         tot_http_cnt = len(http_dict_attr) + len(http_dict_vars)
-        weak_crypt_dic = finalizeWeakEncrypt( dict_func ) 
+
+        
         secret_dict_attr, secret_dict_vars = finalizeHardCodedSecrets( dict_all_attr, dict_all_vari )
         total_secret_count = len(secret_dict_attr) + len(secret_dict_vars) 
-        empty_pwd_attr, empty_pwd_vars = finalizeEmptyPassword( secret_dict_attr, secret_dict_vars  )
+        
+        empty_pwd_attr, empty_pwd_vars = finalizeEmptyPassword( dict_all_attr, dict_all_vari  )
         tot_empty_pass_count = len( empty_pwd_attr ) + len(empty_pwd_vars)
 
-        print( pupp_file, susp_cnt, switch_cnt , tot_invalid_ip_cnt, tot_http_cnt, len(weak_crypt_dic )  , total_secret_count , tot_empty_pass_count  )
+
+        print( pupp_file, susp_cnt, switch_cnt , tot_invalid_ip_cnt, tot_http_cnt, len(weak_crypt_dic )  , total_secret_count , tot_empty_pass_count , len(default_admin_dict ) )
+        print('-'*100)
+
+
+def orchestrateWithTaint(dir_):
+    all_pupp_files = getPuppetFiles(  dir_ )
+    for pupp_file in all_pupp_files:
+        dict_reso, dict_clas, dict_all_attr, dict_all_vari, dict_switch, list_susp_comm, dict_func = parser.executeParser( pupp_file ) 
+
+        susp_cnt       = finalizeSusps( list_susp_comm )
+        switch_cnt     = finalizeSwitches( dict_switch )
+        weak_crypt_dic = finalizeWeakEncrypt( dict_func ) 
+        default_admin_dict   = finalizeDefaults( dict_all_vari )
+
+        invalid_ip_dict_attr, invalid_ip_dict_vars  = finalizeInvalidIPs( dict_all_attr, dict_all_vari ) 
+        invalid_ip_taint_dict = graph.trackTaint( constants.OUTPUT_INVALID_IP_KW, invalid_ip_dict_vars, dict_all_attr, dict_all_vari )
+        
+        http_dict_attr, http_dict_vars = finalizeHTTP( dict_all_attr, dict_all_vari )
+        http_taint_dict = graph.trackTaint( constants.OUTPUT_HTTP_KW, http_dict_vars, dict_all_attr, dict_all_vari )
+
+        secret_dict_attr, secret_dict_vars = finalizeHardCodedSecrets( dict_all_attr, dict_all_vari )
+        
+        empty_pwd_attr, empty_pwd_vars = finalizeEmptyPassword( dict_all_attr, dict_all_vari  )
+
+        print(   invalid_ip_dict_vars , invalid_ip_taint_dict ) 
+        print(   http_dict_vars , http_taint_dict ) 
+        print( pupp_file )
         print('-'*100)
 
 
 if __name__=='__main__':
     test_pp_dir = '../puppet-scripts/'
-    orchestrate( test_pp_dir )
+    # orchestrateWithoutTaint( test_pp_dir )
+
+    orchestrateWithTaint( test_pp_dir )

@@ -11,6 +11,7 @@ LPAREN_SYMBOL = '('
 RPAREN_SYMBOL = ')'
 ATTRIBUTE_SYMBOL = '=>'
 QUOTE_SYMBOL = "'"
+DOLLAR_SYMBOL  = '$'
 
 
 CWE_SUSP_COMMENT_LIST      = ['hack', 'fixme', 'later', 'todo', 'to-do', 'bug'  ]
@@ -36,7 +37,9 @@ SHA1_KEYWORD = 'sha1'
 SECRET_PASSWORD_LIST = ['pwd', 'password']
 SECRET_USER_LIST = ['user']
 SECRET_KEY_LIST = ['key', 'crypt', 'secret']
-INVALID_SECRET_CONFIG_VALUES = ['$', ':undef', INVOKE_KEYWORD, '[]', '/' ]  
+INVALID_SECRET_CONFIG_VALUES = [DOLLAR_SYMBOL, ':undef', INVOKE_KEYWORD, '[]', '/' ]  
+ADMIN_KEYWORD = 'admin'
+CONCAT_KEYWORD = 'cat'
 
 
 TEMP_LOG_FILE = 'temp.output.from.parser.txt'
@@ -50,9 +53,13 @@ EQUAL_SYMBOL = '='
 NULL_SYMBOL = ''
 PP_EXTENSION = '.pp'
 
-ANALYZING_KEYWORD = 'ANALYZING ...'
-OUTPUT_PASS_KW    = 'PASSWORD'
-OUTPUT_USER_KW    = 'USERNAME'
-OUTPUT_TOKEN_KW   = 'API_KEY'
-OUTPUT_EMPTY_KW   = 'EMPTY_PASSWORD'
+ANALYZING_KW             = 'ANALYZING ...'
+OUTPUT_PASS_KW           = 'PASSWORD'
+OUTPUT_USER_KW           = 'USERNAME'
+OUTPUT_TOKEN_KW          = 'API_KEY'
+OUTPUT_EMPTY_KW          = 'EMPTY_PASSWORD'
+OUTPUT_DEFAULT_ADMIN_KW  = 'DEFAULT_ADMIN'
+OUTPUT_INVALID_IP_KW     = 'INVALID_IP_ADDRESS' 
+OUTPUT_HTTP_KW           = 'INSECURE_HTTP' 
+
 CASE_WHEN_HEURISTIC = 100 ## the heuritic is case and when will appear within the first 100 characters 
