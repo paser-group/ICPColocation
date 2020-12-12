@@ -452,6 +452,8 @@ Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-mellanox-20
 
 1. In `deployment_scripts/puppet/manifests` using `'sdn/password': value => "${neo_password}";`  user names and passwords are used but they come from hiera (`$mlnx = hiera('mellanox-plugin')` and `  $neo_password = $mlnx['mlnx_neo_password']`). 
 
+> Addressed by TaintPup
+
 #### Repository-14
 
 Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-vitrage-2018-06/` 
@@ -481,6 +483,8 @@ Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-vitrage-2018-06/
 
 which is propagated into `keystone::resource::service_identity {}` in `manifests/keystone/auth.pp` 
 
+
+
 9. In `examples/vitrage.pp`, `class { '::vitrage::api':}` calls `manifests/api.pp`, but the specifed paramers mentioned below go nowhere 
 
 ```
@@ -494,6 +498,8 @@ which is propagated into `keystone::resource::service_identity {}` in `manifests
   auth_password => 'a_big_secret',
 ```
 that is propagated into `vitrage_config {}` in `manifests/auth.pp`
+
+> Except for cross script tracking handled by TaintPup 
 
 #### Repository-15
 
@@ -510,7 +516,7 @@ Location:`/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/solar-resources-2018-06
 
 4. In `nova_puppet/1.0.0/actions/run.pp` even though used, $qpid_password, $rabbit_password, $db_password, $db_user comes from hiera()  .. so not hard-coded password. Similarly for $neutron_admin_password and $neutron_admin_username in `nova_neutron_puppet/1.0.0/actions/run.pp`. Similar for $libvirt_inject_password in `nova_compute_libvirt_puppet/1.0.0/actions/update.pp` and `nova_compute_libvirt_puppet/1.0.0/actions/run.pp`. Similar for $admin_user and $admin_password in `nova_api_puppet/1.0.0/actions/update.pp` and `nova_api_puppet/1.0.0/actions/run.pp`. Similarly in `node_network_puppet/1.0.0/actions/run.pp`, $db_user, $db_password, $auth_user, $auth_password are used but data comes from hiera, so not a hard-coded password. Similar for $qpid_username, $qpid_password, $rabbit_password in `neutron_puppet/1.0.0/actions/run.pp`. Similar for $auth_user, $auth_password in `neutron_agents_metadata_puppet/1.0.0/actions/run.pp`. Similarly for `$ha_vrrp_auth_password` in `neutron_agents_l3_puppet/1.0.0/actions/run.pp`. Similar for $db_user and $db_password in `keystone_puppet/1.0.0/actions/run.pp` used as `database_connection  => "mysql://$db_user:$db_password@$db_host:$db_port/$db_name",`. Similar for $db_user and $db_password and $keystone_password and $keystone_user in `glance_registry_puppet/1.0.0/actions/run.pp` and `glance_registry_puppet/1.0.0/actions/update.pp` in `glance_registry_puppet/1.0.0/actions/update.pp`
 
-
+> Handled by TaintPup 
 
 #### Repository-15
 
@@ -524,6 +530,8 @@ Location: ``
 
 Even though there is a SQL-injection like statement, the value is not hard-coded rather coming
 from hiera(). This should not be flagged. 
+
+> Handled by TaintPup 
 
 
 #### Repository-16
@@ -540,6 +548,8 @@ if $scaleio['existing_cluster'] {
 ```
 
 `client_password` later used in `class {'::scaleio_openstack::nova':}` as `gateway_password`
+
+> Handled by TaintPup 
 
 #### Repository-17
 
@@ -559,6 +569,8 @@ after >50 lines later used as
 ```
 
 in `scaleio::login {'Normal':}`
+
+> Handled by TaintPup 
 
 
 #### Repository-18
@@ -584,6 +596,8 @@ class { '::aodh::auth':
 `$auth_password` called in `class aodh::auth (){}` and later used as
 `'service_credentials/password' : value => $auth_password, secret => true;` in `aodh_config {}` 
 
+> TODO. Need to be handled by TaintPup 
+
 
 #### Repository-19
 
@@ -597,6 +611,8 @@ Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-pacemaker-2018-
 4. In `manifests/params.pp` `$hacluster_pwd` has a value that is never used 
 
 5. In `manifests/new.pp` , `$cluster_password` is   a hard-coded password that is used 
+
+> Handled by TaintPup 
 
 #### Repository-20
 
@@ -620,7 +636,9 @@ In `manifests/keystone/auth.pp` the following are also true positives:
 ``` 
 
 In `manifests/service_auth.pp` , `'service_auth/password' : value => $password;`, $password is used
-Similar for `manifests/init.pp` and 
+Similar for `manifests/init.pp` 
+
+> Handled by TaintPup 
 
 #### Repository-21
 

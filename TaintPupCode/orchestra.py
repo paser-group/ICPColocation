@@ -253,7 +253,7 @@ def orchestrateWithTaint(dir_):
         print( 'INVALID_IP:::ATTR:{} \n DETCTED_DICT:{} \n TAINTED_DICT:{}'.format( invalid_ip_dict_attr,  invalid_ip_dict_vars , invalid_ip_taint_dict )  )
         print( 'HTTP:::DETECTED_DICT:{} \n TAINTED_DICT:{}'.format( http_dict_vars, http_taint_dict )  )
         # print( empty_pwd_vars, empty_pwd_taint_dict ) 
-        print( 'SECRETS:::DETECTED_DICT:{} \n TAINTED_DICT:{}'.format( secret_dict_vars, secret_taint_dict )  )
+        print( 'SECRETS:::VAR_DETECTED_DICT:{} \n TAINTED_DICT:{} \n SECRETS:::ATTR_DETECTED_DICT:{}'.format( secret_dict_vars, secret_taint_dict, secret_dict_attr )  )
         print( pupp_file )
         # print( dict_all_vari )
 
