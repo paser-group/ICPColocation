@@ -136,6 +136,12 @@ def checkIfEmptyPass(single_config_val):
             flag2Ret = True 
     return flag2Ret
 
+def isValidUserName(uName): 
+    valid = True
+    if( any(z_ in uName for z_ in constants.FORBIDDEN_USER_VALUES) ): 
+        valid = False  
+    return valid
+
 def finalizeHardCodedSecrets( attr_dict, vars_dict ):
     secret_attr_dict , secret_var_dict = {}, {} 
     for attr_key, attr_data in attr_dict.items():
@@ -144,7 +150,7 @@ def finalizeHardCodedSecrets( attr_dict, vars_dict ):
         attr_name  = attr_name.strip() 
         if(any(x_ in attr_name for x_ in constants.SECRET_PASSWORD_LIST )) and (checkIfValidSecret ( attr_value ) ):        
             secret_attr_dict[attr_name] =  attr_value, constants.OUTPUT_PASS_KW
-        elif(any(x_ in attr_name for x_ in constants.SECRET_USER_LIST )) and (checkIfValidSecret ( attr_value ) ) :        
+        elif(any(x_ in attr_name for x_ in constants.SECRET_USER_LIST )) and (checkIfValidSecret ( attr_value ) ) and (isValidUserName( attr_name ) ) :        
             secret_attr_dict[attr_name] =  attr_value, constants.OUTPUT_USER_KW
         elif(any(x_ in attr_name for x_ in constants.SECRET_KEY_LIST )) and (checkIfValidSecret ( attr_value ) ) :        
             secret_attr_dict[attr_name] =  attr_value , constants.OUTPUT_TOKEN_KW
@@ -153,7 +159,7 @@ def finalizeHardCodedSecrets( attr_dict, vars_dict ):
         var_name   = var_name.strip() 
         if(any(x_ in var_name for x_ in constants.SECRET_PASSWORD_LIST )) and (checkIfValidSecret ( var_value ) ):        
             secret_var_dict[var_name] = var_value, constants.OUTPUT_PASS_KW
-        elif(any(x_ in var_name for x_ in constants.SECRET_USER_LIST )) and (checkIfValidSecret ( var_value ) ) :        
+        elif(any(x_ in var_name for x_ in constants.SECRET_USER_LIST )) and (checkIfValidSecret ( var_value ) ) and (isValidUserName( var_name ) ):        
             secret_var_dict[var_name] = var_value, constants.OUTPUT_USER_KW 
         elif(any(x_ in var_name for x_ in constants.SECRET_KEY_LIST )) and (checkIfValidSecret ( var_value ) ) :        
             secret_var_dict[var_name] = var_value, constants.OUTPUT_TOKEN_KW

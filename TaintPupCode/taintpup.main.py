@@ -12,5 +12,5 @@ if __name__=='__main__':
     # 
 
 
-    dataset_dir = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-neutron-2018-06'
+    dataset_dir = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-monasca-2018-06/'
     orchestra.orchestrateWithTaint( dataset_dir )    

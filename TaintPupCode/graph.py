@@ -31,5 +31,11 @@ def trackTaint( smell_type, smell_dict_var, all_attrib_dict, all_vari_dict ):
                     attr_value = attr_data[-1] 
                     enh_var_name =  constants.DOLLAR_SYMBOL + constants.LPAREN_SYMBOL + var_name.replace(constants.DOLLAR_SYMBOL, constants.NULL_SYMBOL )  + constants.RPAREN_SYMBOL  ##need to handle ${url}
                     if( var_name in attr_value ) or (enh_var_name in attr_value) :  
-                        graphDict[var_name] = attr_name, attr_value , smell_type 
+                        '''
+                        one variable can be used for multiple attributes 
+                        '''
+                        if var_name not in graphDict:
+                            graphDict[var_name] = [(attr_name, attr_value , smell_type) ] 
+                        else: 
+                            graphDict[var_name] = graphDict[var_name] + [ (attr_name, attr_value , smell_type)  ]
     return graphDict 

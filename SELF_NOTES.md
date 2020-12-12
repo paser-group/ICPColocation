@@ -444,7 +444,7 @@ and in `password_hash => mysql_password($sql_password),` si a false positive
 
 23. In `manifests/agent.pp`, `$password` and `$username` is declared but not assigned, so FP 
 
-> 
+> Addressed by TaintPup
 
 #### Repository-13
 
