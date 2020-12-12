@@ -51,6 +51,8 @@ def getAttributes(all_locs, all_as_str):
     attribCnt  = 0 
     for loc_tup in all_locs:
         loc_str = all_as_str[loc_tup[0]+1:loc_tup[-1]]  
+        # print(loc_str)
+        # print('*'*25)
         if  (loc_str.count( constants.ATTRIBUTE_SYMBOL ) == 1 ) : 
             '''
             newlines are messy for attributes 
@@ -69,8 +71,11 @@ def getAttributes(all_locs, all_as_str):
 
 def getVars(all_locs, all_as_str): 
     varDict = {}
+    # print(all_as_str)
     for loc_tup in all_locs:
         loc_str = all_as_str[loc_tup[0]+1:loc_tup[-1]]  
+        # print(loc_str)
+        # print('*'*25)
         if constants.NEWLINE_CONSTANT not in loc_str: 
             '''
             if a variable has no value assigned like `$nuage_vsd_password` then we are not tracking that 
@@ -228,5 +233,6 @@ def executeParser(pp_file):
 
 
 if __name__=='__main__':
-    test_pp_file = 'test.api.pp'
+    # test_pp_file = 'test.api.pp'
+    test_pp_file = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ceph-2018-06/manifests/rgw/keystone/auth.pp'
     executeParser( test_pp_file )

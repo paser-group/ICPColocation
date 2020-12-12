@@ -4,6 +4,8 @@ Dec 09, 2020
 Leverage parser output to generate graphs 
 '''
 import constants 
+import parser 
+var_tracker_list  = [] 
 
 def checkLiveness( var_ , all_vari_dict ): 
     aliveFlag = True 
@@ -26,11 +28,15 @@ def trackTaint( smell_type, smell_dict_var, all_attrib_dict, all_vari_dict ):
             var_value, var_ascii = var_data 
             if( checkLiveness( var_name, all_vari_dict ) ): 
                 # print( var_name  + ' is alive ' )
+                '''
+                Now we have support for mutltiple taint tracking 
+                '''
+                multi_taint_var_name = doMultipleTaint( var_name, all_vari_dict  )
                 for attr_key, attr_data in all_attrib_dict.items():
                     attr_name  = attr_data[-2] 
                     attr_value = attr_data[-1] 
                     enh_var_name =  constants.DOLLAR_SYMBOL + constants.LPAREN_SYMBOL + var_name.replace(constants.DOLLAR_SYMBOL, constants.NULL_SYMBOL )  + constants.RPAREN_SYMBOL  ##need to handle ${url}
-                    if( var_name in attr_value ) or (enh_var_name in attr_value) :  
+                    if( var_name in attr_value ) or (enh_var_name in attr_value) or (multi_taint_var_name in attr_value):  
                         '''
                         one variable can be used for multiple attributes 
                         '''
@@ -39,3 +45,38 @@ def trackTaint( smell_type, smell_dict_var, all_attrib_dict, all_vari_dict ):
                         else: 
                             graphDict[var_name] = graphDict[var_name] + [ (attr_name, attr_value , smell_type)  ]
     return graphDict 
+
+
+def constructLHSRHSPairs( var_to_track,  var_dic ):
+    for var_, var_data  in var_dic.copy().items(): 
+        lhs , rhs = var_ , var_data[-1] 
+        if  var_to_track in rhs: 
+            del var_dic[var_to_track]
+            constructLHSRHSPairs( lhs, var_dic ) 
+            var_tracker_list.append( lhs  )
+        else: 
+            pass 
+     
+
+
+
+def doMultipleTaint(var_to_track, all_var_dict):
+    var2ret = constants.MULTI_TAINT_NONSENSE 
+    '''
+    algorithm : keep track of LHS for which RHS exists usign a queue 
+    then return the latest inserted element of the queue 
+    '''
+    constructLHSRHSPairs( var_to_track,   all_var_dict ) 
+    if len( var_tracker_list ) > 0: 
+        var2ret = var_tracker_list[0] 
+    return var2ret 
+
+
+    
+
+if __name__=='__main__':
+    script_name = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-onos-2018-06/deployment_scripts/puppet/manifests/onos-dashboard.pp'
+    dict_of_resources, dict_of_classes, dict_of_all_attribs, dict_of_all_variables, dict_of_switch_cases, list_of_susp_comments , dict_of_funcs = parser.executeParser( script_name )
+    # print( dict_of_all_variables )
+    sink_var = doMultipleTaint( '$password' ,  dict_of_all_variables )
+    print(sink_var) 

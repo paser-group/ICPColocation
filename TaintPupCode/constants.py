@@ -42,6 +42,7 @@ SECRET_USER_LIST = ['user']
 SECRET_KEY_LIST = ['key', 'crypt', 'secret']
 INVALID_SECRET_CONFIG_VALUES = [DOLLAR_SYMBOL, ':undef', INVOKE_KEYWORD, '[]', '/', 'call', 'hiera', 'unset' ]  
 FORBIDDEN_USER_VALUES = ['domain', 'group', 'mode', 'schema', 'email'] 
+FORBIDDEN_KEY_VALUES  = ['separator', 'version', 'map', 'backend']  
 ADMIN_KEYWORD = 'admin'
 CONCAT_KEYWORD = 'cat'
 LOCALHOST_KEYWORD  = 'localhost'
@@ -68,5 +69,6 @@ OUTPUT_DEFAULT_ADMIN_KW  = 'DEFAULT_ADMIN'
 OUTPUT_INVALID_IP_KW     = 'INVALID_IP_ADDRESS' 
 OUTPUT_HTTP_KW           = 'INSECURE_HTTP' 
 OUTPUT_SECRET_KW         = 'HARD_CODED_SECRET' 
+MULTI_TAINT_NONSENSE     = 'MUTI_TAINT_GARBAGE' 
 
 CASE_WHEN_HEURISTIC = 100 ## the heuritic is case and when will appear within the first 100 characters 

@@ -66,7 +66,7 @@ def finalizeInvalidIPs(attr_dict, dict_vars):
 
 def extraHTTPCheck(_valu):
     flag_ = True
-    if(constants.LOCALHOST_KEYWORD in _valu) or (constants.CONCAT_KEYWORD in _valu) or ( constants.LOCAL_IP in _valu):
+    if(constants.LOCALHOST_KEYWORD in _valu) or (constants.CONCAT_KEYWORD in _valu) or ( constants.LOCAL_IP in _valu) or ( constants.DOLLAR_SYMBOL in _valu):
         flag_ = True 
     else: 
         third_slash_loc, cnt  = 0 , 0
@@ -142,6 +142,12 @@ def isValidUserName(uName):
         valid = False  
     return valid
 
+def isValidKeyName(keyName): 
+    valid = True
+    if( any(z_ in keyName for z_ in constants.FORBIDDEN_KEY_VALUES) ): 
+        valid = False  
+    return valid
+
 def finalizeHardCodedSecrets( attr_dict, vars_dict ):
     secret_attr_dict , secret_var_dict = {}, {} 
     for attr_key, attr_data in attr_dict.items():
@@ -152,7 +158,7 @@ def finalizeHardCodedSecrets( attr_dict, vars_dict ):
             secret_attr_dict[attr_name] =  attr_value, constants.OUTPUT_PASS_KW
         elif(any(x_ in attr_name for x_ in constants.SECRET_USER_LIST )) and (checkIfValidSecret ( attr_value ) ) and (isValidUserName( attr_name ) ) :        
             secret_attr_dict[attr_name] =  attr_value, constants.OUTPUT_USER_KW
-        elif(any(x_ in attr_name for x_ in constants.SECRET_KEY_LIST )) and (checkIfValidSecret ( attr_value ) ) :        
+        elif(any(x_ in attr_name for x_ in constants.SECRET_KEY_LIST )) and (checkIfValidSecret ( attr_value ) ) and (isValidKeyName( attr_name ) ) :        
             secret_attr_dict[attr_name] =  attr_value , constants.OUTPUT_TOKEN_KW
     for var_name, var_data in vars_dict.items():
         var_value  = var_data[-1]
@@ -161,7 +167,7 @@ def finalizeHardCodedSecrets( attr_dict, vars_dict ):
             secret_var_dict[var_name] = var_value, constants.OUTPUT_PASS_KW
         elif(any(x_ in var_name for x_ in constants.SECRET_USER_LIST )) and (checkIfValidSecret ( var_value ) ) and (isValidUserName( var_name ) ):        
             secret_var_dict[var_name] = var_value, constants.OUTPUT_USER_KW 
-        elif(any(x_ in var_name for x_ in constants.SECRET_KEY_LIST )) and (checkIfValidSecret ( var_value ) ) :        
+        elif(any(x_ in var_name for x_ in constants.SECRET_KEY_LIST )) and (checkIfValidSecret ( var_value ) ) and (isValidKeyName( var_name ) ) :        
             secret_var_dict[var_name] = var_value, constants.OUTPUT_TOKEN_KW
     return secret_attr_dict, secret_var_dict  
 
@@ -251,7 +257,7 @@ def orchestrateWithTaint(dir_):
 
         # if  'manifests/plugins' in pupp_file:
         print( 'INVALID_IP:::ATTR:{} \n DETCTED_DICT:{} \n TAINTED_DICT:{}'.format( invalid_ip_dict_attr,  invalid_ip_dict_vars , invalid_ip_taint_dict )  )
-        print( 'HTTP:::DETECTED_DICT:{} \n TAINTED_DICT:{}'.format( http_dict_vars, http_taint_dict )  )
+        print( 'HTTP:::ATTR_DICT:{} \n DETECTED_DICT:{} \n TAINTED_DICT:{}'.format( http_dict_attr, http_dict_vars, http_taint_dict )  )
         # print( empty_pwd_vars, empty_pwd_taint_dict ) 
         print( 'SECRETS:::VAR_DETECTED_DICT:{} \n TAINTED_DICT:{} \n SECRETS:::ATTR_DETECTED_DICT:{}'.format( secret_dict_vars, secret_taint_dict, secret_dict_attr )  )
         print( pupp_file )

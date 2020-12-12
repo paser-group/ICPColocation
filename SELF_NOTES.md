@@ -648,6 +648,9 @@ In `deployment_scripts/controller.pp`, `fc_passwd_1 => $plugin_settings["pure_pa
 `$fc_passwd_1` is later is used in `class plugin_purestorage_cinder::controller (){}` as ` "${fabric_zone_1}/cisco_fc_fabric_password": value => $fc_passwd_1;`
 
 
+> Handled by TaintPup 
+
+
 #### Repository-22
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-manila-2018-06` 
@@ -688,13 +691,15 @@ manila::backend::netapp { 'myBackend':
 
 Above is similar for `manifests/keystone/auth.pp` and `manifests/keystone/auth2.pp` and `manifests/share/netapp.pp` and `manifests/share/hitachi_hnas.pp` and `manifests/volume/cinder.pp` and `manifests/type.pp`, `manifests/type_set.pp`, `manifests/service_instance.pp` and `manifests/rabbitmq.pp` and `manifests/init.pp` 
 
-2. In `manifests/network/neutron.pp` we see a password being used, but as class parameters `$neutron_admin_password = undef,` is undefined so not a true psoitive 
+2. In `manifests/network/neutron.pp` we see a password being used, but as class parameters `$neutron_admin_password = undef,` is undefined so not a true positive 
 
 ```
     'DEFAULT/neutron_admin_username':       value => $neutron_admin_username;
     'DEFAULT/neutron_admin_password':       value => $neutron_admin_password, secret => true;
     'DEFAULT/neutron_admin_auth_url':       value => $neutron_admin_auth_url;
 ```
+
+> Handled by TaintPup ... if you have time after cross script tracking, then play with lists , how variables are propagated into lists, and then lists used in attributes 
 
 
 #### Repository-24
@@ -706,17 +711,23 @@ Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-congress-2018-
 3. In `manifests/db/mysql.pp`, `$user = 'congress',` is propagated into `::openstacklib::db::mysql {}`, so TP. Same for `manifests/db/postgresql.pp`
 4. In `manifests/keystone/auth.pp`, `$password` and `$auth_name` is propagated as `password => $password` and `auth_name => $auth_name,`. Same for `manifests/keystone/authtoken.pp`, also `$auth_url  = 'http://localhost:5000',` propagated into `keystone::resource::authtoken {}` 
 
+> Handled by TaintPup 
+
 #### Repository-25
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-rally-2018-06/` 
 
 1. In `example/rally.pp`, `class { '::rally::settings': }` calls `manifests/settings.pp` and `class { '::rally': }`
 
+> Need to do cross script tracking. TODO 
+
 #### Repository-26
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/puppet-watcher-2018-06/` 
 
 1. In `manifests/init.pp`, `$amqp_password = $::os_service_default,` is a false positive 
+
+> Handled by TaintPup 
 
 #### Repository-27
 
@@ -788,18 +799,15 @@ class { '::swift::proxy::tempauth':
 calls `class swift::proxy::tempauth(){}` with `account_user_list` in `manifests/proxy/tempauth.pp` , which is used in 
 `class swift::proxy::tempauth () {}` 
 
+> Single script tracking handled by TaintPup. Cross script tracking needed for #13 ... TODO 
+
 
 #### Repository-28
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-rally-2018-06/` 
 
-1. In `puppet/modules/ironic/bifrost.pp`, `$ironic_url` , `$ironic_db_password`, `$mysql_password`
-are declared but not used ... so FP . ANything that calls `class ironic::bifrost () {}` with the 3 parameters 
-are also FPs. And in `file { "${git_dest_repo_folder}/playbooks/inventory/group_vars/all":}` hard-coded password 
-is loaded from tempalte file and added as a content 
 
-2. In `puppet/modules/ironic/bifrost.pp`, `$host_ip` is assigned `0.0.0.0` and used in `ironic_config {}`. 
-3. In `manifests/ironic.pp` the following use of `pick()` allows introduction of security smells that are TPs. 
+1. In `manifests/ironic.pp` the following use of `pick()` allows introduction of security smells that are TPs. 
 
 ```
 $db_user                    = pick($ironic_hash['db_user'], 'ironic')
@@ -808,7 +816,7 @@ $db_password                = pick($ironic_hash['password'], 'ironic')
 If the first argument does not match, then second argument will be assigned. However in that script `$db_password`
 and `$db_user` are never used so reporting will be FP. 
 
-4. In `manifests/db.pp`, using `pick()` hard-coded values are assigned and then used in `class { 'osnailyfacter::mysql_access':}`
+> Single script tracking handled by TaintPup. 
 
 #### Repository-29
 
@@ -817,6 +825,24 @@ Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ceph-2018-06/`
 1. In `manifests/profile/params.pp` , `  $rgw_keystone_admin_user, $rgw_keystone_admin_password` is defined but not used , so FP 
 2. In `manifests/repo.pp` , `source => 'https://download.ceph.com/keys/release.asc',` is a TP , `id     => '08B73419AC32B4E966C1A330E84AC2C0460F3994',` is a FP , `mirrorlist => "http://mirrors.fedoraproject.org/metalink?repo=epel-${el}&arch=\$basearch",` is a TP 
 
+> Single script tracking handled by TaintPup. But there is also a parser limitation as observed below: 
+
+```
+invoke ensure_resource 'keystone_endpoint' (cat '' (str $region) '/swift::object-store') ({} ('ensure' 'present') ('public_url' $public_url) ('admin_url' $admin_url) ('internal_url' $internal_url))
+
+For 
+
+  ensure_resource('keystone_endpoint', "${region}/swift::object-store", {
+    'ensure'       => 'present',
+    'public_url'   => $public_url,
+    'admin_url'    => $admin_url,
+    'internal_url' => $internal_url,
+  } )
+
+
+Need even more better parsing may be another project 
+```
+
 
 #### Repository-30
 
@@ -824,13 +850,17 @@ Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-cisco-aci
 
 1. In `deployment_scripts/puppet/site.pp` , `admin_username    => $access_hash['user']` and `admin_password    => $access_hash['password'],` are FPs. 
 
+> handled by TaintPup 
+
 #### Repository-31
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-murano-2018-06/` 
 
-1. In `manifests/db/postgresql.pp` , `password_hash => postgresql_password($user, $password),` is a FP.  `$privileges = 'ALL',` is privilege escalation not reproted before , also a TP as used by `::openstacklib::db::postgresql {}`
+1. In `manifests/db/postgresql.pp` , `password_hash => postgresql_password($user, $password),` is a FP.  `$privileges = 'ALL',` is privilege escalation not reported before , also a TP as used by `::openstacklib::db::postgresql {}`
 
 2. In `manifests/db/mysql.pp` , `password_hash => mysql_password($password),` is a FP 
+
+> TODO: protege escalation will need use of resource dict. Rest handled by TaintPup 
 
 
 #### Repository-32
@@ -840,6 +870,8 @@ Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-opendayli
 1. In `manifests/odl-ml2-configuration.pp` , `$auth_password      = $neutron_config['keystone']['admin_password']` is a FP 
 2. In `manifests/opendaylight/service.pp` `$password` is used in `exec { 'wait-until-odl-ready':} as a command`, TP but not detected 
 
+> Handled by TaintPup 
+
 #### Repository-33
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-nova-2018-06/`
@@ -848,6 +880,10 @@ Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-nova-2018-06/`
 2. In `manifests.network/neutron.pp`, `'neutron/password': value => $neutron_password, secret => true;` ensures secret is not logged in console. Absence of `secret => true` will be a new category called `secret leakage` 
 3. In `manifests/cron/archived_deleted_rows.pp` , `user => pick($user, $::nova::params::nova_user),` is a TP. 
 4. In `examples/nova_wsgi.pp` and `examples/nova_with_pacemaker.pp`, `admin_password => 'a_big_secret'` is passed into `manifests/api/pp` but not used, so FP 
+
+> 2 does not map to a CWE or does not map to a smell, so will not be included in this paper. 3 is not a TP as not values are assigned to the variable . Rest handled by TaintPup 
+
+
 
 #### Repository-34
 
@@ -864,13 +900,16 @@ $cinder_env = [
     ]
 ```
 
- 
+> Need to track lists ... TODO. Rest. Handled by TaintPup  
 
 #### Repository-35
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-openstack-cookiecutter-2018-06/`
 
-1. Nothign found or already detected 
+1. Nothing found or already detected 
+
+
+> Handled by TaintPup
 
 #### Repository-36
 
@@ -879,11 +918,37 @@ Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-lma-infra
 1. In `deployment_scripts/modules/lma_infra_alerting/manifests/nagios/check_http.pp`, `$password` was used in `$auth_basic_option`
 , which is in turn used in `$command_line`, and then in `nagios::command {}` as `command_line => $command_line`
 
+> Puppet parser can't parse the following ... fails to handle variables under define 
+
+```
+define lma_infra_alerting::nagios::check_http(
+  $host_name = undef,
+  $contact_group = $lma_infra_alerting::params::nagios_contactgroup,
+  $service_description = undef,
+  $custom_address = undef,
+  $port = undef,
+  $url = '/',
+  $username = undef,
+  $password = undef,
+  $string_expected_in_status = '200 OK',
+  $string_expected_in_content = undef,
+  $string_expected_in_headers = undef,
+  $response_time_warning = 2,
+  $response_time_critical = 3,
+  $timeout = 5,
+){
+```
+
+> Rest handled by TaintPup
+
 #### Repository-37
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-nsx-t-2018-06/`
 
-1. Nothign found or previously addressed 
+1. Nothing found or previously addressed 
+
+> Handled by TaintPup
+
 
 
 #### Repository-38
@@ -893,7 +958,7 @@ Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-gnocchi-2018-0
 1. In `examples/site.pp` `class { '::gnocchi::keystone::auth':}` has `password`, which is passed into `manifests/keystone/auth.pp` as
 ` keystone::resource::service_identity {}` 
 
-
+> Need to do cross script tracking. TODO. Rest handled by TaintPup 
 
 #### Repository-39
 
