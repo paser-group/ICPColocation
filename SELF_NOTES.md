@@ -379,6 +379,11 @@ calls `manifests/plugins/ml2/cisco/uscm.pp` with `ucsm_username` and `ucsm_passw
 
 `username` and `password`  flows within `$nexus_config,` into `class neutron::plugins::ml2::cisco::nexus(){}` in `manifests/plugins/ml2/cisco/nexus.pp`
 
+> Validation with TaintPup done for single script taint tracking. Need to do cross script tracking .... TODO. 
+> During cross script tracking please see /Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-neutron-2018-06/manifests/plugins/nvp.pp as username and password
+> flows from the outside to a resource 
+> Double check if $::os_service_default is coming from external library or Puppet file or other config file 
+
 
 #### Repository-11 
 
@@ -438,6 +443,8 @@ and in `password_hash => mysql_password($sql_password),` si a false positive
 22. In `manifests/alarmdefs.pp`, `$admin_username` and `$admin_password` is used in `environment => []`
 
 23. In `manifests/agent.pp`, `$password` and `$username` is declared but not assigned, so FP 
+
+> 
 
 #### Repository-13
 

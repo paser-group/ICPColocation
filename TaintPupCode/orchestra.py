@@ -51,7 +51,8 @@ def sanitizeConfigVals(config_data):
 
 def finalizeInvalidIPs(attr_dict, dict_vars):
     output_attrib_dict, output_variable_dict = {}, {}
-    for attr_name, attr_data in attr_dict.items():
+    for attr_key, attr_data in attr_dict.items():
+        attr_name  = attr_data[-2] 
         attr_value = attr_data[-1]
         attr_ascii = sanitizeConfigVals( attr_value )
         if attr_ascii == 330 or attr_ascii == 425: # 330 is the total of '0.0.0.0', 425  is the total of '0.0.0.0/0'
@@ -89,7 +90,8 @@ def extraHTTPCheck(_valu):
 
 def finalizeHTTP(attr_dict, dict_vars):
     output_attrib_dict, output_variable_dict = {}, {}
-    for attr_name, attr_data in attr_dict.items():
+    for attr_key, attr_data in attr_dict.items():
+        attr_name  = attr_data[-2] 
         attr_value = attr_data[-1]
         attr_ascii = sanitizeConfigVals( attr_value )
         if (attr_ascii >= 600) and ( constants.HTTP_PATTERN in attr_value) and (extraHTTPCheck( attr_value ) ): # 600 is the total of 'http://'
@@ -136,7 +138,8 @@ def checkIfEmptyPass(single_config_val):
 
 def finalizeHardCodedSecrets( attr_dict, vars_dict ):
     secret_attr_dict , secret_var_dict = {}, {} 
-    for attr_name, attr_data in attr_dict.items():
+    for attr_key, attr_data in attr_dict.items():
+        attr_name  = attr_data[-2] 
         attr_value = attr_data[-1]
         attr_name  = attr_name.strip() 
         if(any(x_ in attr_name for x_ in constants.SECRET_PASSWORD_LIST )) and (checkIfValidSecret ( attr_value ) ):        
@@ -158,7 +161,8 @@ def finalizeHardCodedSecrets( attr_dict, vars_dict ):
 
 def finalizeEmptyPassword( attr_dict, vars_dict ):
     empty_attr_dict , empty_var_dict = {}, {} 
-    for attr_name, attr_data in attr_dict.items():
+    for attr_key, attr_data in attr_dict.items():
+        attr_name  = attr_data[-2] 
         attr_value = attr_data[-1]
         attr_name  = attr_name.strip() 
         if(any(x_ in attr_name for x_ in constants.SECRET_PASSWORD_LIST )) and (checkIfEmptyPass ( attr_value ) ):        
@@ -239,11 +243,14 @@ def orchestrateWithTaint(dir_):
         empty_pwd_taint_dict           = graph.trackTaint( constants.OUTPUT_EMPTY_KW, empty_pwd_vars, dict_all_attr, dict_all_vari )        
 
 
-        # print( 'INVALID_IP:::ATTR:{} constants.NEWLINE_CONSTANT DETCTED_DICT:{} constants.NEWLINE_CONSTANT TAINTED_DICT:{}'.format( invalid_ip_dict_attr,  invalid_ip_dict_vars , invalid_ip_taint_dict )  )
-        # print( 'HTTP:::DETECTED_DICT:{} constants.NEWLINE_CONSTANT TAINTED_DICT:{}'.format( http_dict_vars, http_taint_dict )  )
+        # if  'manifests/plugins' in pupp_file:
+        print( 'INVALID_IP:::ATTR:{} \n DETCTED_DICT:{} \n TAINTED_DICT:{}'.format( invalid_ip_dict_attr,  invalid_ip_dict_vars , invalid_ip_taint_dict )  )
+        print( 'HTTP:::DETECTED_DICT:{} \n TAINTED_DICT:{}'.format( http_dict_vars, http_taint_dict )  )
         # print( empty_pwd_vars, empty_pwd_taint_dict ) 
-        # print( 'SECRETS:::DETECTED_DICT:{} constants.NEWLINE_CONSTANT TAINTED_DICT:{}'.format( secret_dict_vars, secret_taint_dict )  )
+        print( 'SECRETS:::DETECTED_DICT:{} \n TAINTED_DICT:{}'.format( secret_dict_vars, secret_taint_dict )  )
         print( pupp_file )
+        # print( dict_all_vari )
+
         print('-'*100)
 
         

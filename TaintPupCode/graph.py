@@ -19,7 +19,6 @@ def checkLiveness( var_ , all_vari_dict ):
                 aliveFlag = False 
     return aliveFlag 
 
-
 def trackTaint( smell_type, smell_dict_var, all_attrib_dict, all_vari_dict ):
     graphDict = {}
     if(len(smell_dict_var) > 0 ):
@@ -27,7 +26,8 @@ def trackTaint( smell_type, smell_dict_var, all_attrib_dict, all_vari_dict ):
             var_value, var_ascii = var_data 
             if( checkLiveness( var_name, all_vari_dict ) ): 
                 # print( var_name  + ' is alive ' )
-                for attr_name, attr_data in all_attrib_dict.items():
+                for attr_key, attr_data in all_attrib_dict.items():
+                    attr_name  = attr_data[-2] 
                     attr_value = attr_data[-1] 
                     enh_var_name =  constants.DOLLAR_SYMBOL + constants.LPAREN_SYMBOL + var_name.replace(constants.DOLLAR_SYMBOL, constants.NULL_SYMBOL )  + constants.RPAREN_SYMBOL  ##need to handle ${url}
                     if( var_name in attr_value ) or (enh_var_name in attr_value) :  

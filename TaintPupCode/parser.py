@@ -48,20 +48,23 @@ def getContentWithStack( parsed_out_file_str ):
 
 def getAttributes(all_locs, all_as_str): 
     attribDict = {}
+    attribCnt  = 0 
     for loc_tup in all_locs:
         loc_str = all_as_str[loc_tup[0]+1:loc_tup[-1]]  
         if  (loc_str.count( constants.ATTRIBUTE_SYMBOL ) == 1 ) : 
             '''
             newlines are messy for attributes 
-            only allw newlines that have string cotenation operation 
+            only allow newlines that have string cotenation operation 
             '''
+            # print(loc_tup[0], loc_tup[-1], loc_str)             
             if ( constants.NEWLINE_CONSTANT  in loc_str and constants.CONCAT_KEYWORD in loc_str) or (constants.NEWLINE_CONSTANT not in loc_str) :
                 if constants.ATTRIBUTE_SYMBOL in loc_str:
-                    # print(loc_tup[0], loc_tup[-1], loc_str) 
+                    attribCnt += 1 
                     key_, value_ = loc_str.split( constants.ATTRIBUTE_SYMBOL  )
                     key_, value_ = key_.strip(), value_.strip()
-                    attribDict[key_] = (loc_tup[0], loc_tup[-1], value_) 
-                    # print('='*25) 
+                    # same attribute can appear in many places 
+                    attribDict[attribCnt] = (loc_tup[0], loc_tup[-1], key_,  value_) 
+            # print('='*25) 
     return attribDict
 
 def getVars(all_locs, all_as_str): 
@@ -69,6 +72,11 @@ def getVars(all_locs, all_as_str):
     for loc_tup in all_locs:
         loc_str = all_as_str[loc_tup[0]+1:loc_tup[-1]]  
         if constants.NEWLINE_CONSTANT not in loc_str: 
+            '''
+            if a variable has no value assigned like `$nuage_vsd_password` then we are not tracking that 
+            Makes sense for a single script taint tracking
+            Need to track for cross script tracking ... create and return  separate dict called null_var_dict 
+            '''
             if constants.EQUAL_SYMBOL in loc_str and constants.ATTRIBUTE_SYMBOL not in loc_str : 
                 rest_str = loc_str.replace(constants.EQUAL_SYMBOL, constants.NULL_SYMBOL) 
                 rest_str = rest_str[1:]
