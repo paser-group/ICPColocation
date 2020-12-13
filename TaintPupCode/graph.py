@@ -26,12 +26,16 @@ def trackTaint( smell_type, smell_dict_var, all_attrib_dict, all_vari_dict ):
     if(len(smell_dict_var) > 0 ):
         for var_name, var_data in smell_dict_var.items():
             var_value, var_ascii = var_data 
+            '''
+            first check if variable is used in an expression 
+            '''
             if( checkLiveness( var_name, all_vari_dict ) ): 
                 # print( var_name  + ' is alive ' )
                 '''
                 Now we have support for mutltiple taint tracking 
                 '''
                 multi_taint_var_name = doMultipleTaint( var_name, all_vari_dict  )
+                var_tracker_list.clear() ## clear cache once you are done, var_tracker_list is a global variable and clear everytime 
                 for attr_key, attr_data in all_attrib_dict.items():
                     attr_name  = attr_data[-2] 
                     attr_value = attr_data[-1] 
@@ -50,10 +54,12 @@ def trackTaint( smell_type, smell_dict_var, all_attrib_dict, all_vari_dict ):
 def constructLHSRHSPairs( var_to_track,  var_dic ):
     for var_, var_data  in var_dic.copy().items(): 
         lhs , rhs = var_ , var_data[-1] 
-        if  var_to_track in rhs: 
-            del var_dic[var_to_track]
-            constructLHSRHSPairs( lhs, var_dic ) 
-            var_tracker_list.append( lhs  )
+        enh_var_to_track = var_to_track.replace(constants.DOLLAR_SYMBOL, constants.NULL_SYMBOL) 
+        if  (var_to_track in rhs) or (enh_var_to_track in rhs) :  
+            if var_to_track in var_dic:
+                del var_dic[var_to_track]
+                constructLHSRHSPairs( lhs, var_dic ) 
+                var_tracker_list.append( lhs  )
         else: 
             pass 
      
@@ -75,7 +81,8 @@ def doMultipleTaint(var_to_track, all_var_dict):
     
 
 if __name__=='__main__':
-    script_name = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-onos-2018-06/deployment_scripts/puppet/manifests/onos-dashboard.pp'
+    # script_name = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-onos-2018-06/deployment_scripts/puppet/manifests/onos-dashboard.pp'
+    script_name = '../puppet-scripts/onos-dasboard.pp' 
     dict_of_resources, dict_of_classes, dict_of_all_attribs, dict_of_all_variables, dict_of_switch_cases, list_of_susp_comments , dict_of_funcs = parser.executeParser( script_name )
     # print( dict_of_all_variables )
     sink_var = doMultipleTaint( '$password' ,  dict_of_all_variables )

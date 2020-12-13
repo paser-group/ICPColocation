@@ -968,6 +968,8 @@ Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-onos-2018
 `$json_hash`, that is used in `$json_message` and then in `command => "/usr/bin/curl -H 'Content-Type: application/json' -X POST \
 -d '${json_message}' \` 
 
+> Handled by TaintPup 
+
 #### Repository-40 
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-lma-collector-2018-06/`
@@ -988,11 +990,15 @@ Side point: not all strings are escaped as below:
 
 4. In `manifests/controller.pp` `password                  => hiera('lma::collector::infrastructure_alerting::password'),` is not a hard-coded password, so FP 
 
+> Handled by TaintPup 
+
 #### Repository-41
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-midonet-2018-06/`
 
 1. Nothing found or reported previously 
+
+> Handled by TaintPup 
 
 
 #### Repository-42
@@ -1001,6 +1007,8 @@ Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-bigswitch
 
 1. Nothing found or reported previously 
 
+> Handled by TaintPup 
+
 
 
 #### Repository-43
@@ -1008,6 +1016,10 @@ Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-bigswitch
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-qdr-2018-06/`
 
 1. Nothing found or reported previously 
+
+> Handled by TaintPup 
+
+
 #### Repository-44
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-trove-2018-06/`
@@ -1017,37 +1029,57 @@ in `manifests/db/mysql.pp`
 
 2. In `examples/site.pp`, `class { '::trove::keystone::auth':}` uses ` password`, that is passed into `class trove::keystone::auth (){}` in `keystone/auth.pp`
 
+> Need to do cross script tracking. TODO. 
 
 #### Repository-45
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-datera-cinder-2018-06/`
 
 1. Nothing found or previously reported 
+
+> Handled by TaintPup 
+
 #### Repository-46
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-manila-2018-06/`
 
 1. Nothing found or previously reported 
+
+> Handled by TaintPup 
+
+
 #### Repository-47
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-influxdb-grafana-2018-06/`
 
 1. Nothing found or previously reported 
+
+> Handled by TaintPup 
+
 #### Repository-48
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-mistral-2018-06/`
 
 1. Nothing found or previously reported 
+
+> Handled by TaintPup 
+
 #### Repository-49
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-zaqar-2018-06/`
 
 1. Nothing found or previously reported 
-#### Repository-49
+
+> Handled by TaintPup 
+
+#### Repository-50
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-elasticsearch-kibana-2018-06/`
 
 1. Nothing found or previously reported 
+
+> Handled by TaintPup 
+
 #### Repository-50
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-magnum-2018-06/`
@@ -1055,11 +1087,16 @@ Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-magnum-2018-06
 1. In `examples/magnum.pp`, password is passed as `class { '::magnum::db::mysql':` in `class magnum::db::mysql(){}` located at `manifests/db/mysql.pp`. Similarly,  `domain_password => 'oh_my_no_secret',` is used in `class { '::magnum::keystone::domain': }`
 that calls `class magnum::keystone::domain () {}` in `manifests/keystone/domain.pp`. Eventually the password is used in `magnum_config {}` 
 
+> Need to do cross script tracking. TODO. Rest handled by TaintPup 
+
+
 #### Repository-51
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-oslo-2018-06/`
 
 1. Nothing found or identified previously 
+
+> Handled by TaintPup 
 
 #### Repository-52
 
@@ -1067,32 +1104,45 @@ Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-sahara-2018-06
 
 1. In `examples/basic.pp` , `host => '0.0.0.0',` is passed into `manifests/init.pp` through `class sahara(){}`, which is eventually used in `sahara_config {}`
 
+> Need to do cross script tracking. TODO. Rest handled by TaintPup 
+
 
 #### Repository-53
 
-Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-6wind-virtual-accelerator-2018-06/`
+Location:  `/Users/Brahmin/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-6wind-virtual-accelerator-2018-06/`
 
 1. Nothing found or identified previously 
+
+
+> Handled by TaintPup 
+
 #### Repository-54
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-midonet-2018-06/`
 
 1. In `manifests/repo/centos.pp`, `$mem_password` and `$mem_username` are used in `$midonet_core_repo_url      = "http://${mem_username}:${mem_password}@${midonet::params::midonet_repo_baseurl}/mem-${mem_version}/${midonet_stage}/el${::operatingsystemmajrelease}"` , which is later used in `yumrepo {}`
 
+
+> Handled by TaintPup 
+
 #### Repository-55
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/packstack-2018-06/`
 
-1. In `manifests/nova/api.pp`, passwords that se hiera are not hard-coded, so should be excluded `$admin_password = hiera('CONFIG_NOVA_KS_PW')` is later used in `class {'::nova::keystone::authtoken':}`
+1. In `manifests/nova/api.pp`, passwords that use hiera are not hard-coded, so should be excluded `$admin_password = hiera('CONFIG_NOVA_KS_PW')` is later used in `class {'::nova::keystone::authtoken':}`
 
 2. In `manifests/keystone/gnochhi.pp` `internal_url => "http://${gnocchi_keystone_host_url}:8041",` is a TP, as `HTTP` is directly 
 used and assigned to an attribute.  
+
+> Handled by TaintPup 
 
 #### Repository-56
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-glance-2018-06/`
 
 1. Nothing found or already reported 
+
+> Handled by TaintPup 
 
 #### Repository-57
 
@@ -1106,7 +1156,7 @@ in `keystone::resource::service_identity {}` inside `manifests/endpoint.pp`
 
 3. In `examples/v3_basic.pp`, `password => 'a_big_secret',',` in `class { '::keystone::roles::admin':}` calls `class keystone::roles::admin(){}` in `keystone_user {}` inside `roles/admin.pp` 
 
-
+> Need to do cross script tracking. Rest handled by TaintPup 
 
 #### Repository-58
 
@@ -1123,41 +1173,91 @@ Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-library-2018-06/
 5. `$rabbit_password      = $murano_hash['rabbit_password']` not a hard-coded password and used in `command => "rabbitmqctl -n '${rabbit_node_name}' add_user '${rabbit_user}' '${rabbit_password}'",` for `exec { 'create_murano_user' :`
 
 
+> Handled by TaintPup 
+
+> Parser limitation ... cannot detect attributes that are of the following format: 
+
+```
+  $default_ceilometer_hash = {
+    'enabled'                    => false,
+    'db_password'                => 'ceilometer',
+    'user_password'              => 'ceilometer',
+    'metering_secret'            => 'ceilometer',
+    'http_timeout'               => '600',
+    'event_time_to_live'         => '604800',
+    'metering_time_to_live'      => '604800',
+  }
+```
+
+
 #### Repository-59
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-designate-2018-06/`
 
 1. Nothing found or previously reported 
+
+
+> Handled by TaintPup 
+
 #### Repository-60
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-external-zabbix-2018-06/`
 
 1. In `deployment_scripts/modules/plugin_zabbix/manifests/db/mysql.pp`, `$db_passwd = $mysql_db['root_password']` is used in `$mysql_extras_args` that is later used in `command     => "/usr/bin/mysql ${mysql_extras_args} ${plugin_zabbix::params::db_name} < /tmp/zabbix/schema.sql",`, inside `exec { "${plugin_zabbix::params::db_name}-import":}` 
+
+
+> Handled by TaintPup 
+
 #### Repository-61
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-murano-2018-06/`
 
 1. Nothing found or already reported 
+
+> Handled by TaintPup 
+
+
 #### Repository-62
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ironic-2018-06/`
 
 1. In `examples/ironic.pp`, `class { '::ironic::bifrost': }`, passes hard-coded passwords into `class ironic::bifrost (){}` that is located in `manifests/bifrost.pp` . The two passwords `  $ironic_db_password and $mysql_password,` are declared but not used, so FP. 
+
+
+> Need to do cross script tracking. Rest handled by TaintPup 
+
 #### Repository-63
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-barbican-2018-06/`
 
-1. Nothng found or previously reported 
+1. Nothing found or previously reported 
+
+> Handled by TaintPup 
+
 #### Repository-64
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-openstack-integration-2018-06/`
 
-1. Nothng found or previously reported 
+1. Nothing found or previously reported 
+
+> Handled by TaintPup 
+
+> Found a cool example in /Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-openstack-integration-2018-06/manifests/ceph.pp: 
+
+```
+SECRETS:::VAR_DETECTED_DICT:{"secret'": ("'AQD7kyJQQGoOBhAAqrPAqSopSwPrrfMMomzVdw'", 'API_KEY'), '$password': ("'secret'", 'PASSWORD')} 
+ TAINTED_DICT:{"secret'": [('client_keys', "({} ('client.admin' ({} ('secret' 'AQD7kyJQQGoOBhAAqrPAqSopSwPrrfMMomzVdw==') ('mode' '0600') ('cap_mon' 'allow *') ('cap_osd' 'allow *') ('cap_mds' 'allow *'))) ('client.bootstrap-osd' ({} ('secret' 'AQD7kyJQQGoOBhAAqrPAqSopSwPrrfMMomzVdw==') ('keyring_path' '/var/lib/ceph/bootstrap-osd/ceph.keyring') ('cap_mon' 'allow profile bootstrap-osd'))) ('client.openstack' ({} ('secret' 'AQD7kyJQQGoOBhAAqrPAqSopSwPrrfMMomzVdw==') ('mode' '0644') ('cap_mon' 'profile rbd') ('cap_osd' 'profile rbd pool=cinder, profile rbd pool=nova, profile rbd pool=glance, profile rbd pool=gnocchi'))))", 'HARD_CODED_SECRET'), ('osds', "({} ('/var/lib/ceph/data' ({})))", 'HARD_CODED_SECRET')], '$password': [('rgw_keystone_admin_password', '$password', 'HARD_CODED_SECRET'), ('password', '$password', 'HARD_CODED_SECRET')]} 
+ SECRETS:::ATTR_DETECTED_DICT:{'mon_key': ("'AQD7kyJQQGoOBhAAqrPAqSopSwPrrfMMomzVdw=='", 'API_KEY'), 'mgr_key': ("'AQD7kyJQQGoOBhAAqrPAqSopSwPrrfMMomzVdw=='", 'API_KEY'), 'rgw_user': ("'ceph'", 'USERNAME'), 'user': ("'ceph'", 'USERNAME'), 'secret': ("'AQD7kyJQQGoOBhAAqrPAqSopSwPrrfMMomzVdw=='", 'API_KEY')}
+
+```
+
 #### Repository-65
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-ci-2018-06/`
 
-1. Nothng found or previously reported 
+1. Nothing found or previously reported 
+
+> Handled by TaintPup 
 
 #### Repository-66
 
@@ -1165,6 +1265,8 @@ Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-tripleo-2018-0
 
 1. In `manifests/profile/base/designate/api.pp`, `$listen_ip      = '0.0.0.0',` is used in `$listen_uri = normalize_ip_for_uri($listen_ip)` and then in `class { '::designate::api': }` as `listen => "${listen_uri}:${listen_port}",`
 
+
+> Need to do cross script tracking. TODO. Rest handled by TaintPup 
 
 #### Repository-67
 
@@ -1180,8 +1282,12 @@ Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ceilometer-2018
 
 calls `ceilometer_config {}` inside `manifests/agent/auth.pp` . This is a TP 
 
+> Need to do cross script tracking. TODO. Rest handled by TaintPup 
+
 #### Repository-68
 
 Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-contrail-2018-06`
 
-1. Nothng found or previously reported 
+1. Nothing found or previously reported 
+
+> Handled by TaintPup 

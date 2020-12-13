@@ -41,12 +41,16 @@ SECRET_PASSWORD_LIST = ['pwd', 'password', 'passwd']
 SECRET_USER_LIST = ['user']
 SECRET_KEY_LIST = ['key', 'crypt', 'secret']
 INVALID_SECRET_CONFIG_VALUES = [DOLLAR_SYMBOL, ':undef', INVOKE_KEYWORD, '[]', '/', 'call', 'hiera', 'unset' ]  
-FORBIDDEN_USER_VALUES = ['domain', 'group', 'mode', 'schema', 'email'] 
-FORBIDDEN_KEY_VALUES  = ['separator', 'version', 'map', 'backend']  
+FORBIDDEN_USER_VALUES = ['domain', 'group', 'mode', 'schema', 'email', '_tenant'] 
+FORBIDDEN_PASS_VALUES = ['_auth'] 
+FORBIDDEN_KEY_VALUES  = ['separator', 'version', 'map', 'backend', '_host', '_tenant', 'set_', '_service_name', 'keytype', '_buffer_size', 'revocation_interval', 'gpg_pub_']  
 ADMIN_KEYWORD = 'admin'
 CONCAT_KEYWORD = 'cat'
 LOCALHOST_KEYWORD  = 'localhost'
-LOCAL_IP           = '127'
+LOCAL_IP_KEYWORD   =  '//1'
+XTRA_HTTP_PATTERN  = 'http'
+XTRA_HTTP_PROTO_KW = '_protocol'
+YUM_KW  = 'yum'
 
 
 TEMP_LOG_FILE = 'temp.output.from.parser.txt'
@@ -70,5 +74,6 @@ OUTPUT_INVALID_IP_KW     = 'INVALID_IP_ADDRESS'
 OUTPUT_HTTP_KW           = 'INSECURE_HTTP' 
 OUTPUT_SECRET_KW         = 'HARD_CODED_SECRET' 
 MULTI_TAINT_NONSENSE     = 'MUTI_TAINT_GARBAGE' 
+VALID_CONFIG_DEFAULT     = 'VALID_CONFIG_SAMPLE_PLACEHOLDER' 
 
 CASE_WHEN_HEURISTIC = 100 ## the heuritic is case and when will appear within the first 100 characters 

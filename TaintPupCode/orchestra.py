@@ -38,12 +38,14 @@ def finalizeSwitches( dic_ ):
 
 
 def sanitizeConfigVals(config_data):
-    data_ascii = config_data 
-    if(constants.IP_ADDRESS_PATTERN in config_data):
-        config_data = config_data.replace(constants.QUOTE_SYMBOL, constants.NULL_SYMBOL)
+    valid_config_data = constants.VALID_CONFIG_DEFAULT 
+    if(constants.IP_ADDRESS_PATTERN in config_data) and (constants.YUM_KW not in config_data) :
+        valid_config_data = config_data.replace(constants.QUOTE_SYMBOL, constants.NULL_SYMBOL)
     elif(  constants.HTTP_PATTERN in config_data ):
-        config_data = config_data.replace(constants.WHITESPACE_SYMBOL, constants.NULL_SYMBOL)
-    data_value =  config_data.strip() 
+        valid_config_data = config_data.replace(constants.WHITESPACE_SYMBOL, constants.NULL_SYMBOL)
+    elif(  constants.XTRA_HTTP_PATTERN in config_data ):
+        valid_config_data = config_data.replace(constants.WHITESPACE_SYMBOL, constants.NULL_SYMBOL)
+    data_value =  valid_config_data.strip() 
     data_ascii = sum([ ord(y_) for y_ in data_value ])     
     return data_ascii
 
@@ -66,7 +68,7 @@ def finalizeInvalidIPs(attr_dict, dict_vars):
 
 def extraHTTPCheck(_valu):
     flag_ = True
-    if(constants.LOCALHOST_KEYWORD in _valu) or (constants.CONCAT_KEYWORD in _valu) or ( constants.LOCAL_IP in _valu) or ( constants.DOLLAR_SYMBOL in _valu):
+    if(constants.LOCALHOST_KEYWORD in _valu) or (constants.CONCAT_KEYWORD in _valu) or ( constants.LOCAL_IP_KEYWORD in _valu ) or ( constants.DOLLAR_SYMBOL in _valu):
         flag_ = True 
     else: 
         third_slash_loc, cnt  = 0 , 0
@@ -101,6 +103,9 @@ def finalizeHTTP(attr_dict, dict_vars):
         var_ascii = sanitizeConfigVals( var_value )
         if (var_ascii >= 600) and ( constants.HTTP_PATTERN in var_value) and (extraHTTPCheck( var_value) ): # 600 is the total of 'http://'
             output_variable_dict[var_name] = (var_value, var_ascii) 
+        elif constants.XTRA_HTTP_PROTO_KW in var_name and  (var_ascii ==  448 or var_ascii == 526) : ### need to handle $magnum_protocol = 'http', ascii for 'http' is 448
+            output_variable_dict[var_name] = (var_value, var_ascii)             
+
     return output_attrib_dict, output_variable_dict # dict will help in taint tracking 
 
 def finalizeWeakEncrypt(func_dict):
@@ -148,13 +153,19 @@ def isValidKeyName(keyName):
         valid = False  
     return valid
 
+def isValidPassword(pName): 
+    valid = True
+    if( any(z_ in pName for z_ in constants.FORBIDDEN_PASS_VALUES) ): 
+        valid = False  
+    return valid
+
 def finalizeHardCodedSecrets( attr_dict, vars_dict ):
     secret_attr_dict , secret_var_dict = {}, {} 
     for attr_key, attr_data in attr_dict.items():
         attr_name  = attr_data[-2] 
         attr_value = attr_data[-1]
         attr_name  = attr_name.strip() 
-        if(any(x_ in attr_name for x_ in constants.SECRET_PASSWORD_LIST )) and (checkIfValidSecret ( attr_value ) ):        
+        if(any(x_ in attr_name for x_ in constants.SECRET_PASSWORD_LIST )) and (checkIfValidSecret ( attr_value ) ) and (isValidPassword( attr_name )):        
             secret_attr_dict[attr_name] =  attr_value, constants.OUTPUT_PASS_KW
         elif(any(x_ in attr_name for x_ in constants.SECRET_USER_LIST )) and (checkIfValidSecret ( attr_value ) ) and (isValidUserName( attr_name ) ) :        
             secret_attr_dict[attr_name] =  attr_value, constants.OUTPUT_USER_KW
@@ -163,7 +174,7 @@ def finalizeHardCodedSecrets( attr_dict, vars_dict ):
     for var_name, var_data in vars_dict.items():
         var_value  = var_data[-1]
         var_name   = var_name.strip() 
-        if(any(x_ in var_name for x_ in constants.SECRET_PASSWORD_LIST )) and (checkIfValidSecret ( var_value ) ):        
+        if(any(x_ in var_name for x_ in constants.SECRET_PASSWORD_LIST )) and (checkIfValidSecret ( var_value ) ) and ( isValidPassword( var_name ) ):        
             secret_var_dict[var_name] = var_value, constants.OUTPUT_PASS_KW
         elif(any(x_ in var_name for x_ in constants.SECRET_USER_LIST )) and (checkIfValidSecret ( var_value ) ) and (isValidUserName( var_name ) ):        
             secret_var_dict[var_name] = var_value, constants.OUTPUT_USER_KW 
@@ -255,7 +266,7 @@ def orchestrateWithTaint(dir_):
         empty_pwd_taint_dict           = graph.trackTaint( constants.OUTPUT_EMPTY_KW, empty_pwd_vars, dict_all_attr, dict_all_vari )        
 
 
-        # if  'manifests/plugins' in pupp_file:
+        # if  'packstack/manifests/keystone/' in pupp_file:
         print( 'INVALID_IP:::ATTR:{} \n DETCTED_DICT:{} \n TAINTED_DICT:{}'.format( invalid_ip_dict_attr,  invalid_ip_dict_vars , invalid_ip_taint_dict )  )
         print( 'HTTP:::ATTR_DICT:{} \n DETECTED_DICT:{} \n TAINTED_DICT:{}'.format( http_dict_attr, http_dict_vars, http_taint_dict )  )
         # print( empty_pwd_vars, empty_pwd_taint_dict ) 

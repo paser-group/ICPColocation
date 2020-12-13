@@ -12,5 +12,5 @@ if __name__=='__main__':
     # 
 
 
-    dataset_dir = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-onos-2018-06/'
+    dataset_dir = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-contrail-2018-06/'
     orchestra.orchestrateWithTaint( dataset_dir )    
