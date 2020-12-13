@@ -1136,6 +1136,8 @@ used and assigned to an attribute.
 
 > Handled by TaintPup 
 
+> TEST_CASE: Use this repo to test one-level and multi-level taint tracking 
+
 #### Repository-56
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-glance-2018-06/`
@@ -1161,6 +1163,8 @@ in `keystone::resource::service_identity {}` inside `manifests/endpoint.pp`
 #### Repository-58
 
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-library-2018-06/`
+
+
 
 1. In `deplyoment/puppet/fuel/cluster/manifests/mysql.pp`, `$password',` used in `$init_file_contents`, which is later used in  `command => "echo \"${init_file_contents}\" > /tmp/wsrep-init-file",` inside `exec { 'create-init-file': }` 
 
