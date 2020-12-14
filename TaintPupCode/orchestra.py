@@ -5,7 +5,7 @@ Orchestrate parser and graph generator
 '''
 
 import constants 
-import parser 
+import  parser 
 import os 
 from collections import Counter 
 import graph 
@@ -267,20 +267,11 @@ def orchestrateWithTaint(dir_):
 
 
         # if  'packstack/manifests/keystone/' in pupp_file:
-        print( 'INVALID_IP:::ATTR:{} \n DETCTED_DICT:{} \n TAINTED_DICT:{}'.format( invalid_ip_dict_attr,  invalid_ip_dict_vars , invalid_ip_taint_dict )  )
+        # print( 'INVALID_IP:::ATTR:{} \n DETCTED_DICT:{} \n TAINTED_DICT:{}'.format( invalid_ip_dict_attr,  invalid_ip_dict_vars , invalid_ip_taint_dict )  )
         print( 'HTTP:::ATTR_DICT:{} \n DETECTED_DICT:{} \n TAINTED_DICT:{}'.format( http_dict_attr, http_dict_vars, http_taint_dict )  )
         # print( empty_pwd_vars, empty_pwd_taint_dict ) 
-        # print( 'SECRETS:::VAR_DETECTED_DICT:{} \n TAINTED_DICT:{} \n SECRETS:::ATTR_DETECTED_DICT:{}'.format( secret_dict_vars, secret_taint_dict, secret_dict_attr )  )
+        print( 'SECRETS:::VAR_DETECTED_DICT:{} \n TAINTED_DICT:{} \n SECRETS:::ATTR_DETECTED_DICT:{}'.format( secret_dict_vars, secret_taint_dict, secret_dict_attr )  )
         print( pupp_file )
         # print( dict_all_vari )
 
         print('-'*100)
-
-        
-
-
-if __name__=='__main__':
-    test_pp_dir = '../puppet-scripts/'
-    # orchestrateWithoutTaint( test_pp_dir )
-
-    orchestrateWithTaint( test_pp_dir )

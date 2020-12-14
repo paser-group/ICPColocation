@@ -69,7 +69,7 @@ def constructLHSRHSPairs( var_to_track,  var_dic ):
 def doMultipleTaint(var_to_track, all_var_dict):
     var2ret = constants.MULTI_TAINT_NONSENSE 
     '''
-    algorithm : keep track of LHS for which RHS exists usign a queue 
+    algorithm : keep track of LHS for which RHS exists using a queue 
     then return the latest inserted element of the queue 
     '''
     constructLHSRHSPairs( var_to_track,   all_var_dict ) 

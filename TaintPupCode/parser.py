@@ -226,7 +226,7 @@ def executeParser(pp_file):
         subprocess.check_output([constants.BASH_CMD, constants.BASH_FLAG, command2exec])
     except subprocess.CalledProcessError as e_:
         print( str(e_) )
-    num_lines = sum(1 for line in open( constants.TEMP_LOG_FILE , constants.FILE_READ_MODE ))
+    # num_lines = sum(1 for line in open( constants.TEMP_LOG_FILE , constants.FILE_READ_MODE ))
     parseResults = mineParseOutput( constants.TEMP_LOG_FILE )
     os.remove( constants.TEMP_LOG_FILE )
     return parseResults 
