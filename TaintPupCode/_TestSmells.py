@@ -54,6 +54,10 @@ class TestSmells( unittest.TestCase ):
         _attr, _vars = orchestra.finalizeEmptyPassword( dict_all_attr, dict_all_vari )
         self.assertEqual(  1 , len(  _vars ) , _test_constants._empty_pass_msg_ ) 
 
+    def testDefaultAdmin( self ): 
+        _, _, _, dict_all_vari, _, _, _ = parser.executeParser( _test_constants._default_adm_script_name ) 
+        _vars = orchestra.finalizeDefaults(  dict_all_vari )
+        self.assertEqual(  1 , len(  _vars ) , _test_constants._default_adm_msg_ ) 
 
 if __name__ == '__main__':
     unittest.main()
