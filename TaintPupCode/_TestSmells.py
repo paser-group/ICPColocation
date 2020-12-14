@@ -59,5 +59,16 @@ class TestSmells( unittest.TestCase ):
         _vars = orchestra.finalizeDefaults(  dict_all_vari )
         self.assertEqual(  1 , len(  _vars ) , _test_constants._default_adm_msg_ ) 
 
+    def testHardcodedUser( self ): 
+        self.assertTrue( orchestra.isValidUserName( _test_constants._secret_uname ) , _test_constants._secret_flag_status  ) 
+
+    def testHardcodedPass( self ): 
+        self.assertTrue( orchestra.isValidPassword( _test_constants._secret_password ) , _test_constants._secret_flag_status  ) 
+
+    def testHardcodedSecret( self ): 
+        _, _, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( _test_constants._secret_script_name ) 
+        _attr, _vars = orchestra.finalizeHardCodedSecrets( dict_all_attr, dict_all_vari )
+        self.assertEqual(  2 , len(  _vars ) , _test_constants._secret_msg_ ) 
+
 if __name__ == '__main__':
     unittest.main()

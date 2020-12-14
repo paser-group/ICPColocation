@@ -51,3 +51,9 @@ _empty_pass_msg_           = common_error_string + '1'
 
 _default_adm_script_name   = 'test.api.pp' 
 _default_adm_msg_          = common_error_string + '1'
+
+_secret_script_name   = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/sample-puppet-scripts/onos-dasboard.pp' 
+_secret_msg_          = common_error_string + '2'
+_secret_uname         = 'karaf'
+_secret_password      = 'karaf'
+_secret_flag_status   = 'TRUE'
