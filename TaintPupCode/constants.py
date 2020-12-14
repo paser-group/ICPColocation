@@ -51,7 +51,7 @@ LOCAL_IP_KEYWORD   =  '//1'
 XTRA_HTTP_PATTERN  = 'http'
 XTRA_HTTP_PROTO_KW = '_protocol'
 YUM_KW  = 'yum'
-
+INVALID_ATTRIBUTE_KEYWORDS = ['block', 'resource' , '(', ')']  
 
 TEMP_LOG_FILE = 'temp.output.from.parser.txt'
 BASH_CMD = 'bash'

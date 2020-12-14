@@ -6,7 +6,7 @@ Constants needed to do testing
 
 common_error_string = 'DOES NOT MATCH:::Should be '
 
-_multi_taint_script_name    = '../puppet-scripts/onos-dasboard.pp' 
+_multi_taint_script_name    = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/sample-puppet-scripts/onos-dasboard.pp' 
 _multi_taint_var_input      = '$password'
 _multi_taint_var_output     = '$json_message'
 _multi_taint_var_error_msg  = common_error_string + _multi_taint_var_output 
@@ -37,6 +37,7 @@ _invalid_ip_script_name2 = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-Ten
 _invalid_ip_msg1         = common_error_string + '1'
 _invalid_ip_msg0         = common_error_string + '0'
 
-_http_script_name  = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/sample-puppet-scripts/manifests/auth.pp' 
-_http_msg_1        = common_error_string + '1'
-_http_msg_0        = common_error_string + '0'
+_http_var_script_name    = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/sample-puppet-scripts/manifests/auth.pp' 
+_http_msg_1              = common_error_string + '1'
+_http_msg_0              = common_error_string + '0'
+_http_attr_script_name   = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/sample-puppet-scripts/onos-dasboard.pp'

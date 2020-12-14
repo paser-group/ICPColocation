@@ -32,12 +32,17 @@ class TestSmells( unittest.TestCase ):
         self.assertEqual(  0 , len(ip_vars) , _test_constants._invalid_ip_msg0 ) 
         self.assertEqual(  1 , len(ip_attr) , _test_constants._invalid_ip_msg1 ) 
 
-    def testHTTP( self ): 
-        _, _, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( _test_constants._http_script_name ) 
+    def testHTTPForVariables( self ): 
+        _, _, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( _test_constants._http_var_script_name ) 
         http_attr, http_vars = orchestra.finalizeHTTP( dict_all_attr, dict_all_vari )
         self.assertEqual(  3 , len(http_vars) , _test_constants._http_msg_1 ) 
         self.assertEqual(  0 , len(http_attr) , _test_constants._http_msg_0 )  
 
+    def testHTTPForAttributes( self ): 
+        _, _, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( _test_constants._http_attr_script_name ) 
+        http_attr, http_vars = orchestra.finalizeHTTP( dict_all_attr, dict_all_vari )
+        self.assertEqual(  1 , len(http_vars) , _test_constants._http_msg_1 ) 
+        self.assertEqual(  1 , len(http_attr) , _test_constants._http_msg_1 )  
 
 if __name__ == '__main__':
     unittest.main()

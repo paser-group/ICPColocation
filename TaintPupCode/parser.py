@@ -46,6 +46,13 @@ def getContentWithStack( parsed_out_file_str ):
                 tracker_list.append(  (returned_elem, char_index) )
     return tracker_list , parsed_out_file_str
 
+
+def check4InavlidAttrKeyword( key_str ):
+    flag_ = False
+    if ( any(x_ in key_str for x_ in constants.INVALID_ATTRIBUTE_KEYWORDS ) ):
+        flag_ = True 
+    return flag_
+
 def getAttributes(all_locs, all_as_str): 
     attribDict = {}
     attribCnt  = 0 
@@ -60,12 +67,13 @@ def getAttributes(all_locs, all_as_str):
             '''
             # print(loc_tup[0], loc_tup[-1], loc_str)             
             if ( constants.NEWLINE_CONSTANT  in loc_str and constants.CONCAT_KEYWORD in loc_str) or (constants.NEWLINE_CONSTANT not in loc_str) :
-                if constants.ATTRIBUTE_SYMBOL in loc_str:
+                if constants.ATTRIBUTE_SYMBOL in loc_str :
                     attribCnt += 1 
                     key_, value_ = loc_str.split( constants.ATTRIBUTE_SYMBOL  )
                     key_, value_ = key_.strip(), value_.strip()
                     # same attribute can appear in many places 
-                    attribDict[attribCnt] = (loc_tup[0], loc_tup[-1], key_,  value_) 
+                    if( check4InavlidAttrKeyword(  key_ ) == False ):
+                        attribDict[attribCnt] = (loc_tup[0], loc_tup[-1], key_,  value_) 
             # print('='*25) 
     return attribDict
 
