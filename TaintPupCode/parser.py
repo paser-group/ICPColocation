@@ -243,8 +243,8 @@ def executeParser(pp_file):
 
 
 if __name__=='__main__':
-    # test_pp_file = 'test.api.pp'
+    test_pp_file = 'test.api.pp'
     # test_pp_file = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ceph-2018-06/manifests/rgw/keystone/auth.pp'
-    test_pp_file = '../../sample-puppet-scripts/manifests/init1.pp'
+    # test_pp_file = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/sample-puppet-scripts/manifests/init1.pp' 
 
     executeParser( test_pp_file )

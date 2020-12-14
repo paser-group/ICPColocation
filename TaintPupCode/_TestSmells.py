@@ -70,5 +70,11 @@ class TestSmells( unittest.TestCase ):
         _attr, _vars = orchestra.finalizeHardCodedSecrets( dict_all_attr, dict_all_vari )
         self.assertEqual(  2 , len(  _vars ) , _test_constants._secret_msg_ ) 
 
+
+    def testHardcodedUname( self ): 
+        _, _, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( _test_constants._username_script_name ) 
+        _attr, _vars = orchestra.finalizeHardCodedSecrets( dict_all_attr, dict_all_vari )
+        self.assertEqual(  2 , len(  _attr ) , _test_constants._secret_msg_ ) 
+
 if __name__ == '__main__':
     unittest.main()

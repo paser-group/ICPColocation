@@ -9,6 +9,9 @@ var_tracker_list  = []
 
 def checkLiveness( var_ , all_vari_dict ): 
     aliveFlag = True 
+    '''
+    all_vari_dict has a different format than smell_vari_dict 
+    '''
     for var_name_, var_data in all_vari_dict.items():
         var_value  = var_data[-1]
         var_name_  = var_name_.strip() 
@@ -24,8 +27,8 @@ def checkLiveness( var_ , all_vari_dict ):
 def trackTaint( smell_type, smell_dict_var, all_attrib_dict, all_vari_dict ):
     graphDict = {}
     if(len(smell_dict_var) > 0 ):
-        for var_name, var_data in smell_dict_var.items():
-            var_value, var_ascii = var_data 
+        for var_count, var_data in smell_dict_var.items():
+            var_name,  var_value, var_ascii = var_data 
             '''
             first check if variable is used in an expression 
             '''
@@ -36,9 +39,13 @@ def trackTaint( smell_type, smell_dict_var, all_attrib_dict, all_vari_dict ):
                 '''
                 multi_taint_var_name = doMultipleTaint( var_name, all_vari_dict  )
                 var_tracker_list.clear() ## clear cache once you are done, var_tracker_list is a global variable and clear everytime 
-                for attr_key, attr_data in all_attrib_dict.items():
+                for attr_cnt, attr_data in all_attrib_dict.items():
+                    '''
+                    all_attrib_dict has a different format than smell_attrib_dict 
+                    '''
                     attr_name  = attr_data[-2] 
                     attr_value = attr_data[-1] 
+
                     enh_var_name =  constants.DOLLAR_SYMBOL + constants.LPAREN_SYMBOL + var_name.replace(constants.DOLLAR_SYMBOL, constants.NULL_SYMBOL )  + constants.RPAREN_SYMBOL  ##need to handle ${url}
                     if( var_name in attr_value ) or (enh_var_name in attr_value) or (multi_taint_var_name in attr_value):  
                         '''
@@ -52,6 +59,9 @@ def trackTaint( smell_type, smell_dict_var, all_attrib_dict, all_vari_dict ):
 
 
 def constructLHSRHSPairs( var_to_track,  var_dic ):
+    '''
+    var_dic has a different format than smell_attrib_dict as it is all_var_dict 
+    '''
     for var_, var_data  in var_dic.copy().items(): 
         lhs , rhs = var_ , var_data[-1] 
         enh_var_to_track = var_to_track.replace(constants.DOLLAR_SYMBOL, constants.NULL_SYMBOL) 
@@ -82,7 +92,7 @@ def doMultipleTaint(var_to_track, all_var_dict):
 
 if __name__=='__main__':
     # script_name = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-onos-2018-06/deployment_scripts/puppet/manifests/onos-dashboard.pp'
-    script_name = '../puppet-scripts/onos-dasboard.pp' 
+    script_name = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/sample-puppet-scripts/onos-dasboard.pp' 
     dict_of_resources, dict_of_classes, dict_of_all_attribs, dict_of_all_variables, dict_of_switch_cases, list_of_susp_comments , dict_of_funcs = parser.executeParser( script_name )
     # print( dict_of_all_variables )
     sink_var = doMultipleTaint( '$password' ,  dict_of_all_variables )
