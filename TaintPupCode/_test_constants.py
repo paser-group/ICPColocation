@@ -23,3 +23,20 @@ _single_taint_error_true  = common_error_string + 'TRUE'
 _single_taint_error_msg   = common_error_string + 'user' 
 OUTPUT_SECRET_KW          = 'HARD_CODED_SECRET'
 
+_susp_script_name = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/puppet-2018-06/manifests/realm.pp' 
+_susp_error_msg   = common_error_string + '6'
+
+
+_missing_default_script_name = 'test.api.pp' 
+_missing_default_msg         = common_error_string + '1'
+_present_default_script_name = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/sample-puppet-scripts/manifests/params.switch.case.pp'
+_present_default_msg         = common_error_string + '0'
+
+_invalid_ip_script_name1 = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/sample-puppet-scripts/manifests/init1.pp' 
+_invalid_ip_script_name2 = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/sample-puppet-scripts/manifests/init2.pp' 
+_invalid_ip_msg1         = common_error_string + '1'
+_invalid_ip_msg0         = common_error_string + '0'
+
+_http_script_name  = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/sample-puppet-scripts/manifests/auth.pp' 
+_http_msg_1        = common_error_string + '1'
+_http_msg_0        = common_error_string + '0'

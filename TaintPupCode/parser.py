@@ -221,18 +221,22 @@ def mineParseOutput(parser_output_file):
 
 
 def executeParser(pp_file):
-    try:
-        command2exec = constants.NATIVE_PUPPET_PARSER_CMD +  constants.WHITESPACE_SYMBOL + pp_file + constants.WHITESPACE_SYMBOL + constants.REDIRECT_SYMBOL + constants.WHITESPACE_SYMBOL + constants.TEMP_LOG_FILE 
-        subprocess.check_output([constants.BASH_CMD, constants.BASH_FLAG, command2exec])
-    except subprocess.CalledProcessError as e_:
-        print( str(e_) )
-    # num_lines = sum(1 for line in open( constants.TEMP_LOG_FILE , constants.FILE_READ_MODE ))
-    parseResults = mineParseOutput( constants.TEMP_LOG_FILE )
-    os.remove( constants.TEMP_LOG_FILE )
+    parseResults = None 
+    if (os.path.exists(pp_file) ):
+        try:
+            command2exec = constants.NATIVE_PUPPET_PARSER_CMD +  constants.WHITESPACE_SYMBOL + pp_file + constants.WHITESPACE_SYMBOL + constants.REDIRECT_SYMBOL + constants.WHITESPACE_SYMBOL + constants.TEMP_LOG_FILE 
+            subprocess.check_output([constants.BASH_CMD, constants.BASH_FLAG, command2exec])
+        except subprocess.CalledProcessError as e_:
+            print( str(e_) )
+        # num_lines = sum(1 for line in open( constants.TEMP_LOG_FILE , constants.FILE_READ_MODE ))
+        parseResults = mineParseOutput( constants.TEMP_LOG_FILE )
+        os.remove( constants.TEMP_LOG_FILE )
     return parseResults 
 
 
 if __name__=='__main__':
     # test_pp_file = 'test.api.pp'
-    test_pp_file = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ceph-2018-06/manifests/rgw/keystone/auth.pp'
+    # test_pp_file = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ceph-2018-06/manifests/rgw/keystone/auth.pp'
+    test_pp_file = '../../sample-puppet-scripts/manifests/init1.pp'
+
     executeParser( test_pp_file )
