@@ -44,3 +44,7 @@ _http_attr_script_name   = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-Ten
 
 _weak_cryp_script_name    = 'test.api.pp' 
 _weak_cryp_msg_           = common_error_string + '1'
+
+
+_empty_pass_script_name    = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/sample-puppet-scripts/manifests/oozie.pp' 
+_empty_pass_msg_           = common_error_string + '1'
