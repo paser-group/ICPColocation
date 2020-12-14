@@ -114,10 +114,10 @@ def finalizeWeakEncrypt(func_dict):
     for func_count, func_data in func_dict.items():
         func_name = func_data[0] 
         if constants.MD5_KEYWORD in func_name: 
-            weak_dict += 1 
+            weak_count += 1 
             weak_dict[weak_count] = func_name , constants.MD5_KEYWORD            
         elif  constants.SHA1_KEYWORD in func_name:
-            weak_dict += 1 
+            weak_count += 1 
             weak_dict[weak_count] = func_name, constants.SHA1_KEYWORD
     return weak_dict
 

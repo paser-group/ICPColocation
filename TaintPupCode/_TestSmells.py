@@ -44,5 +44,11 @@ class TestSmells( unittest.TestCase ):
         self.assertEqual(  1 , len(http_vars) , _test_constants._http_msg_1 ) 
         self.assertEqual(  1 , len(http_attr) , _test_constants._http_msg_1 )  
 
+    def testWeakCrypto( self ): 
+        _, _, _, _, _, _, dict_func = parser.executeParser( _test_constants._weak_cryp_script_name ) 
+        dict_ = orchestra.finalizeWeakEncrypt( dict_func )
+        self.assertEqual(  1 , len(dict_) , _test_constants._weak_cryp_msg_ ) 
+
+
 if __name__ == '__main__':
     unittest.main()
