@@ -27,7 +27,7 @@ class TestSmells( unittest.TestCase ):
         self.assertEqual(  1 , len(ip_vars) , _test_constants._invalid_ip_msg1 ) 
 
     def testInavlidIPAbsence( self ): 
-        _, _, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( _test_constants._invalid_ip_script_name2 ) 
+        _, _, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( _test_constants._invalid_ip_script_name3 ) 
         ip_attr, ip_vars = orchestra.finalizeInvalidIPs( dict_all_attr, dict_all_vari )
         self.assertEqual(  0 , len(ip_vars) , _test_constants._invalid_ip_msg0 ) 
         self.assertEqual(  1 , len(ip_attr) , _test_constants._invalid_ip_msg1 ) 

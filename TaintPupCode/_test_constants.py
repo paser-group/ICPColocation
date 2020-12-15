@@ -34,6 +34,7 @@ _present_default_msg         = common_error_string + '0'
 
 _invalid_ip_script_name1 = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/sample-puppet-scripts/manifests/init1.pp' 
 _invalid_ip_script_name2 = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/sample-puppet-scripts/manifests/init2.pp' 
+_invalid_ip_script_name3 = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/packstack-2018-06/packstack/puppet/modules/packstack/manifests/magnum.pp'
 _invalid_ip_msg1         = common_error_string + '1'
 _invalid_ip_msg0         = common_error_string + '0'
 
@@ -60,3 +61,12 @@ _secret_flag_status   = 'TRUE'
 
 
 _username_script_name   = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/sample-puppet-scripts/manifests/oozie/database/mysql.pp' 
+
+_taintedHttp_script_v1 = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/packstack-2018-06/packstack/puppet/modules/packstack/manifests/keystone/magnum.pp'
+_tainted_http_msg_v1   = common_error_string + '3'
+_taintedHttp_script_v2 = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/packstack-2018-06/packstack/puppet/modules/packstack/manifests/keystone/manila.pp'
+_tainted_http_msg_v2   = common_error_string + '5'
+_taintedHttp_script_v3 = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/packstack-2018-06/packstack/puppet/modules/packstack/manifests/keystone/cinder.pp'
+_tainted_http_msg_v3   = common_error_string + '9'
+
+OUTPUT_HTTP_KW         = 'INSECURE_HTTP'
