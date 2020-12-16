@@ -30,5 +30,14 @@ class TestCrossScriptTaint( unittest.TestCase ):
         _, dict_clas, _, _, _, _, _ = parser.executeParser( _test_constants._cross_taint_script_1 ) 
         self.assertEqual(  0 , len(dict_clas[5][-2])  ,  _test_constants.common_error_string + str(0) ) 
 
+    def testCrossScriptReff(self):            
+        _, dict_clas, _, _, _, _, _ = parser.executeParser( _test_constants._cross_taint_script_1 ) 
+        scripts2Track = graph.getReferredScripts( dict_clas , _test_constants._cross_taint_script_1 )
+        self.assertEqual(  5 , len( scripts2Track )  ,  _test_constants.common_error_string + str(5) ) 
+
+    def testCrossScriptSecret(self):            
+        _, dict_clas, _, _, _, _, _ = parser.executeParser( _test_constants._cross_taint_script_1 ) 
+        scripts2Track = graph.getReferredScripts( dict_clas , _test_constants._cross_taint_script_1 )
+
 if __name__ == '__main__':
     unittest.main()

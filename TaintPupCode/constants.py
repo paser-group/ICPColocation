@@ -17,6 +17,7 @@ COLON_SYMBOL = ':'
 AN_S         = 's'
 
 
+
 CWE_SUSP_COMMENT_LIST      = ['hack', 'fixme', 'later', 'todo', 'to-do', 'bug'  ]
 DEBUG_KW = 'debug' 
 DEFAULT_RESO_NAME = 'ESLIC_DEFAULT_RESOURCE_NAME'
@@ -76,5 +77,9 @@ OUTPUT_SECRET_KW         = 'HARD_CODED_SECRET'
 MULTI_TAINT_NONSENSE     = 'MUTI_TAINT_GARBAGE' 
 VALID_CONFIG_DEFAULT     = 'VALID_CONFIG_SAMPLE_PLACEHOLDER' 
 
-CASE_WHEN_HEURISTIC = 100 ## the heuritic is case and when will appear within the first 100 characters 
-INVALID_CLASS_KW    = 'block\n'
+CASE_WHEN_HEURISTIC      = 100 ## the heuritic is case and when will appear within the first 100 characters 
+INVALID_CLASS_KW         = 'block\n'
+_DATASET_PATH            = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/' 
+PUPPET_KW                = 'puppet-'
+MONTH_DATA_KW            = '-2018-06'
+MANIFESTS_KW             = 'manifests'
