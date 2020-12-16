@@ -71,8 +71,11 @@ def getAttributes(all_locs, all_as_str):
                     attribCnt += 1 
                     key_, value_ = loc_str.split( constants.ATTRIBUTE_SYMBOL  )
                     key_, value_ = key_.strip(), value_.strip()
-                    # same attribute can appear in many places 
+                    '''
+                    check for invalid parsing key words like block, resource 
+                    '''
                     if( check4InavlidAttrKeyword(  key_ ) == False ):
+                        # same attribute can appear in many places , so using count 
                         attribDict[attribCnt] = (loc_tup[0], loc_tup[-1], key_,  value_) 
             # print('='*25) 
     return attribDict
@@ -153,14 +156,20 @@ def getClasses(all_locs, all_as_str):
             class_locs,  class_content = getContentWithStack( loc_str  )  
             class_name, inherit_name = getClassName( class_locs, class_content ) 
             var_per_class_dict = getVars( class_locs, class_content )  
+            attr_per_class_dic = getAttributes( class_locs, class_content )
+
             '''
             Needed to handle arameters and parameters and block 
             '''
             if constants.ARAMETERS_KEYWORD in var_per_class_dict: del var_per_class_dict[ constants.ARAMETERS_KEYWORD ]          
             if constants.PARAMETERS_KEYWORD in var_per_class_dict: del var_per_class_dict[ constants.PARAMETERS_KEYWORD ]
+            if constants.ARAMETERS_KEYWORD in attr_per_class_dic: del attr_per_class_dic[ constants.ARAMETERS_KEYWORD ]          
+            if constants.PARAMETERS_KEYWORD in attr_per_class_dic: del attr_per_class_dic[ constants.PARAMETERS_KEYWORD ]
+
             if (constants.PARAMETERS_KEYWORD in class_name or constants.BLOCK_KEYWORD in class_name ) and (constants.WHITESPACE_SYMBOL in class_name): 
                 class_name = class_name.split(constants.WHITESPACE_SYMBOL)[0]  
-            classDict[ class_index ] = ( class_name, inherit_name, loc_tup[0], loc_tup[-1], var_per_class_dict )
+            if (constants.INVALID_CLASS_KW not in class_name): 
+                classDict[ class_index ] = ( class_name, inherit_name, loc_tup[0], loc_tup[-1], var_per_class_dict , attr_per_class_dic )
     return classDict    
 
 def getWhenBlock(case_locations, case_full_content):

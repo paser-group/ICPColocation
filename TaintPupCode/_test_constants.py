@@ -70,3 +70,6 @@ _taintedHttp_script_v3 = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/packsta
 _tainted_http_msg_v3   = common_error_string + '9'
 
 OUTPUT_HTTP_KW         = 'INSECURE_HTTP'
+
+_cross_taint_script_1  = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-trove-2018-06/examples/site.pp'
+_cross_taint_msg_1     =  common_error_string + '7'

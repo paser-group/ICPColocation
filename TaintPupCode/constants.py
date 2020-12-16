@@ -77,3 +77,4 @@ MULTI_TAINT_NONSENSE     = 'MUTI_TAINT_GARBAGE'
 VALID_CONFIG_DEFAULT     = 'VALID_CONFIG_SAMPLE_PLACEHOLDER' 
 
 CASE_WHEN_HEURISTIC = 100 ## the heuritic is case and when will appear within the first 100 characters 
+INVALID_CLASS_KW    = 'block\n'
