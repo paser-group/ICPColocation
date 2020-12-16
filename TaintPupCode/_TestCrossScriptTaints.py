@@ -32,12 +32,13 @@ class TestCrossScriptTaint( unittest.TestCase ):
 
     def testCrossScriptReff(self):            
         _, dict_clas, _, _, _, _, _ = parser.executeParser( _test_constants._cross_taint_script_1 ) 
-        scripts2Track = graph.getReferredScripts( dict_clas , _test_constants._cross_taint_script_1 )
+        scripts2Track = orchestra.getReferredScripts( dict_clas , _test_constants._cross_taint_script_1 )
         self.assertEqual(  5 , len( scripts2Track )  ,  _test_constants.common_error_string + str(5) ) 
 
-    def testCrossScriptSecret(self):            
-        _, dict_clas, _, _, _, _, _ = parser.executeParser( _test_constants._cross_taint_script_1 ) 
-        scripts2Track = graph.getReferredScripts( dict_clas , _test_constants._cross_taint_script_1 )
+    # def testCrossScriptSecret(self):            
+    #     _, dict_clas, _, _, _, _, _ = parser.executeParser( _test_constants._cross_taint_script_1 ) 
+    #     scripts2Track = orchestra.getReferredScripts( dict_clas , _test_constants._cross_taint_script_1 ) 
+    #     orchestra.getCrossScriptSecret( scripts2Track, dict_clas ) 
 
 if __name__ == '__main__':
     unittest.main()

@@ -255,6 +255,80 @@ def orchestrateWithoutTaint(dir_):
         print('-'*100)
 
 
+def getReferredScriptName(cls_name, module_name):
+    cls_name = cls_name.replace( constants.RESOURCE_KEYWORD , constants.NULL_SYMBOL)
+    cls_name = cls_name.replace( constants.LPAREN_SYMBOL , constants.NULL_SYMBOL)
+    cls_name = cls_name.replace( constants.NEWLINE_CONSTANT , constants.NULL_SYMBOL)
+    cls_name = cls_name.replace( constants.WHITESPACE_SYMBOL , constants.NULL_SYMBOL)
+    cls_name = cls_name.replace( constants.QUOTE_SYMBOL , constants.NULL_SYMBOL)
+    splitted_list = cls_name.split( constants.COLON_SYMBOL * 2  )  ## synatx is ::<module_name>::script
+    splitted_list = [z_ for z_ in splitted_list if len(z_) > 0  and z_ != module_name ]
+    # print(cls_name)
+    # print(splitted_list) 
+    reff_script_path = constants.SLASH_SYMBOL.join( splitted_list )
+    # print( reff_script_path )
+    # print('='*50)
+    return  reff_script_path 
+
+
+def getReferredScripts( class_dic , script_path): 
+    scripts2track      = []
+    script_module_path = script_path.replace( constants._DATASET_PATH ,  constants.NULL_SYMBOL )
+    script_module_name = script_module_path.split( constants.SLASH_SYMBOL )[0] 
+    script_module_name = script_module_name.replace( constants.PUPPET_KW, constants.NULL_SYMBOL )
+    script_module_name = script_module_name.replace( constants.MONTH_DATA_KW, constants.NULL_SYMBOL ) 
+    for class_index, class_data in class_dic.items(): 
+        class_attrs = class_data[-1] 
+        class_name  = class_data[0]
+        reff_path =getReferredScriptName( class_name, script_module_name )
+        full_script_path = constants._DATASET_PATH + constants.PUPPET_KW + script_module_name + constants.MONTH_DATA_KW + constants.SLASH_SYMBOL + constants.MANIFESTS_KW + constants.SLASH_SYMBOL  + reff_path + constants.PP_EXTENSION
+        if  os.path.exists( full_script_path ) : 
+            scripts2track.append(  (class_index, full_script_path  )  )
+
+    return scripts2track
+    
+
+
+def checkAttribInReferred( name2check, dict_vari ):
+    checkFlag = False
+    for k_, v_ in dict_all_vari.items(): 
+        if name2check in k_ : 
+            checkFlag = True 
+    return checkFlag
+
+
+def getCrossScriptSecret( script_list, class_dict ):
+    output_count, output_dict = 0, {}
+    for tup_ in script_list:
+        class_index, refferred_full_path = tup_
+        if class_index in class_dict: 
+            attr_dict = class_dict[class_index][-1]
+            for k_, v_ in attr_dict.items(): 
+                attrib_name, attrib_value = v_[-2], v_[-1] 
+                if len( attrib_value ) > 0: 
+                    _, _, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( refferred_full_path )
+                    '''
+                    first check if the variable is in the referred scripts 
+                    '''
+                    if(  checkAttribInReferred(  attrib_name, dict_all_vari  ) ): 
+                        '''
+                        now check if the attrib_name is used by an attribute using two steps: 
+                        1. existence of the attrib_name in secret_dict_vars 
+                        2. existence of the attrib_name in secret_taint_dict 
+                        '''
+                        _, secret_dict_vars = finalizeHardCodedSecrets( dict_all_attr, dict_all_vari )
+                        secret_taint_dict   = graph.trackTaint( constants.OUTPUT_SECRET_KW, secret_dict_vars, dict_all_attr, dict_all_vari )                        
+                        print(secret_taint_dict) 
+                        if ( attrib_name in secret_dict_vars ) and ( attrib_name in secret_taint_dict ) :
+                            output_count += 1 
+                            output_dict[output_count] = ( class_index, attrib_name, attrib_value )
+    return output_dict 
+
+
+
+
+
+
 def orchestrateWithTaint(dir_):
     all_pupp_files = getPuppetFiles(  dir_ )
     for pupp_file in all_pupp_files:

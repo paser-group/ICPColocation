@@ -88,37 +88,7 @@ def doMultipleTaint(var_to_track, all_var_dict):
         var2ret = var_tracker_list[0] 
     return var2ret 
 
-def getReferredScriptName(cls_name, module_name):
-    cls_name = cls_name.replace( constants.RESOURCE_KEYWORD , constants.NULL_SYMBOL)
-    cls_name = cls_name.replace( constants.LPAREN_SYMBOL , constants.NULL_SYMBOL)
-    cls_name = cls_name.replace( constants.NEWLINE_CONSTANT , constants.NULL_SYMBOL)
-    cls_name = cls_name.replace( constants.WHITESPACE_SYMBOL , constants.NULL_SYMBOL)
-    cls_name = cls_name.replace( constants.QUOTE_SYMBOL , constants.NULL_SYMBOL)
-    splitted_list = cls_name.split( constants.COLON_SYMBOL * 2  )  ## synatx is ::<module_name>::script
-    splitted_list = [z_ for z_ in splitted_list if len(z_) > 0  and z_ != module_name ]
-    # print(cls_name)
-    # print(splitted_list) 
-    reff_script_path = constants.SLASH_SYMBOL.join( splitted_list )
-    # print( reff_script_path )
-    # print('='*50)
-    return  reff_script_path 
 
-
-def getReferredScripts( class_dic , script_path): 
-    scripts2track      = []
-    script_module_path = script_path.replace( constants._DATASET_PATH ,  constants.NULL_SYMBOL )
-    script_module_name = script_module_path.split( constants.SLASH_SYMBOL )[0] 
-    script_module_name = script_module_name.replace( constants.PUPPET_KW, constants.NULL_SYMBOL )
-    script_module_name = script_module_name.replace( constants.MONTH_DATA_KW, constants.NULL_SYMBOL ) 
-    for class_index, class_data in class_dic.items(): 
-        class_attrs = class_data[-1] 
-        class_name  = class_data[0]
-        reff_path =getReferredScriptName( class_name, script_module_name )
-        full_script_path = constants._DATASET_PATH + constants.PUPPET_KW + script_module_name + constants.MONTH_DATA_KW + constants.SLASH_SYMBOL + constants.MANIFESTS_KW + constants.SLASH_SYMBOL  + reff_path + constants.PP_EXTENSION
-        if  os.path.exists( full_script_path ) : 
-            scripts2track.append( full_script_path  ) 
-    return scripts2track
-    
 
 if __name__=='__main__':
     # script_name = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-onos-2018-06/deployment_scripts/puppet/manifests/onos-dashboard.pp'
