@@ -285,11 +285,12 @@ def getReferredScripts( class_dic , script_path):
     for class_index, class_data in class_dic.items(): 
         class_attrs = class_data[-1] 
         class_name  = class_data[0]
-        reff_path =getReferredScriptName( class_name, script_module_name )
-        full_script_path = constants._DATASET_PATH + constants.PUPPET_KW + script_module_name + constants.MONTH_DATA_KW + constants.SLASH_SYMBOL + constants.MANIFESTS_KW + constants.SLASH_SYMBOL  + reff_path + constants.PP_EXTENSION
-        # print( full_script_path )
-        if  os.path.exists( full_script_path ) : 
-            scripts2track.append(  (class_index, full_script_path  )  )
+        if constants.COLON_SYMBOL * 2 in class_name:
+            reff_path =getReferredScriptName( class_name, script_module_name )
+            full_script_path = constants._DATASET_PATH + constants.PUPPET_KW + script_module_name + constants.MONTH_DATA_KW + constants.SLASH_SYMBOL + constants.MANIFESTS_KW + constants.SLASH_SYMBOL  + reff_path + constants.PP_EXTENSION
+            # print( full_script_path )
+            if  os.path.exists( full_script_path ) : 
+                scripts2track.append(  (class_index, full_script_path  )  )
 
     return scripts2track
     
@@ -335,6 +336,7 @@ def getCrossScriptSecret( script_list, class_dict ):
                     if ( attrib_name in the_dict ) :
                         output_count += 1 
                         output_dict[output_count] = ( class_index, refferred_full_path, attrib_name, attrib_value, secret_attr_dict[attrib_name] )
+    # print(output_dict)
     return output_dict 
 
 

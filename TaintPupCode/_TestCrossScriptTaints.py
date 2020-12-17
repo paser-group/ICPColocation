@@ -35,11 +35,42 @@ class TestCrossScriptTaint( unittest.TestCase ):
         scripts2Track = orchestra.getReferredScripts( dict_clas , _test_constants._cross_taint_script_1 )
         self.assertEqual(  6 , len( scripts2Track )  ,  _test_constants.common_error_string + str(6) ) 
 
-    def testCrossScriptSecret(self):            
+    def testCrossScriptSecretV1(self):            
         _, dict_clas, _, _, _, _, _ = parser.executeParser( _test_constants._cross_taint_script_1 ) 
         scripts2Track = orchestra.getReferredScripts( dict_clas , _test_constants._cross_taint_script_1 ) 
         secret_dict  = orchestra.getCrossScriptSecret( scripts2Track, dict_clas ) 
         self.assertEqual(2, len(secret_dict) ,  _test_constants.common_error_string + str(2)  ) 
+
+    def testCrossScriptSecretV2(self):            
+        _, dict_clas, _, _, _, _, _ = parser.executeParser( _test_constants._cross_taint_script_2 ) 
+        scripts2Track = orchestra.getReferredScripts( dict_clas , _test_constants._cross_taint_script_2 ) 
+        secret_dict  = orchestra.getCrossScriptSecret( scripts2Track, dict_clas ) 
+        self.assertEqual(4, len(secret_dict) ,  _test_constants.common_error_string + str(4)  ) 
+
+    def testCrossScriptSecretV3(self):            
+        _, dict_clas, _, _, _, _, _ = parser.executeParser( _test_constants._cross_taint_script_3 ) 
+        scripts2Track = orchestra.getReferredScripts( dict_clas , _test_constants._cross_taint_script_3 ) 
+        secret_dict  = orchestra.getCrossScriptSecret( scripts2Track, dict_clas ) 
+        self.assertEqual(2, len(secret_dict) ,  _test_constants.common_error_string + str(2)  ) 
+
+    def testCrossScriptSecretV4(self):            
+        _, dict_clas, _, _, _, _, _ = parser.executeParser( _test_constants._cross_taint_script_4 ) 
+        scripts2Track = orchestra.getReferredScripts( dict_clas , _test_constants._cross_taint_script_4 ) 
+        secret_dict  = orchestra.getCrossScriptSecret( scripts2Track, dict_clas ) 
+        self.assertEqual(0, len(secret_dict) ,  _test_constants.common_error_string + str(0)  ) 
+
+
+    def testCrossScriptSecretV5(self):            
+        _, dict_clas, _, _, _, _, _ = parser.executeParser( _test_constants._cross_taint_script_5 ) 
+        scripts2Track = orchestra.getReferredScripts( dict_clas , _test_constants._cross_taint_script_5 ) 
+        secret_dict  = orchestra.getCrossScriptSecret( scripts2Track, dict_clas ) 
+        self.assertEqual(4, len(secret_dict) ,  _test_constants.common_error_string + str(4)  ) 
+
+    def testCrossScriptSecretV6(self):            
+        _, dict_clas, _, _, _, _, _ = parser.executeParser( _test_constants._cross_taint_script_6 ) 
+        scripts2Track = orchestra.getReferredScripts( dict_clas , _test_constants._cross_taint_script_6 ) 
+        secret_dict  = orchestra.getCrossScriptSecret( scripts2Track, dict_clas ) 
+        self.assertEqual(1, len(secret_dict) ,  _test_constants.common_error_string + str(1)  )         
 
 if __name__ == '__main__':
     unittest.main()
