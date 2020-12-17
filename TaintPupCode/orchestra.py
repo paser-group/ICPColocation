@@ -380,8 +380,29 @@ def getCrossScriptHTTP( script_list, class_dict ):
                     if ( attrib_name in the_dict ) :
                         output_count += 1 
                         output_dict[output_count] = ( class_index, refferred_full_path, attrib_name, attrib_value, result_attr_dict[attrib_name] )
+    return output_dict 
+
+
+def getCrossScriptEmptyPass(script_list, class_dict):
+    output_count, output_dict = 0, {}
+    for tup_ in script_list:
+        class_index, refferred_full_path = tup_
+        if class_index in class_dict: 
+            attr_dict = class_dict[class_index][-1]
+            for k_, v_ in attr_dict.items(): 
+                attrib_name, attrib_value = v_[-2], v_[-1] 
+                result_attr_dict = {} 
+                if(any(x_ in attrib_name for x_ in constants.SECRET_PASSWORD_LIST )) and (checkIfEmptyPass ( attrib_value ) ):        
+                    result_attr_dict[attrib_name] = constants.OUTPUT_EMPTY_KW 
+                if (len( result_attr_dict ) ) > 0:
+                    _, _, dict_all_attr, _, _, _, _ = parser.executeParser( refferred_full_path )
+                    the_dict = graph.trackSingleVarTaintInAttrib( attrib_name, dict_all_attr  )
+                    if ( attrib_name in the_dict ) :
+                        output_count += 1 
+                        output_dict[output_count] = ( class_index, refferred_full_path, attrib_name, attrib_value, result_attr_dict[attrib_name] )
     # print(output_dict)
     return output_dict 
+
 
 def orchestrateWithTaint(dir_):
     all_pupp_files = getPuppetFiles(  dir_ )
@@ -405,13 +426,17 @@ def orchestrateWithTaint(dir_):
         empty_pwd_attr, empty_pwd_vars = finalizeEmptyPassword( dict_all_attr, dict_all_vari  )
         empty_pwd_taint_dict           = graph.trackTaint( constants.OUTPUT_EMPTY_KW, empty_pwd_vars, dict_all_attr, dict_all_vari )        
 
+        scripts2Track          = getReferredScripts( dict_clas , pupp_file ) 
+        cross_secret_dict      = getCrossScriptSecret( scripts2Track, dict_clas )         
+        cross_ip_dict          = getCrossScriptInvalidIP( scripts2Track, dict_clas ) 
+        cross_http_dict        = getCrossScriptHTTP ( scripts2Track, dict_clas )     
+        cross_empty_pass_dict  = getCrossScriptEmptyPass ( scripts2Track, dict_clas ) 
 
-        # if  'packstack/manifests/keystone/' in pupp_file:
-        # print( 'INVALID_IP:::ATTR:{} \n DETCTED_DICT:{} \n TAINTED_DICT:{}'.format( invalid_ip_dict_attr,  invalid_ip_dict_vars , invalid_ip_taint_dict )  )
-        print( 'HTTP:::ATTR_DICT:{} \n DETECTED_DICT:{} \n TAINTED_DICT:{}'.format( http_dict_attr, http_dict_vars, http_taint_dict )  )
-        # print( empty_pwd_vars, empty_pwd_taint_dict ) 
-        print( 'SECRETS:::VAR_DETECTED_DICT:{} \n TAINTED_DICT:{} \n SECRETS:::ATTR_DETECTED_DICT:{}'.format( secret_dict_vars, secret_taint_dict, secret_dict_attr )  )
         print( pupp_file )
-        # print( dict_all_vari )
+        print( cross_secret_dict )
+        print( cross_ip_dict  )
+        print( cross_http_dict  )
+        print( cross_empty_pass_dict  )
+
 
         print('-'*100)

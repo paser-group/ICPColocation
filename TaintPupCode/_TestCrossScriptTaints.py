@@ -106,7 +106,13 @@ class TestCrossScriptTaint( unittest.TestCase ):
         _, dict_clas, _, _, _, _, _ = parser.executeParser( _test_constants._cross_taint_script_3 ) 
         scripts2Track = orchestra.getReferredScripts( dict_clas , _test_constants._cross_taint_script_3 ) 
         http_dict  = orchestra.getCrossScriptHTTP ( scripts2Track, dict_clas ) 
-        self.assertEqual(2, len(http_dict) ,  _test_constants.common_error_string + str(2)  )                
+        self.assertEqual(2, len(http_dict) ,  _test_constants.common_error_string + str(2)  )    
+
+    def testCrossScriptEmptyPass(self):            
+        _, dict_clas, _, _, _, _, _ = parser.executeParser( _test_constants._cross_taint_script_3 ) 
+        scripts2Track = orchestra.getReferredScripts( dict_clas , _test_constants._cross_taint_script_3 ) 
+        _dict  = orchestra.getCrossScriptEmptyPass ( scripts2Track, dict_clas ) 
+        self.assertEqual(1, len(_dict) ,  _test_constants.common_error_string + str(1)  )                       
 
 if __name__ == '__main__':
     unittest.main()

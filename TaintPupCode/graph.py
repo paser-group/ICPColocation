@@ -39,7 +39,8 @@ def trackTaint( smell_type, smell_dict_var, all_attrib_dict, all_vari_dict ):
                 Now we have support for mutltiple taint tracking 
                 '''
                 multi_taint_var_name = doMultipleTaint( var_name, all_vari_dict  )
-                var_tracker_list.clear() ## clear cache once you are done, var_tracker_list is a global variable and clear everytime 
+                hop_count = len(var_tracker_list)
+                var_tracker_list.clear() ## clear cache once you are done, var_tracker_list is a global variable and remains alive during the entire execution 
                 for attr_cnt, attr_data in all_attrib_dict.items():
                     '''
                     all_attrib_dict has a different format than smell_attrib_dict 
@@ -53,9 +54,9 @@ def trackTaint( smell_type, smell_dict_var, all_attrib_dict, all_vari_dict ):
                         one variable can be used for multiple attributes 
                         '''
                         if var_name not in graphDict:
-                            graphDict[var_name] = [(attr_name, attr_value , smell_type) ] 
+                            graphDict[var_name] = [(attr_name, attr_value , smell_type, hop_count) ] 
                         else: 
-                            graphDict[var_name] = graphDict[var_name] + [ (attr_name, attr_value , smell_type)  ]
+                            graphDict[var_name] = graphDict[var_name] + [ (attr_name, attr_value , smell_type, hop_count)  ]
     return graphDict 
 
 
