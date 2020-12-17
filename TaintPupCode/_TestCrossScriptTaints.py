@@ -90,12 +90,23 @@ class TestCrossScriptTaint( unittest.TestCase ):
         ip_dict  = orchestra.getCrossScriptInvalidIP( scripts2Track, dict_clas ) 
         self.assertEqual(1, len(ip_dict) ,  _test_constants.common_error_string + str(1)  )        
 
-    def testCrossScriptInsecureHTTP(self):            
+    def testCrossScriptInsecureHTTPV1(self):            
         _, dict_clas, _, _, _, _, _ = parser.executeParser( _test_constants._cross_taint_script_http ) 
         scripts2Track = orchestra.getReferredScripts( dict_clas , _test_constants._cross_taint_script_http ) 
         http_dict  = orchestra.getCrossScriptHTTP ( scripts2Track, dict_clas ) 
         self.assertEqual(1, len(http_dict) ,  _test_constants.common_error_string + str(1)  )        
 
+    def testCrossScriptInsecureHTTPV2(self):            
+        _, dict_clas, _, _, _, _, _ = parser.executeParser( _test_constants._cross_taint_script_7 ) 
+        scripts2Track = orchestra.getReferredScripts( dict_clas , _test_constants._cross_taint_script_7 ) 
+        http_dict  = orchestra.getCrossScriptHTTP ( scripts2Track, dict_clas ) 
+        self.assertEqual(3, len(http_dict) ,  _test_constants.common_error_string + str(3)  )
+
+    def testCrossScriptInsecureHTTPV3(self):            
+        _, dict_clas, _, _, _, _, _ = parser.executeParser( _test_constants._cross_taint_script_3 ) 
+        scripts2Track = orchestra.getReferredScripts( dict_clas , _test_constants._cross_taint_script_3 ) 
+        http_dict  = orchestra.getCrossScriptHTTP ( scripts2Track, dict_clas ) 
+        self.assertEqual(2, len(http_dict) ,  _test_constants.common_error_string + str(2)  )                
 
 if __name__ == '__main__':
     unittest.main()

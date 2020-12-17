@@ -358,7 +358,7 @@ def getCrossScriptInvalidIP( script_list, class_dict ):
                     if ( attrib_name in the_dict ) :
                         output_count += 1 
                         output_dict[output_count] = ( class_index, refferred_full_path, attrib_name, attrib_value, result_attr_dict[attrib_name] )
-    # print(output_dict)
+    
     return output_dict 
 
 
