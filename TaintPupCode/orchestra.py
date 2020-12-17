@@ -116,13 +116,15 @@ def finalizeWeakEncrypt(func_dict):
     weak_count  = 0 
     weak_dict   = {}
     for func_count, func_data in func_dict.items():
-        func_name = func_data[0] 
+        func_assignee = func_data[0]
+        func_name     = func_data[1] 
+        func_params   = func_data[2] 
         if constants.MD5_KEYWORD in func_name: 
             weak_count += 1 
-            weak_dict[weak_count] = func_name , constants.MD5_KEYWORD            
+            weak_dict[weak_count] = func_assignee,  func_name , func_params,  constants.MD5_KEYWORD            
         elif  constants.SHA1_KEYWORD in func_name:
             weak_count += 1 
-            weak_dict[weak_count] = func_name, constants.SHA1_KEYWORD
+            weak_dict[weak_count] =  func_assignee,  func_name, func_params,  constants.SHA1_KEYWORD
     return weak_dict
 
 def checkIfValidSecret(single_config_val):
@@ -429,7 +431,6 @@ def orchestrateWithTaint(dir_):
 
         susp_cnt       = finalizeSusps( list_susp_comm )
         switch_cnt     = finalizeSwitches( dict_switch )
-        weak_crypt_dic = finalizeWeakEncrypt( dict_func ) 
 
 
         invalid_ip_dict_attr, invalid_ip_dict_vars  = finalizeInvalidIPs( dict_all_attr, dict_all_vari ) 
@@ -446,8 +447,16 @@ def orchestrateWithTaint(dir_):
 
         default_admin_dict     = finalizeDefaults( dict_all_vari )
         default_taint_dict     = getTaintAdminDict( default_admin_dict, secret_taint_dict  )        
-        print(default_taint_dict)  
 
+
+        weak_crypt_dic = finalizeWeakEncrypt( dict_func ) 
+
+
+
+
+        '''
+        cross script tracking zone 
+        '''
         scripts2Track          = getReferredScripts( dict_clas , pupp_file ) 
         cross_secret_dict      = getCrossScriptSecret( scripts2Track, dict_clas )         
         cross_ip_dict          = getCrossScriptInvalidIP( scripts2Track, dict_clas ) 

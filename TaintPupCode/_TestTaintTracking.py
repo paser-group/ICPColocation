@@ -91,6 +91,14 @@ class TestTaintGraph( unittest.TestCase ):
         default_taint_dict                          = orchestra.getTaintAdminDict( default_admin_dict, secret_taint_dict  )        
         self.assertEqual( 1 , len(default_taint_dict) , _test_constants.common_error_string + str(1) ) 
 
+    def testTaintedWeakCrypto(self):                    
+        dict_reso, dict_clas, dict_all_attr, dict_all_vari, dict_switch, list_susp_comm, dict_func = parser.executeParser( _test_constants._weak_cryp_script_name ) 
+        weak_crypt_dic =  orchestra.finalizeWeakEncrypt( dict_func ) 
+        # for count_, items_ in weak_crypt_dic.items():
+        #     func_assignee, func_name, params , type_  = items_
+        #     print(func_assignee, func_name)
+        #     print('-'*100)
+
 
 def checkVarInSmellDict(  dic_smell  ):
         status = False

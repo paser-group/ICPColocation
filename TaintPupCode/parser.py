@@ -216,7 +216,25 @@ def getFunctions( locs, texts  ):
                     func_content = func_content.replace(constants.INVOKE_KEYWORD, constants.NULL_SYMBOL) 
                     func_name    = func_content.split(constants.WHITESPACE_SYMBOL)[1].strip() 
                     func_parms   = func_content.split(constants.WHITESPACE_SYMBOL)[2:] 
-                    func_dict[func_index] = (func_name, func_parms) 
+                    func_dict[func_index] = (constants.DUMMY_FUNC_ASSIGNEE,   func_name, func_parms) 
+        elif (constants.CALL_KW  in loc_str): 
+            per_line_locs, per_line_content = getContentWithStack( loc_str )  
+            if (constants.CALL_KW  in per_line_content) and (constants.NEWLINE_CONSTANT not in per_line_content) and (constants.EQUAL_SYMBOL in per_line_content):  
+                    func_index += 1 
+                    splitted_list = per_line_content.split( constants.CALL_KW )
+                    func_call_text = splitted_list[-1]
+
+                    func_val_assignee = splitted_list[0] 
+                    func_val_assignee = func_val_assignee.replace( constants.ATTRIBUTE_SYMBOL, constants.NULL_SYMBOL )
+                    func_val_assignee = func_val_assignee.replace( constants.EQUAL_SYMBOL, constants.NULL_SYMBOL )
+                    func_val_assignee = func_val_assignee.replace( constants.DOLLAR_SYMBOL, constants.NULL_SYMBOL )
+                    func_val_assignee = func_val_assignee.strip() 
+
+                    func_call_list = func_call_text.split( constants.WHITESPACE_SYMBOL )
+                    func_call_list = [z_ for z_ in func_call_list if len(z_) > 0 ] 
+                    func_name      = func_call_list[0].strip()
+                    func_params    = func_call_list[1:]
+                    func_dict[func_index] = (func_val_assignee,   func_name, func_params) 
     return func_dict 
 
 

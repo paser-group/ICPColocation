@@ -47,7 +47,7 @@ class TestSmells( unittest.TestCase ):
     def testWeakCrypto( self ): 
         _, _, _, _, _, _, dict_func = parser.executeParser( _test_constants._weak_cryp_script_name ) 
         dict_ = orchestra.finalizeWeakEncrypt( dict_func )
-        self.assertEqual(  1 , len(dict_) , _test_constants._weak_cryp_msg_ ) 
+        self.assertEqual(  3 , len(dict_) , _test_constants._weak_cryp_msg_ ) 
 
     def testEmptyPasswordForVariables( self ): 
         _, _, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( _test_constants._empty_pass_script_name ) 
