@@ -3,6 +3,7 @@ import unittest
 import _test_constants
 import parser 
 import orchestra 
+import constants 
 
 '''
 Note to self: 
@@ -81,6 +82,15 @@ class TestTaintGraph( unittest.TestCase ):
         http_taint_dict = graph.trackTaint( _test_constants.OUTPUT_HTTP_KW, http_dict_vars, dict_all_attr, dict_all_vari )
         self.assertEqual( 1 , http_taint_dict['$cinder_protocol'][0][-1] , _test_constants.common_error_string + str(1) )         
         graph.var_tracker_list.clear()                
+
+    def testTaintedDefaultAdminV1(self):            
+        _, _, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( _test_constants._default_adm_script_name ) 
+        default_admin_dict                          = orchestra.finalizeDefaults( dict_all_vari )
+        _, secret_dict_vars                         = orchestra.finalizeHardCodedSecrets( dict_all_attr, dict_all_vari )
+        secret_taint_dict                           = graph.trackTaint( constants.OUTPUT_SECRET_KW, secret_dict_vars, dict_all_attr, dict_all_vari )
+        default_taint_dict                          = orchestra.getTaintAdminDict( default_admin_dict, secret_taint_dict  )        
+        self.assertEqual( 1 , len(default_taint_dict) , _test_constants.common_error_string + str(1) ) 
+
 
 def checkVarInSmellDict(  dic_smell  ):
         status = False

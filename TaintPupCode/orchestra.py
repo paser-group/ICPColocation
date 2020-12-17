@@ -404,6 +404,24 @@ def getCrossScriptEmptyPass(script_list, class_dict):
     return output_dict 
 
 
+def getTaintAdminDict( dflt_dict, secret_taint_dict ):
+    '''
+    As default admin is a variant of a hard-coded user name , we will leverage 
+    tainted secret dict to see if the default admin is actually in use 
+    '''
+    final_output_dic = {}
+    for _, default_details in dflt_dict.items():
+        var_name, var_value, constants.OUTPUT_DEFAULT_ADMIN_KW = default_details
+        for k_, _ in secret_taint_dict.items():
+            if (var_name == k_): 
+                if var_name not in final_output_dic:
+                    final_output_dic[var_name] = [(var_name, var_value ) ] 
+                else: 
+                    final_output_dic[var_name] = final_output_dic[var_name] + [ (var_name, var_value )  ]
+    return final_output_dic 
+
+
+
 def orchestrateWithTaint(dir_):
     all_pupp_files = getPuppetFiles(  dir_ )
     for pupp_file in all_pupp_files:
@@ -412,7 +430,7 @@ def orchestrateWithTaint(dir_):
         susp_cnt       = finalizeSusps( list_susp_comm )
         switch_cnt     = finalizeSwitches( dict_switch )
         weak_crypt_dic = finalizeWeakEncrypt( dict_func ) 
-        default_admin_dict   = finalizeDefaults( dict_all_vari )
+
 
         invalid_ip_dict_attr, invalid_ip_dict_vars  = finalizeInvalidIPs( dict_all_attr, dict_all_vari ) 
         invalid_ip_taint_dict = graph.trackTaint( constants.OUTPUT_INVALID_IP_KW, invalid_ip_dict_vars, dict_all_attr, dict_all_vari )
@@ -426,17 +444,19 @@ def orchestrateWithTaint(dir_):
         empty_pwd_attr, empty_pwd_vars = finalizeEmptyPassword( dict_all_attr, dict_all_vari  )
         empty_pwd_taint_dict           = graph.trackTaint( constants.OUTPUT_EMPTY_KW, empty_pwd_vars, dict_all_attr, dict_all_vari )        
 
+        default_admin_dict     = finalizeDefaults( dict_all_vari )
+        default_taint_dict     = getTaintAdminDict( default_admin_dict, secret_taint_dict  )        
+        print(default_taint_dict)  
+
         scripts2Track          = getReferredScripts( dict_clas , pupp_file ) 
         cross_secret_dict      = getCrossScriptSecret( scripts2Track, dict_clas )         
         cross_ip_dict          = getCrossScriptInvalidIP( scripts2Track, dict_clas ) 
         cross_http_dict        = getCrossScriptHTTP ( scripts2Track, dict_clas )     
         cross_empty_pass_dict  = getCrossScriptEmptyPass ( scripts2Track, dict_clas ) 
 
+
         print( pupp_file )
-        print( cross_secret_dict )
-        print( cross_ip_dict  )
-        print( cross_http_dict  )
-        print( cross_empty_pass_dict  )
+
 
 
         print('-'*100)
