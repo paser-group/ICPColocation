@@ -80,3 +80,5 @@ _cross_taint_script_5  = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-
 _cross_taint_script_6  = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-neutron-2018-06/examples/neutron.pp'
 _cross_taint_script_7  = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-vitrage-2018-06/examples/vitrage.pp'
 _cross_taint_script_8  = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-gnocchi-2018-06/examples/site.pp'
+
+_cross_taint_script_ip = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-sahara-2018-06/examples/basic.pp' 
