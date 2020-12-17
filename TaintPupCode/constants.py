@@ -15,6 +15,7 @@ DOLLAR_SYMBOL  = '$'
 SLASH_SYMBOL = '/'
 COLON_SYMBOL = ':'
 AN_S         = 's'
+COMMA_SYMBOL = ','
 
 
 
@@ -38,7 +39,7 @@ HTTP_PATTERN = 'http://'
 INVOKE_KEYWORD = 'invoke'
 MD5_KEYWORD = 'md5'
 SHA1_KEYWORD = 'sha1'
-SECRET_PASSWORD_LIST = ['pwd', 'password', 'passwd']
+SECRET_PASSWORD_LIST = ['pwd', 'password', 'passwd', 'admin_pass'] #admin_pass is used somewhere , keep an eye for false positives 
 SECRET_USER_LIST = ['user']
 SECRET_KEY_LIST = ['key', 'crypt', 'secret']
 INVALID_SECRET_CONFIG_VALUES = [DOLLAR_SYMBOL, ':undef', INVOKE_KEYWORD, '[]', '/', 'call', 'hiera', 'unset', 'undefined' ]  
@@ -83,3 +84,4 @@ _DATASET_PATH            = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/'
 PUPPET_KW                = 'puppet-'
 MONTH_DATA_KW            = '-2018-06'
 MANIFESTS_KW             = 'manifests'
+INIT_FILE_KW             = 'init' 

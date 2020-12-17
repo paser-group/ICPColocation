@@ -256,18 +256,23 @@ def orchestrateWithoutTaint(dir_):
 
 
 def getReferredScriptName(cls_name, module_name):
+    reff_script_path = constants.NULL_SYMBOL 
     cls_name = cls_name.replace( constants.RESOURCE_KEYWORD , constants.NULL_SYMBOL)
     cls_name = cls_name.replace( constants.LPAREN_SYMBOL , constants.NULL_SYMBOL)
     cls_name = cls_name.replace( constants.NEWLINE_CONSTANT , constants.NULL_SYMBOL)
     cls_name = cls_name.replace( constants.WHITESPACE_SYMBOL , constants.NULL_SYMBOL)
     cls_name = cls_name.replace( constants.QUOTE_SYMBOL , constants.NULL_SYMBOL)
-    splitted_list = cls_name.split( constants.COLON_SYMBOL * 2  )  ## synatx is ::<module_name>::script
-    splitted_list = [z_ for z_ in splitted_list if len(z_) > 0  and z_ != module_name ]
-    # print(cls_name)
-    # print(splitted_list) 
-    reff_script_path = constants.SLASH_SYMBOL.join( splitted_list )
-    # print( reff_script_path )
-    # print('='*50)
+    if cls_name.replace( constants.COLON_SYMBOL * 2, constants.NULL_SYMBOL ) == module_name:
+        reff_script_path = constants.INIT_FILE_KW 
+    else:
+        splitted_list = cls_name.split( constants.COLON_SYMBOL * 2  )  ## synatx is ::<module_name>::script
+        splitted_list = [z_ for z_ in splitted_list if len(z_) > 0  and z_ != module_name ]
+        # print(cls_name)
+        # print(splitted_list) 
+        reff_script_path = constants.SLASH_SYMBOL.join( splitted_list )
+        # print( reff_script_path )
+        # print('='*50)
+
     return  reff_script_path 
 
 
@@ -282,6 +287,7 @@ def getReferredScripts( class_dic , script_path):
         class_name  = class_data[0]
         reff_path =getReferredScriptName( class_name, script_module_name )
         full_script_path = constants._DATASET_PATH + constants.PUPPET_KW + script_module_name + constants.MONTH_DATA_KW + constants.SLASH_SYMBOL + constants.MANIFESTS_KW + constants.SLASH_SYMBOL  + reff_path + constants.PP_EXTENSION
+        # print( full_script_path )
         if  os.path.exists( full_script_path ) : 
             scripts2track.append(  (class_index, full_script_path  )  )
 
@@ -291,7 +297,7 @@ def getReferredScripts( class_dic , script_path):
 
 def checkAttribInReferred( name2check, dict_vari ):
     checkFlag = False
-    for k_, v_ in dict_all_vari.items(): 
+    for k_, v_ in dict_vari.items(): 
         if name2check in k_ : 
             checkFlag = True 
     return checkFlag
@@ -305,23 +311,31 @@ def getCrossScriptSecret( script_list, class_dict ):
             attr_dict = class_dict[class_index][-1]
             for k_, v_ in attr_dict.items(): 
                 attrib_name, attrib_value = v_[-2], v_[-1] 
-                if len( attrib_value ) > 0: 
-                    _, _, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( refferred_full_path )
+                secret_attr_dict = {}
+                if(any(x_ in attrib_name for x_ in constants.SECRET_PASSWORD_LIST )) and (checkIfValidSecret ( attrib_value ) ) and (isValidPassword( attrib_name )):        
+                    secret_attr_dict[attrib_name] =     constants.OUTPUT_PASS_KW
+                elif(any(x_ in attrib_name for x_ in constants.SECRET_USER_LIST )) and (checkIfValidSecret ( attrib_value ) ) and (isValidUserName( attrib_name ) ) :        
+                    secret_attr_dict[attrib_name] =    constants.OUTPUT_USER_KW
+                elif(any(x_ in attrib_name for x_ in constants.SECRET_KEY_LIST )) and (checkIfValidSecret ( attrib_value ) ) and (isValidKeyName( attrib_name ) ) :        
+                    secret_attr_dict[attrib_name] =     constants.OUTPUT_TOKEN_KW
+
+                if (len( secret_attr_dict ) ) > 0:
+                    _, _, dict_all_attr, _, _, _, _ = parser.executeParser( refferred_full_path )
                     '''
-                    first check if the variable is in the referred scripts 
+                    due to parser limitiation directly check if variable used by attributes 
+                    for this we cannot do mutli-level taint tracking 
+
+                    check if the attrib_name (variable in a referred script) is used by an attribute by checking if 
+                    attrib_name is used by an attribute 
                     '''
-                    if(  checkAttribInReferred(  attrib_name, dict_all_vari  ) ): 
-                        '''
-                        now check if the attrib_name is used by an attribute using two steps: 
-                        1. existence of the attrib_name in secret_dict_vars 
-                        2. existence of the attrib_name in secret_taint_dict 
-                        '''
-                        _, secret_dict_vars = finalizeHardCodedSecrets( dict_all_attr, dict_all_vari )
-                        secret_taint_dict   = graph.trackTaint( constants.OUTPUT_SECRET_KW, secret_dict_vars, dict_all_attr, dict_all_vari )                        
-                        print(secret_taint_dict) 
-                        if ( attrib_name in secret_dict_vars ) and ( attrib_name in secret_taint_dict ) :
-                            output_count += 1 
-                            output_dict[output_count] = ( class_index, attrib_name, attrib_value )
+                    the_dict = graph.trackSingleVarTaintInAttrib( attrib_name, dict_all_attr  )
+                    # print(attrib_name)
+                    # print( the_dict )
+                    # print('='*25)
+                    if ( attrib_name in the_dict ) :
+                        output_count += 1 
+                        output_dict[output_count] = ( class_index, refferred_full_path, attrib_name, attrib_value, secret_attr_dict[attrib_name] )
+    print(output_dict) 
     return output_dict 
 
 

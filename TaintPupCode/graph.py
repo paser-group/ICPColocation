@@ -59,6 +59,32 @@ def trackTaint( smell_type, smell_dict_var, all_attrib_dict, all_vari_dict ):
     return graphDict 
 
 
+def trackSingleVarTaintInAttrib(var_name, full_attr_dict): 
+    graphDict = {} 
+    for attr_cnt, attr_data in full_attr_dict.items():
+        var_key_name = constants.NULL_SYMBOL 
+        '''
+        full_attr_dict has a different format than smell_attrib_dict 
+        '''
+        attr_name  = attr_data[-2] 
+        attr_value = attr_data[-1] 
+        # print(var_name , attr_value)   
+        enh_var_name =  constants.DOLLAR_SYMBOL + constants.LPAREN_SYMBOL + var_name.replace(constants.DOLLAR_SYMBOL, constants.NULL_SYMBOL )  + constants.RPAREN_SYMBOL  ##need to handle ${url}
+        if( var_name in attr_value ):
+            var_key_name =   var_name
+        elif (enh_var_name in attr_value) : 
+            var_key_name =   enh_var_name             
+        '''
+        one variable can be used for multiple attributes 
+        '''
+        if (var_key_name != constants.NULL_SYMBOL):
+            if (var_key_name not in graphDict) :
+                graphDict[var_key_name] = [(attr_name, attr_value ) ] 
+            else: 
+                graphDict[var_key_name] = graphDict[var_key_name] + [ (attr_name, attr_value )  ]
+    return graphDict     
+
+
 def constructLHSRHSPairs( var_to_track,  var_dic ):
     '''
     var_dic has a different format than smell_attrib_dict as it is all_var_dict 
