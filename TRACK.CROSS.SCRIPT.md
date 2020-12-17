@@ -10,11 +10,24 @@ In examples/site.pp, class { '::trove::db::mysql':} uses password, that is passe
 
 In examples/site.pp, class { '::trove::keystone::auth':} uses password, that is passed into class trove::keystone::auth (){} in keystone/auth.pp
 
+
+> Found a parser limitation .... cannot detect variables like $password in 
+
+```
+class trove::keystone::auth (
+  $password,
+} 
+```
+
+> Handled by TaintPup 
+
 ###### Example-2 
 
 Location: /Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-magnum-2018-06/
 
 In examples/magnum.pp, password is passed as class { '::magnum::db::mysql': in class magnum::db::mysql(){} located at manifests/db/mysql.pp. Similarly, domain_password => 'oh_my_no_secret', is used in class { '::magnum::keystone::domain': } that calls class magnum::keystone::domain () {} in manifests/keystone/domain.pp. Eventually the password is used in magnum_config {} 
+
+> Handled by TaintPup 
 
 
 ###### Example-3 
@@ -33,11 +46,15 @@ In examples/v3_basic.pp, public_url => 'http://127.0.0.1:5000/', in class keysto
 
 In examples/v3_basic.pp, password => 'a_big_secret',', in class { '::keystone::roles::admin':} calls class keystone::roles::admin(){} in keystone_user {} inside roles/admin.pp
 
+> Handled by TaintPup 
+
 ###### Example-5 
 
 Location: /Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ironic-2018-06/
 
 In examples/ironic.pp, class { '::ironic::bifrost': }, passes hard-coded passwords into class ironic::bifrost (){} that is located in manifests/bifrost.pp . The two passwords $ironic_db_password and $mysql_password, are declared but not used, so FP.
+
+> Handled by TaintPup 
 
 ###### Example-6 
 
@@ -56,13 +73,17 @@ In examples/site.pp, the following
     auth_password => 'tralalerotralala'
   }
 ``` 
-calls ceilometer_config {} inside manifests/agent/auth.pp . This is a TP
+calls ceilometer_config {} inside manifests/agent/auth.pp . This is a TP  
+
+> Handled by TaintPup 
 
 ###### Example-8 
 
 Location:/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-plumgrid-2018-06/deployment_scripts/puppet/modules/plumgrid/manifests/init.pp
 
 class plumgrid is a class that inherits plumgrid::params means a class needs sth. that comes from params.pp which is plumgrid/manifests/
+
+> Not sure what to make of it as it does not help in security smell identification ... so skipping 
 
 ###### Example-9 
 
@@ -93,6 +114,8 @@ In manifests/plugins/ml2/cisco/uscm.pp
 ```
 username and password flows within $nexus_config, into class neutron::plugins::ml2::cisco::nexus(){} in manifests/plugins/ml2/cisco/nexus.pp
 
+> Handled by TaintPup 
+
 ###### Example-10
 
 Location:/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-vitrage-2018-06/ 
@@ -119,11 +142,15 @@ In examples/vitrage.pp, class { '::vitrage::auth':} calls manifests/auth.pp, wit
 ``` 
 that is propagated into vitrage_config {} in manifests/auth.pp
 
+> Handled by TaintPup 
+
 ###### Example-11
 
 Location: /Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-rally-2018-06/
 
 In example/rally.pp, class { '::rally::settings': } calls manifests/settings.pp and class { '::rally': }
+
+> Handled by TaintPup 
 
 ###### Example-12
 
@@ -154,9 +181,12 @@ class { '::swift::proxy::tempauth':
 ```
 calls class swift::proxy::tempauth(){} with account_user_list in manifests/proxy/tempauth.pp , which is used in class swift::proxy::tempauth () {}
 
+> Handled by TaintPup ... attributes in  list are not handled yet 
+
 ###### Example-13 
 
 Location: /Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-gnocchi-2018-06/
 
 In examples/site.pp class { '::gnocchi::keystone::auth':} has password, which is passed into manifests/keystone/auth.pp as keystone::resource::service_identity {}
 
+> Handled by TaintPup  
