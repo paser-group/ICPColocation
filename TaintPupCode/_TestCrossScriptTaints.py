@@ -84,11 +84,18 @@ class TestCrossScriptTaint( unittest.TestCase ):
         secret_dict  = orchestra.getCrossScriptSecret( scripts2Track, dict_clas ) 
         self.assertEqual(1, len(secret_dict) ,  _test_constants.common_error_string + str(1)  )        
 
-    def testCrossScriptInavlidIPV1(self):            
+    def testCrossScriptInavlidIP(self):            
         _, dict_clas, _, _, _, _, _ = parser.executeParser( _test_constants._cross_taint_script_ip ) 
         scripts2Track = orchestra.getReferredScripts( dict_clas , _test_constants._cross_taint_script_ip ) 
         ip_dict  = orchestra.getCrossScriptInvalidIP( scripts2Track, dict_clas ) 
         self.assertEqual(1, len(ip_dict) ,  _test_constants.common_error_string + str(1)  )        
+
+    def testCrossScriptInsecureHTTP(self):            
+        _, dict_clas, _, _, _, _, _ = parser.executeParser( _test_constants._cross_taint_script_http ) 
+        scripts2Track = orchestra.getReferredScripts( dict_clas , _test_constants._cross_taint_script_http ) 
+        http_dict  = orchestra.getCrossScriptHTTP ( scripts2Track, dict_clas ) 
+        self.assertEqual(1, len(http_dict) ,  _test_constants.common_error_string + str(1)  )        
+
 
 if __name__ == '__main__':
     unittest.main()

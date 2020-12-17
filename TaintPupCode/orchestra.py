@@ -362,7 +362,26 @@ def getCrossScriptInvalidIP( script_list, class_dict ):
     return output_dict 
 
 
-
+def getCrossScriptHTTP( script_list, class_dict ):
+    output_count, output_dict = 0, {}
+    for tup_ in script_list:
+        class_index, refferred_full_path = tup_
+        if class_index in class_dict: 
+            attr_dict = class_dict[class_index][-1]
+            for k_, v_ in attr_dict.items(): 
+                attrib_name, attrib_value = v_[-2], v_[-1] 
+                result_attr_dict = {}
+                attr_ascii = sanitizeConfigVals( attrib_value )
+                if (attr_ascii >= 600) and ( constants.HTTP_PATTERN in attrib_value) and (extraHTTPCheck( attrib_value ) ): 
+                    result_attr_dict[attrib_name] = constants.OUTPUT_HTTP_KW  
+                if (len( result_attr_dict ) ) > 0:
+                    _, _, dict_all_attr, _, _, _, _ = parser.executeParser( refferred_full_path )
+                    the_dict = graph.trackSingleVarTaintInAttrib( attrib_name, dict_all_attr  )
+                    if ( attrib_name in the_dict ) :
+                        output_count += 1 
+                        output_dict[output_count] = ( class_index, refferred_full_path, attrib_name, attrib_value, result_attr_dict[attrib_name] )
+    # print(output_dict)
+    return output_dict 
 
 def orchestrateWithTaint(dir_):
     all_pupp_files = getPuppetFiles(  dir_ )

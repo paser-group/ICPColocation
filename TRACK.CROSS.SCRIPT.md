@@ -36,6 +36,8 @@ Location: /Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-sahara-2018-06/
 
 In examples/basic.pp , host => '0.0.0.0', is passed into manifests/init.pp through class sahara(){}, which is eventually used in sahara_config {} 
 
+> handled by TaintPup 
+
 ###### Example-4 
 
 Location: /Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-keystone-2018-06/
@@ -61,6 +63,8 @@ In examples/ironic.pp, class { '::ironic::bifrost': }, passes hard-coded passwor
 Location: /Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-tripleo-2018-06/
 
 In manifests/profile/base/designate/api.pp, $listen_ip = '0.0.0.0', is used in $listen_uri = normalize_ip_for_uri($listen_ip) and then in class { '::designate::api': } as listen => "${listen_uri}:${listen_port}",
+
+> handled by TaintPup 
 
 ###### Example-7 
 
