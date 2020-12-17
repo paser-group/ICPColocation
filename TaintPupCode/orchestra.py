@@ -422,7 +422,31 @@ def getTaintAdminDict( dflt_dict, secret_taint_dict ):
                     final_output_dic[var_name] = final_output_dic[var_name] + [ (var_name, var_value )  ]
     return final_output_dic 
 
+def checkAtrribInDict( attrib_name_param, attrib_dict ):
+    flag_ = False
+    for k_, v_ in attrib_dict.items():
+        _, _, attr_name, attr_val = v_ 
+        attr_name = attr_name.strip()
+        if (attrib_name_param in attr_name) or (attrib_name_param == attr_name): 
+            flag_ = True  
 
+    return flag_
+
+def getTaintWeakCryptDict(weak_crypt_dic, dict_all_attr, dict_all_vari) :
+    weak_cryp_assignee_dic = {}
+    for count_, items_ in weak_crypt_dic.items():
+        func_assignee, func_name, params , type_  = items_
+        func_assignee     = func_assignee.replace( constants.LPAREN_SYMBOL, constants.NULL_SYMBOL ) 
+        func_assignee     = func_assignee.replace( constants.WHITESPACE_SYMBOL, constants.NULL_SYMBOL ) 
+        if ( checkAtrribInDict( func_assignee, dict_all_attr ) ):
+            weak_cryp_assignee_dic[ func_assignee ] = func_name, type_ , func_assignee, 0 
+        else: 
+            taintedDic  = graph.trackSingleVarTaint( constants.OUTPUT_WEAK_ENCR_KW , func_assignee, dict_all_vari, dict_all_attr )
+            for K_, V_ in taintedDic.items(): 
+                for data_ in V_:
+                    attr_name, attr_value , smell_type, hop_count = data_ 
+                    weak_cryp_assignee_dic[ func_assignee ] = func_name, type_ , attr_name, hop_count
+    return weak_cryp_assignee_dic 
 
 def orchestrateWithTaint(dir_):
     all_pupp_files = getPuppetFiles(  dir_ )
@@ -449,7 +473,9 @@ def orchestrateWithTaint(dir_):
         default_taint_dict     = getTaintAdminDict( default_admin_dict, secret_taint_dict  )        
 
 
-        weak_crypt_dic = finalizeWeakEncrypt( dict_func ) 
+        weak_crypt_dic     = finalizeWeakEncrypt( dict_func ) 
+        weak_cry_dic_taint = getTaintWeakCryptDict( weak_crypt_dic, dict_all_attr, dict_all_vari )
+
 
 
 

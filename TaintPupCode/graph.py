@@ -117,6 +117,35 @@ def doMultipleTaint(var_to_track, all_var_dict):
 
 
 
+def trackSingleVarTaint( smell_type, var_name, all_vari_dict, all_attrib_dict ):
+    graphDict = {} 
+    '''
+    first check if variable is used in an expression 
+    '''
+    if( checkLiveness( var_name, all_vari_dict ) ): 
+        # print( var_name  + ' is alive ' )
+        '''
+        Now we have support for mutltiple taint tracking 
+        '''
+        multi_taint_var_name = doMultipleTaint( var_name, all_vari_dict  )
+        hop_count = len(var_tracker_list)
+        var_tracker_list.clear() 
+        for attr_cnt, attr_data in all_attrib_dict.items():
+            '''
+            all_attrib_dict has a different format than smell_attrib_dict 
+            '''
+            attr_name  = attr_data[-2] 
+            attr_value = attr_data[-1] 
+            # print(var_name , multi_taint_var_name, attr_value)   
+            enh_var_name =  constants.DOLLAR_SYMBOL + constants.LPAREN_SYMBOL + var_name.replace(constants.DOLLAR_SYMBOL, constants.NULL_SYMBOL )  + constants.RPAREN_SYMBOL  ##need to handle ${url}
+            if( var_name in attr_value ) or (enh_var_name in attr_value) or (multi_taint_var_name in attr_value):  
+                if var_name not in graphDict:
+                    graphDict[var_name] = [(attr_name, attr_value , smell_type, hop_count) ] 
+                else: 
+                    graphDict[var_name] = graphDict[var_name] + [ (attr_name, attr_value , smell_type, hop_count)  ]
+    return graphDict 
+
+
 if __name__=='__main__':
     # script_name = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-onos-2018-06/deployment_scripts/puppet/manifests/onos-dashboard.pp'
     script_name = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/sample-puppet-scripts/onos-dasboard.pp' 
