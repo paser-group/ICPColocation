@@ -486,13 +486,15 @@ def orchestrateWithTaint(dir_):
         cross_http_dict        = getCrossScriptHTTP ( scripts2Track, dict_clas )     
         cross_empty_pass_dict  = getCrossScriptEmptyPass ( scripts2Track, dict_clas ) 
 
-        secret_tuple           = ( secret_taint_dict, cross_secret_dict )
-        ip_tuple               = ( invalid_ip_taint_dict, cross_ip_dict )
-        http_tuple             = ( http_taint_dict, cross_http_dict ) 
-        empty_pass_tuple       = ( empty_pwd_taint_dict, cross_empty_pass_dict ) 
+        secret_tuple           = ( secret_taint_dict, cross_secret_dict, secret_dict_attr, invalid_ip_dict_vars )
+        ip_tuple               = ( invalid_ip_taint_dict, cross_ip_dict, invalid_ip_dict_attr, http_dict_vars )
+        http_tuple             = ( http_taint_dict, cross_http_dict, http_dict_attr, secret_dict_vars ) 
+        empty_pass_tuple       = ( empty_pwd_taint_dict, cross_empty_pass_dict, empty_pwd_attr, empty_pwd_vars ) 
+        default_admin_tuple    = ( default_taint_dict, default_admin_dict )
+        weak_cryp_tuple        = ( weak_cry_dic_taint, weak_crypt_dic  )
 
-        print( pupp_file )
+        print( constants.ANALYZING_KW + pupp_file )
+
         if pupp_file not in final_res_dic: 
-            final_res_dic[ pupp_file ] = ( susp_cnt, switch_cnt, ip_tuple, http_tuple, secret_tuple, empty_pass_tuple, default_taint_dict, weak_cry_dic_taint )
-        print('-'*100)
+            final_res_dic[ pupp_file ] = ( susp_cnt, switch_cnt, ip_tuple, http_tuple, secret_tuple, empty_pass_tuple, default_admin_tuple, weak_cryp_tuple )
     return final_res_dic 
