@@ -450,6 +450,7 @@ def getTaintWeakCryptDict(weak_crypt_dic, dict_all_attr, dict_all_vari) :
 
 def orchestrateWithTaint(dir_):
     all_pupp_files = getPuppetFiles(  dir_ )
+    final_res_dic  = {} 
     for pupp_file in all_pupp_files:
         dict_reso, dict_clas, dict_all_attr, dict_all_vari, dict_switch, list_susp_comm, dict_func = parser.executeParser( pupp_file ) 
 
@@ -476,10 +477,6 @@ def orchestrateWithTaint(dir_):
         weak_crypt_dic     = finalizeWeakEncrypt( dict_func ) 
         weak_cry_dic_taint = getTaintWeakCryptDict( weak_crypt_dic, dict_all_attr, dict_all_vari )
 
-
-
-
-
         '''
         cross script tracking zone 
         '''
@@ -489,9 +486,13 @@ def orchestrateWithTaint(dir_):
         cross_http_dict        = getCrossScriptHTTP ( scripts2Track, dict_clas )     
         cross_empty_pass_dict  = getCrossScriptEmptyPass ( scripts2Track, dict_clas ) 
 
+        secret_tuple           = ( secret_taint_dict, cross_secret_dict )
+        ip_tuple               = ( invalid_ip_taint_dict, cross_ip_dict )
+        http_tuple             = ( http_taint_dict, cross_http_dict ) 
+        empty_pass_tuple       = ( empty_pwd_taint_dict, cross_empty_pass_dict ) 
 
         print( pupp_file )
-
-
-
+        if pupp_file not in final_res_dic: 
+            final_res_dic[ pupp_file ] = ( susp_cnt, switch_cnt, ip_tuple, http_tuple, secret_tuple, empty_pass_tuple, default_taint_dict, weak_cry_dic_taint )
         print('-'*100)
+    return final_res_dic 

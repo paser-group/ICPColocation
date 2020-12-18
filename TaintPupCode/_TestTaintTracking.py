@@ -86,24 +86,28 @@ class TestTaintGraph( unittest.TestCase ):
         secret_taint_dict                           = graph.trackTaint( constants.OUTPUT_SECRET_KW, secret_dict_vars, dict_all_attr, dict_all_vari )
         default_taint_dict                          = orchestra.getTaintAdminDict( default_admin_dict, secret_taint_dict  )        
         self.assertEqual( 1 , len(default_taint_dict) , _test_constants.common_error_string + str(1) ) 
+        graph.var_tracker_list.clear()               
 
     def testTaintedWeakCryptoV1(self):                    
         _, _, dict_all_attr, dict_all_vari, _, _, dict_func = parser.executeParser( _test_constants._weak_cryp_script_name ) 
         weak_crypt_dic     =  orchestra.finalizeWeakEncrypt( dict_func ) 
         weak_cry_dic_taint =  orchestra.getTaintWeakCryptDict( weak_crypt_dic, dict_all_attr, dict_all_vari )
-        self.assertEqual( 2 , len(weak_cry_dic_taint) , _test_constants.common_error_string + str(2) )         
+        self.assertEqual( 2 , len(weak_cry_dic_taint) , _test_constants.common_error_string + str(2) )  
+        graph.var_tracker_list.clear()               
 
     def testTaintedWeakCryptoV2(self):                    
         _, _, dict_all_attr, dict_all_vari, _, _, dict_func = parser.executeParser( _test_constants._empty_pass_script_name ) 
         weak_crypt_dic     =  orchestra.finalizeWeakEncrypt( dict_func ) 
         weak_cry_dic_taint =  orchestra.getTaintWeakCryptDict( weak_crypt_dic, dict_all_attr, dict_all_vari )
-        self.assertEqual( 0 , len(weak_cry_dic_taint) , _test_constants.common_error_string + str(0) )         
+        self.assertEqual( 0 , len(weak_cry_dic_taint) , _test_constants.common_error_string + str(0) )  
+        graph.var_tracker_list.clear()               
 
     def testTaintedWeakCryptoV3(self):                    
         _, _, dict_all_attr, dict_all_vari, _, _, dict_func = parser.executeParser( _test_constants._weak_crypt_script ) 
         weak_crypt_dic     =  orchestra.finalizeWeakEncrypt( dict_func ) 
         weak_cry_dic_taint =  orchestra.getTaintWeakCryptDict( weak_crypt_dic, dict_all_attr, dict_all_vari )
         self.assertEqual( 1 , len(weak_cry_dic_taint) , _test_constants.common_error_string + str(1) )         
+        graph.var_tracker_list.clear()               
 
 def checkVarInSmellDict(  dic_smell  ):
         status = False
