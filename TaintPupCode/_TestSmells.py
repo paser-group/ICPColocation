@@ -5,14 +5,28 @@ import orchestra
 
 class TestSmells( unittest.TestCase ):
 
-    def testSuspiciousComment( self ): 
-        susp_ls = parser.getSuspComments( _test_constants._susp_script_name )
+    def testSuspiciousCommentV1( self ): 
+        susp_ls = parser.getSuspComments( _test_constants._susp_script_1 )
+        self.assertEqual(  0 , len(susp_ls) , _test_constants.common_error_string + str(0) ) 
+
+
+    def testSuspiciousCommentV2( self ): 
+        susp_ls = parser.getSuspComments( _test_constants._susp_script_2 )
         self.assertEqual(  5 , len(susp_ls) , _test_constants._susp_error_msg) 
 
-    def testMissingDefaultPresence( self ): 
+    def testSuspiciousCommentV3( self ): 
+        susp_ls = parser.getSuspComments( _test_constants._missing_default_script_name )
+        self.assertEqual(  6 , len(susp_ls) , _test_constants.common_error_string + str(6) ) 
+
+    def testMissingDefaultPresenceV1( self ): 
         _, _, _, _, dict_switch, _, _ = parser.executeParser( _test_constants._missing_default_script_name ) 
-        no_default_count = orchestra.finalizeSwitches( dict_switch  )
+        no_default_count = orchestra.finalizeSwitches( dict_switch )
         self.assertEqual(  1 , no_default_count , _test_constants._missing_default_msg) 
+
+    def testMissingDefaultPresenceV2( self ): 
+        _, _, _, _, dict_switch, _, _ = parser.executeParser( _test_constants._missing_default_script2 ) 
+        no_default_count = orchestra.finalizeSwitches( dict_switch  )
+        self.assertEqual(  1 , no_default_count , _test_constants.common_error_string + str (1) ) 
 
     def testPresentDefault( self ): 
         _, _, _, _, dict_switch, _, _ = parser.executeParser( _test_constants._present_default_script_name ) 

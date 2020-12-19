@@ -25,8 +25,9 @@ def readAsStr(file_):
 def getSuspComments( file_ ):  
     comment_files =  []
     data_as_ls = getContentAsList( file_ )  
-    comment_as_ls = [z for z in data_as_ls if constants.COMMENT_SYMBOL in z] 
-    for comment in comment_as_ls:
+    comment_as_ls = [z.split( constants.COMMENT_SYMBOL )[1:] for z in data_as_ls if (constants.COMMENT_SYMBOL in z)  ] 
+    for comment_item in comment_as_ls:
+        comment = constants.WHITESPACE_SYMBOL.join( comment_item  )
         comment = comment.lower() 
         if(any(x_ in comment for x_ in constants.CWE_SUSP_COMMENT_LIST )) and ( constants.DEBUG_KW not in comment ) :
             comment_files.append(  comment )
