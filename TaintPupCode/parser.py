@@ -194,7 +194,8 @@ def getCaseWhenBlock(locs, contents):
     case_block_index = 0 
     for loc_tup in locs:
         loc_str = contents[loc_tup[0]+1:loc_tup[-1]] 
-        if constants.CASE_KEYWORD in loc_str :         
+        if constants.CASE_KEYWORD in loc_str :       
+            print(loc_str)   
             case_block_index += 1 
             case_locs, case_content = getContentWithStack( loc_str )
             if(len(case_locs) > 0):
@@ -272,8 +273,9 @@ def executeParser(pp_file):
 
 
 if __name__=='__main__':
-    test_pp_file = 'test.api.pp'
+    # test_pp_file = 'test.api.pp'
     # test_pp_file = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ceph-2018-06/manifests/rgw/keystone/auth.pp'
     # test_pp_file = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/sample-puppet-scripts/manifests/init1.pp' 
+    test_pp_file = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-tripleo-2018-06/manifests/profile/base/pacemaker.pp'
 
     executeParser( test_pp_file )
