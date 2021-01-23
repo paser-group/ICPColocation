@@ -95,3 +95,8 @@ _cross_taint_script_ip = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-
 _cross_taint_script_http = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ceilometer-2018-06/examples/site.pp'
 
 _weak_crypt_script     = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/sample-puppet-scripts/test.pp' 
+
+
+_empirical_script_ip     = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/puppet-2018-06/modules/memcached/manifests/init.pp'
+_empirical_script_http   = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/vagrant-2018-06/puppet/modules/role/manifests/raita.pp' 
+_empirical_script_secret = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/puppet-2018-06/modules/aptrepo/manifests/init.pp'
