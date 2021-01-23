@@ -439,13 +439,16 @@ def getTaintWeakCryptDict(weak_crypt_dic, dict_all_attr, dict_all_vari) :
         func_assignee     = func_assignee.replace( constants.LPAREN_SYMBOL, constants.NULL_SYMBOL ) 
         func_assignee     = func_assignee.replace( constants.WHITESPACE_SYMBOL, constants.NULL_SYMBOL ) 
         if ( checkAtrribInDict( func_assignee, dict_all_attr ) ):
-            weak_cryp_assignee_dic[ func_assignee ] = func_name, type_ , func_assignee, 0 
+            weak_cryp_assignee_dic[ func_assignee ] = [ ( func_name, type_ , func_assignee, 0 ) ]
         else: 
             taintedDic  = graph.trackSingleVarTaint( constants.OUTPUT_WEAK_ENCR_KW , func_assignee, dict_all_vari, dict_all_attr )
             for K_, V_ in taintedDic.items(): 
                 for data_ in V_:
                     attr_name, attr_value , smell_type, hop_count = data_ 
-                    weak_cryp_assignee_dic[ func_assignee ] = func_name, type_ , attr_name, hop_count
+                    if func_assignee not in weak_cryp_assignee_dic:
+                        weak_cryp_assignee_dic[ func_assignee ] = [ (func_name, type_ , attr_name, hop_count) ]
+                    else: 
+                        weak_cryp_assignee_dic[ func_assignee ] =  weak_cryp_assignee_dic[ func_assignee ] +  [ ( func_name, type_ , attr_name, hop_count) ]
     return weak_cryp_assignee_dic 
 
 

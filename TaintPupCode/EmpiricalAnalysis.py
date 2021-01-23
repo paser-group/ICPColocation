@@ -34,7 +34,36 @@ def reportSmellUsage( tup_, smell_type ):
         total_affected_attribute_count       = len(attr_dict) + var_use_count
         print('TOTAL_EFFECT_COUNT:::'        + str( total_affected_attribute_count  ) ) 
         print('*'*25)
-    # else:
+
+    elif ( len(tup_) == 2 ) and ( smell_type == 'DEFAULT_ADMIN' ) :
+        within_taint_dict, var_with_smell_dict = tup_ 
+        used_var_count = len(within_taint_dict) 
+        for _, v_ in within_taint_dict.items(): 
+            within_use_count = within_use_count + len(v_) 
+        print('*'*25)
+        print('VARIABLE_WITH_SMELL_COUNT:::' + str (len( var_with_smell_dict )  ) )
+        print('VARIABLE_IN_USE_COUNT:::'     + str (  used_var_count  ) )
+        print('*'*25)
+        print('WITHIN_VAR_USE_COUNT:::'      + str( within_use_count  ) )
+        print('TOTAL_VAR_USE_COUNT:::'       + str( within_use_count  ) )
+        print('TOTAL_EFFECT_COUNT:::'        + str( within_use_count  ) ) 
+        total_affected_attribute_count       = within_use_count 
+        print('*'*25)
+    elif ( len(tup_) == 2 ) and ( smell_type == 'WEAK_CRYPTO' ) :
+        within_taint_dict, var_with_smell_dict = tup_ 
+        used_var_count = len(within_taint_dict) 
+        # print(within_taint_dict) 
+        for _, v_ in within_taint_dict.items(): 
+            within_use_count = within_use_count + len(v_) 
+        print('*'*25)
+        print('VARIABLE_WITH_SMELL_COUNT:::' + str (len( var_with_smell_dict )  ) )
+        print('VARIABLE_IN_USE_COUNT:::'     + str (  used_var_count  ) )
+        print('*'*25)
+        print('WITHIN_VAR_USE_COUNT:::'      + str( within_use_count  ) )
+        print('TOTAL_VAR_USE_COUNT:::'       + str( within_use_count  ) )
+        print('TOTAL_EFFECT_COUNT:::'        + str( within_use_count  ) ) 
+        total_affected_attribute_count       = within_use_count 
+        print('*'*25)
     print('='*50)
     return total_affected_attribute_count
 
@@ -48,8 +77,11 @@ def mineNotUsedSmells(pp_file):
     invalid_ip_affect_cnt = reportSmellUsage( ip_tuple, 'INVALID_IP' )
     http_affect_cnt       = reportSmellUsage( http_tuple, 'INSECURE_HTTP' )
     secret_affect_cnt     = reportSmellUsage( secret_tuple, 'HARD_CODED_SECRET' )
+    empt_pass_affect_cnt  = reportSmellUsage( empty_pass_tuple, 'EMPTY_PASSWORD' )
+    default_adm_affect_cnt= reportSmellUsage( default_admin_tuple, 'DEFAULT_ADMIN' )
+    weak_cryp_affect_cnt  = reportSmellUsage( weak_cryp_tuple, 'WEAK_CRYPTO' )
 
-    return invalid_ip_affect_cnt , http_affect_cnt , secret_affect_cnt
+    return invalid_ip_affect_cnt , http_affect_cnt , secret_affect_cnt, empt_pass_affect_cnt, default_adm_affect_cnt, weak_cryp_affect_cnt
 
 if __name__=='__main__':
     # scriptName = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/puppet-2018-06/modules/statistics/manifests/user.pp'

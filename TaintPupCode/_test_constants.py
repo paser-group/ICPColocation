@@ -100,3 +100,6 @@ _weak_crypt_script     = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-Tenne
 _empirical_script_ip     = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/puppet-2018-06/modules/memcached/manifests/init.pp'
 _empirical_script_http   = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/vagrant-2018-06/puppet/modules/role/manifests/raita.pp' 
 _empirical_script_secret = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/puppet-2018-06/modules/aptrepo/manifests/init.pp'
+_empirical_script_empty  = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/translatewiki-2018-06/puppet/modules/users/manifests/init.pp'
+_empirical_script_d_adm  = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/puppet-2018-06/modules/superset/manifests/init.pp'
+_empirical_script_md5    = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/puppet-2018-06/modules/postgresql/manifests/user.pp'
