@@ -15,11 +15,10 @@ class TestIntegration( unittest.TestCase ):
         icp_tuple   =  orchestra.doFullTaintForSingleScript( scriptName )       
         self.assertEqual(1, icp_tuple[1] ,  _test_constants.common_error_string + str(1)  )   
 
-    def testFullDirectory(self):     
-        dirName          = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/' 
-        icp_dict_per_dir =  orchestra.orchestrateWithTaint( dirName )       
-        self.assertEqual(2840, len(icp_dict_per_dir) ,  _test_constants.common_error_string + str(2840)  )                       
-
+    # def testFullDirectory(self):     
+    #     dirName          = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/' 
+    #     icp_dict_per_dir =  orchestra.orchestrateWithTaint( dirName )       
+    #     self.assertEqual(2840, len(icp_dict_per_dir) ,  _test_constants.common_error_string + str(2840)  )                       
 
 
 

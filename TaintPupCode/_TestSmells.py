@@ -28,6 +28,46 @@ class TestSmells( unittest.TestCase ):
         no_default_count = orchestra.finalizeSwitches( dict_switch  )
         self.assertEqual(  1 , no_default_count , _test_constants.common_error_string + str (1) ) 
 
+    def testMissingDefaultPresenceV3( self ): 
+        _, _, _, _, dict_switch, _, _ = parser.executeParser( _test_constants._missing_default_script3 ) 
+        no_default_count = orchestra.finalizeSwitches( dict_switch  )
+        self.assertEqual(  0 , no_default_count , _test_constants.common_error_string + str (0) ) 
+
+    def testMissingDefaultPresenceV4( self ): 
+        _, _, _, _, dict_switch, _, _ = parser.executeParser( _test_constants._missing_default_script4 ) 
+        no_default_count = orchestra.finalizeSwitches( dict_switch  )
+        self.assertEqual(  1 , no_default_count , _test_constants.common_error_string + str (1) ) 
+
+    def testMissingDefaultPresenceV5( self ): 
+        _, _, _, _, dict_switch, _, _ = parser.executeParser( _test_constants._missing_default_script5 ) 
+        no_default_count = orchestra.finalizeSwitches( dict_switch  )
+        self.assertEqual(  1 , no_default_count , _test_constants.common_error_string + str (1) ) 
+
+    def testMissingDefaultPresenceV6( self ): 
+        _, _, _, _, dict_switch, _, _ = parser.executeParser( _test_constants._missing_default_script6 ) 
+        no_default_count = orchestra.finalizeSwitches( dict_switch  )
+        self.assertEqual(  0 , no_default_count , _test_constants.common_error_string + str (0) ) 
+
+    def testMissingDefaultPresenceV7( self ): 
+        _, _, _, _, dict_switch, _, _ = parser.executeParser( _test_constants._missing_default_script7 ) 
+        no_default_count = orchestra.finalizeSwitches( dict_switch  )
+        self.assertEqual(  0 , no_default_count , _test_constants.common_error_string + str (0) ) 
+
+    def testMissingDefaultPresenceV8( self ): 
+        _, _, _, _, dict_switch, _, _ = parser.executeParser( _test_constants._missing_default_script8 ) 
+        default_count = orchestra.finalizeSwitches( dict_switch  )
+        self.assertEqual(  0 , default_count , _test_constants.common_error_string + str (0) ) 
+
+    def testMissingDefaultPresenceV9( self ): 
+        _, _, _, _, dict_switch, _, _ = parser.executeParser( _test_constants._missing_default_script9 ) # this one has a default block 
+        default_count = orchestra.finalizeSwitches( dict_switch  )
+        self.assertEqual(  0 , default_count , _test_constants.common_error_string + str (0) ) 
+
+    def testMissingDefaultPresenceV10( self ): 
+        _, _, _, _, dict_switch, _, _ = parser.executeParser( _test_constants._missing_default_script10 ) # this one has a default block 
+        default_count = orchestra.finalizeSwitches( dict_switch  )
+        self.assertEqual(  0 , default_count , _test_constants.common_error_string + str (0) ) 
+
     def testPresentDefault( self ): 
         _, _, _, _, dict_switch, _, _ = parser.executeParser( _test_constants._present_default_script_name ) 
         no_default_count = orchestra.finalizeSwitches( dict_switch  )

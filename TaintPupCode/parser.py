@@ -194,8 +194,8 @@ def getCaseWhenBlock(locs, contents):
     case_block_index = 0 
     for loc_tup in locs:
         loc_str = contents[loc_tup[0]+1:loc_tup[-1]] 
-        if constants.CASE_KEYWORD in loc_str :       
-            print(loc_str)   
+        if (constants.CASE_KEYWORD in loc_str) and ( any(x_ in loc_str for x_ in constants.INVALID_SWITCH_CASE_KEYWORDS  ) == False ):       
+            # print(loc_str)   
             case_block_index += 1 
             case_locs, case_content = getContentWithStack( loc_str )
             if(len(case_locs) > 0):
