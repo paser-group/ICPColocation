@@ -448,53 +448,58 @@ def getTaintWeakCryptDict(weak_crypt_dic, dict_all_attr, dict_all_vari) :
                     weak_cryp_assignee_dic[ func_assignee ] = func_name, type_ , attr_name, hop_count
     return weak_cryp_assignee_dic 
 
+
+def doFullTaintForSingleScript( pupp_file ): 
+    dict_reso, dict_clas, dict_all_attr, dict_all_vari, dict_switch, list_susp_comm, dict_func = parser.executeParser( pupp_file ) 
+
+    susp_cnt       = finalizeSusps( list_susp_comm )
+    switch_cnt     = finalizeSwitches( dict_switch )
+
+
+    invalid_ip_dict_attr, invalid_ip_dict_vars  = finalizeInvalidIPs( dict_all_attr, dict_all_vari ) 
+    invalid_ip_taint_dict = graph.trackTaint( constants.OUTPUT_INVALID_IP_KW, invalid_ip_dict_vars, dict_all_attr, dict_all_vari )
+    
+    http_dict_attr, http_dict_vars = finalizeHTTP( dict_all_attr, dict_all_vari )
+    http_taint_dict = graph.trackTaint( constants.OUTPUT_HTTP_KW, http_dict_vars, dict_all_attr, dict_all_vari )
+
+    secret_dict_attr, secret_dict_vars = finalizeHardCodedSecrets( dict_all_attr, dict_all_vari )
+    secret_taint_dict                  = graph.trackTaint( constants.OUTPUT_SECRET_KW, secret_dict_vars, dict_all_attr, dict_all_vari )
+
+    empty_pwd_attr, empty_pwd_vars = finalizeEmptyPassword( dict_all_attr, dict_all_vari  )
+    empty_pwd_taint_dict           = graph.trackTaint( constants.OUTPUT_EMPTY_KW, empty_pwd_vars, dict_all_attr, dict_all_vari )        
+
+    default_admin_dict     = finalizeDefaults( dict_all_vari )
+    default_taint_dict     = getTaintAdminDict( default_admin_dict, secret_taint_dict  )        
+
+
+    weak_crypt_dic     = finalizeWeakEncrypt( dict_func ) 
+    weak_cry_dic_taint = getTaintWeakCryptDict( weak_crypt_dic, dict_all_attr, dict_all_vari )
+
+    '''
+    cross script tracking zone 
+    '''
+    scripts2Track          = getReferredScripts( dict_clas , pupp_file ) 
+    cross_secret_dict      = getCrossScriptSecret( scripts2Track, dict_clas )         
+    cross_ip_dict          = getCrossScriptInvalidIP( scripts2Track, dict_clas ) 
+    cross_http_dict        = getCrossScriptHTTP ( scripts2Track, dict_clas )     
+    cross_empty_pass_dict  = getCrossScriptEmptyPass ( scripts2Track, dict_clas ) 
+
+    secret_tuple           = ( secret_taint_dict, cross_secret_dict, secret_dict_attr, secret_dict_vars )
+    ip_tuple               = ( invalid_ip_taint_dict, cross_ip_dict, invalid_ip_dict_attr, invalid_ip_dict_vars )
+    http_tuple             = ( http_taint_dict, cross_http_dict, http_dict_attr, http_dict_vars ) 
+    empty_pass_tuple       = ( empty_pwd_taint_dict, cross_empty_pass_dict, empty_pwd_attr, empty_pwd_vars ) 
+    default_admin_tuple    = ( default_taint_dict, default_admin_dict )
+    weak_cryp_tuple        = ( weak_cry_dic_taint, weak_crypt_dic  )    
+
+    return ( susp_cnt, switch_cnt, ip_tuple, http_tuple, secret_tuple, empty_pass_tuple, default_admin_tuple, weak_cryp_tuple, dict_reso )
+
+
 def orchestrateWithTaint(dir_):
     all_pupp_files = getPuppetFiles(  dir_ )
     final_res_dic  = {} 
     for pupp_file in all_pupp_files:
-        dict_reso, dict_clas, dict_all_attr, dict_all_vari, dict_switch, list_susp_comm, dict_func = parser.executeParser( pupp_file ) 
-
-        susp_cnt       = finalizeSusps( list_susp_comm )
-        switch_cnt     = finalizeSwitches( dict_switch )
-
-
-        invalid_ip_dict_attr, invalid_ip_dict_vars  = finalizeInvalidIPs( dict_all_attr, dict_all_vari ) 
-        invalid_ip_taint_dict = graph.trackTaint( constants.OUTPUT_INVALID_IP_KW, invalid_ip_dict_vars, dict_all_attr, dict_all_vari )
-        
-        http_dict_attr, http_dict_vars = finalizeHTTP( dict_all_attr, dict_all_vari )
-        http_taint_dict = graph.trackTaint( constants.OUTPUT_HTTP_KW, http_dict_vars, dict_all_attr, dict_all_vari )
-
-        secret_dict_attr, secret_dict_vars = finalizeHardCodedSecrets( dict_all_attr, dict_all_vari )
-        secret_taint_dict                  = graph.trackTaint( constants.OUTPUT_SECRET_KW, secret_dict_vars, dict_all_attr, dict_all_vari )
-
-        empty_pwd_attr, empty_pwd_vars = finalizeEmptyPassword( dict_all_attr, dict_all_vari  )
-        empty_pwd_taint_dict           = graph.trackTaint( constants.OUTPUT_EMPTY_KW, empty_pwd_vars, dict_all_attr, dict_all_vari )        
-
-        default_admin_dict     = finalizeDefaults( dict_all_vari )
-        default_taint_dict     = getTaintAdminDict( default_admin_dict, secret_taint_dict  )        
-
-
-        weak_crypt_dic     = finalizeWeakEncrypt( dict_func ) 
-        weak_cry_dic_taint = getTaintWeakCryptDict( weak_crypt_dic, dict_all_attr, dict_all_vari )
-
-        '''
-        cross script tracking zone 
-        '''
-        scripts2Track          = getReferredScripts( dict_clas , pupp_file ) 
-        cross_secret_dict      = getCrossScriptSecret( scripts2Track, dict_clas )         
-        cross_ip_dict          = getCrossScriptInvalidIP( scripts2Track, dict_clas ) 
-        cross_http_dict        = getCrossScriptHTTP ( scripts2Track, dict_clas )     
-        cross_empty_pass_dict  = getCrossScriptEmptyPass ( scripts2Track, dict_clas ) 
-
-        secret_tuple           = ( secret_taint_dict, cross_secret_dict, secret_dict_attr, invalid_ip_dict_vars )
-        ip_tuple               = ( invalid_ip_taint_dict, cross_ip_dict, invalid_ip_dict_attr, http_dict_vars )
-        http_tuple             = ( http_taint_dict, cross_http_dict, http_dict_attr, secret_dict_vars ) 
-        empty_pass_tuple       = ( empty_pwd_taint_dict, cross_empty_pass_dict, empty_pwd_attr, empty_pwd_vars ) 
-        default_admin_tuple    = ( default_taint_dict, default_admin_dict )
-        weak_cryp_tuple        = ( weak_cry_dic_taint, weak_crypt_dic  )
-
+        res_tup  = doFullTaintForSingleScript( pupp_file )
         print( constants.ANALYZING_KW + pupp_file )
-
         if pupp_file not in final_res_dic: 
-            final_res_dic[ pupp_file ] = ( susp_cnt, switch_cnt, ip_tuple, http_tuple, secret_tuple, empty_pass_tuple, default_admin_tuple, weak_cryp_tuple )
+            final_res_dic[ pupp_file ] = res_tup 
     return final_res_dic 

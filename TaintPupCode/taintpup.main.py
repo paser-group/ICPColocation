@@ -12,7 +12,7 @@ import  datetime
 
 def getCountFromTuple(tu_):
     cnt  = 0 
-    taint_dic, cross_dic, attrib_dic , _ = tu_  # we will not use non-tainted hard-coded secrets so skipping last element of tuple 
+    taint_dic, cross_dic, attrib_dic , _ = tu_  # we will not use non-tainted security smells so skipping last element of tuple 
     # one hard-coded secret can be assigned in more places , so get the list 
     for name_, data_ in taint_dic.items(): 
         cnt = cnt + len( data_ )
@@ -33,7 +33,8 @@ def getCountFromDic(dic_):
 def processResults( res_dic, res_csv_name, res_pkl_name ):
     res_holder  = [] 
     for file_name, scan_results in res_dic.items():
-        susp_cnt, switch_cnt, ip_tuple, http_tuple, secret_tuple, empty_pass_tuple, default_admin_tuple, weak_cry_tuple = scan_results
+        # last element of scan results is dict of resources : will be used later 
+        susp_cnt, switch_cnt, ip_tuple, http_tuple, secret_tuple, empty_pass_tuple, default_admin_tuple, weak_cry_tuple, _ = scan_results
         
         ip_count       = getCountFromTuple( ip_tuple )
         http_count     = getCountFromTuple( http_tuple )
@@ -49,8 +50,8 @@ def processResults( res_dic, res_csv_name, res_pkl_name ):
         
         full_res_tup   = ( file_name, susp_cnt, switch_cnt, ip_count, http_count, secret_count, empty_pass_cnt, dflt_adm_cnt, weak_cry_cnt, total_count )
         res_holder.append( full_res_tup ) 
-        print( full_res_tup )
-        print('='*80)
+        # print( full_res_tup )
+        # print('='*80)
     
     df_ = pd.DataFrame( res_holder )
     df_.to_csv( res_csv_name, header= constants.CSV_HEADER , index=False, encoding= constants.CSV_ENCODING )
