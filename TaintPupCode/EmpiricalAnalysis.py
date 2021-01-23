@@ -27,8 +27,11 @@ def reportSmellUsage( tup_, smell_type ):
         print('VARIABLE_IN_USE_COUNT:::'     + str (  used_var_count  ) )
         print('*'*25)
         print('WITHIN_VAR_USE_COUNT:::'      + str( within_use_count  ) )
+        print('*'*25)
         print('CROSS_VAR_USE_COUNT:::'       + str( cross_use_count  ) )
-        var_use_count = within_use_count     + cross_use_count
+        print('*'*25)
+        # var_use_count = within_use_count     + cross_use_count ## commenting as in cross script taints, attributes flow into classes as variables
+        var_use_count = within_use_count
         print('TOTAL_VAR_USE_COUNT:::'       + str( var_use_count  ) )
         print('TOTAL_ATTR_USE_COUNT:::'      + str( len(attr_dict)  ) ) 
         total_affected_attribute_count       = len(attr_dict) + var_use_count
@@ -82,6 +85,33 @@ def mineNotUsedSmells(pp_file):
     weak_cryp_affect_cnt  = reportSmellUsage( weak_cryp_tuple, 'WEAK_CRYPTO' )
 
     return invalid_ip_affect_cnt , http_affect_cnt , secret_affect_cnt, empt_pass_affect_cnt, default_adm_affect_cnt, weak_cryp_affect_cnt
+
+
+def reportHopUsage( tup_, smell_type ):
+    within_use_count, cross_use_count , used_var_count   = 0, 0 , 0
+    total_affected_attribute_count = 0 
+    print('='*50)
+    print(smell_type)
+    print('='*50)
+    if len( tup_ ) == 4:
+        # the block with cross script taint detection
+        within_taint_dict, cross_taint_dict, _, _ = tup_ 
+
+
+
+def mineSmellHops(pp_file):
+    res_tuple = orchestra.doFullTaintForSingleScript( pp_file  )
+    _, _, ip_tuple, http_tuple, secret_tuple, empty_pass_tuple, _, weak_cryp_tuple, _ = res_tuple
+    '''
+    for suspicious comments and missing default no taint propagation
+    resource dict not needed here 
+    default admin has no hops by definition of how it flows 
+    '''
+    # invalid_ip_hop_cnt = reportHopUsage( ip_tuple, 'INVALID_IP' )
+
+
+    # return invalid_ip_hop_cnt 
+
 
 if __name__=='__main__':
     # scriptName = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/puppet-2018-06/modules/statistics/manifests/user.pp'
