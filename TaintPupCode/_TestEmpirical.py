@@ -33,7 +33,7 @@ class TestAffectsEmpirically( unittest.TestCase ):
 class TestHopsEmpirically( unittest.TestCase ):
 
     def testInvalidIPHops(self):     
-        hopListCount = len (EmpiricalAnalysis.mineSmellHops( _test_constants._empirical_hop_ip  )[0]  )
+        hopListCount = len (EmpiricalAnalysis.mineSmellHops( _test_constants._empirical_script_ip  )[0]  )
         self.assertEqual(2, hopListCount ,  _test_constants.common_error_string + str(2)  )   
 
     def testHTTPHops(self):     
@@ -51,6 +51,33 @@ class TestHopsEmpirically( unittest.TestCase ):
     def testWeakCryptHops(self):     
         hopListCount = len (EmpiricalAnalysis.mineSmellHops( _test_constants._empirical_script_md5 )[4]  )
         self.assertEqual(1, hopListCount ,  _test_constants.common_error_string + str(1)  )   
+
+class TestSmellyResourcesEmpirically( unittest.TestCase ):
+
+    def testInvalidIPResources(self):     
+        resoListCount = len (EmpiricalAnalysis.mineSmellyResources ( _test_constants._empirical_script_ip  )[0]  )
+        self.assertEqual(2, resoListCount ,  _test_constants.common_error_string + str(2)  )   
+
+    def testHTTPResources(self):     
+        resoListCount = len (EmpiricalAnalysis.mineSmellyResources ( _test_constants._empirical_script_http  )[1]  )
+        self.assertEqual(14, resoListCount ,  _test_constants.common_error_string + str(14)  )   
+
+    def testSecretResources(self):     
+        resoListCount = len (EmpiricalAnalysis.mineSmellyResources ( _test_constants._empirical_script_secret  )[2]  )
+        self.assertEqual(74, resoListCount ,  _test_constants.common_error_string + str(74)  )   
+
+    def testEmptyPassResources(self):     
+        resoListCount = len (EmpiricalAnalysis.mineSmellyResources ( _test_constants._empirical_script_empty  )[3]  )
+        self.assertEqual(576, resoListCount ,  _test_constants.common_error_string + str(576)  )   
+
+    def testDefaultAdminResources(self):     
+        resoListCount = len (EmpiricalAnalysis.mineSmellyResources ( _test_constants._empirical_script_d_adm  )[4]  )
+        self.assertEqual(1, resoListCount ,  _test_constants.common_error_string + str(1)  )   
+
+    def testWeakCryptResources(self):     
+        resoListCount = len (EmpiricalAnalysis.mineSmellyResources ( _test_constants._empirical_script_md5  )[5]  )
+        self.assertEqual(1, resoListCount ,  _test_constants.common_error_string + str(1)  )   
+
 
 if __name__ == '__main__':
     unittest.main()

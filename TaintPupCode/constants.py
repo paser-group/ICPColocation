@@ -16,7 +16,12 @@ SLASH_SYMBOL = '/'
 COLON_SYMBOL = ':'
 AN_S         = 's'
 COMMA_SYMBOL = ','
-
+REDIRECT_SYMBOL = '>' 
+WHITESPACE_SYMBOL = ' '
+ARROWHEAD_SYMBOL = '->'
+EQUAL_SYMBOL = '='
+NULL_SYMBOL = ''
+LCURL_SYMBOL = '{'
 
 
 CWE_SUSP_COMMENT_LIST      = ['hack', 'fixme', 'later', 'todo', 'to-do', 'bug'  ]
@@ -55,16 +60,12 @@ XTRA_HTTP_PROTO_KW = '_protocol'
 YUM_KW  = 'yum'
 INVALID_ATTRIBUTE_KEYWORDS   = ['block', 'resource' , '(', ')']  
 INVALID_SWITCH_CASE_KEYWORDS = ['downcase' ] 
+INVALID_RESO_NAME_KEYWORDS   = ['resource ', 'block', 'else ', ARROWHEAD_SYMBOL, ATTRIBUTE_SYMBOL, 'if ' ] 
 
 TEMP_LOG_FILE = 'temp.output.from.parser.txt'
 BASH_CMD = 'bash'
 BASH_FLAG = '-c'
 NATIVE_PUPPET_PARSER_CMD = 'puppet parser  dump --render-as console' 
-REDIRECT_SYMBOL = '>' 
-WHITESPACE_SYMBOL = ' '
-ARROWHEAD_SYMBOL = '->'
-EQUAL_SYMBOL = '='
-NULL_SYMBOL = ''
 PP_EXTENSION = '.pp'
 
 ANALYZING_KW             = 'ANALYZING ...'

@@ -123,12 +123,12 @@ def getResources(all_locs, all_as_str):
     for loc_tup in all_locs:
         loc_str = all_as_str[loc_tup[0]+1:loc_tup[-1]] 
         if constants.RESOURCE_KEYWORD in loc_str and constants.ARROWHEAD_SYMBOL not in loc_str:     
-            reso_index += 1 
-            reso_locs,  reso_content = getContentWithStack( loc_str  )  
-            attrib_per_reso_dict = getAttributes( reso_locs, reso_content )
-            reso_name  = getResoName( reso_locs, reso_content )
-            reso_type  = getResoType( reso_content )
-            resoDict[ reso_index ] = ( reso_name, reso_type,  loc_tup[0], loc_tup[-1], attrib_per_reso_dict  )
+                reso_index += 1 
+                reso_locs,  reso_content = getContentWithStack( loc_str  )  
+                attrib_per_reso_dict = getAttributes( reso_locs, reso_content )
+                reso_name  = getResoName( reso_locs, reso_content )
+                reso_type  = getResoType( reso_content )
+                resoDict[ reso_index ] = ( reso_name, reso_type,  loc_tup[0], loc_tup[-1], attrib_per_reso_dict  )
     return resoDict     
 
 
