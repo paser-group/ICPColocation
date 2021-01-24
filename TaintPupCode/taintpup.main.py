@@ -9,15 +9,15 @@ import constants
 import pickle
 import time 
 import  datetime 
+import EmpiricalAnalysis 
 
 def getCountFromTuple(tu_):
     cnt  = 0 
-    taint_dic, cross_dic, attrib_dic , _ = tu_  # we will not use non-tainted security smells so skipping last element of tuple 
+    taint_dic, _, attrib_dic , _ = tu_  # we will not use non-tainted security smells so skipping last element of tuple 
+    # we will not consider cross dict as we are calculating within script smells 
     # one hard-coded secret can be assigned in more places , so get the list 
     for name_, data_ in taint_dic.items(): 
         cnt = cnt + len( data_ )
-    # all propagated secrets are tracked as dictionary index 
-    cnt = cnt + len(cross_dic) 
     # all attribute secrets are tracked as dictionary index 
     cnt = cnt + len(attrib_dic) 
     return cnt 
@@ -32,6 +32,7 @@ def getCountFromDic(dic_):
 
 def processResults( res_dic, res_csv_name, res_pkl_name ):
     res_holder  = [] 
+    insights_not_used_holder, insights_hop_holder, insights_reso_holder = [] , [], []
     for file_name, scan_results in res_dic.items():
         # last element of scan results is dict of resources : will be used later 
         susp_cnt, switch_cnt, ip_tuple, http_tuple, secret_tuple, empty_pass_tuple, default_admin_tuple, weak_cry_tuple, _ = scan_results
@@ -52,7 +53,26 @@ def processResults( res_dic, res_csv_name, res_pkl_name ):
         res_holder.append( full_res_tup ) 
         # print( full_res_tup )
         # print('='*80)
-    
+        '''
+        extra insights zone , segment#1: not used zone 
+        '''
+        notUsedTuple  =  EmpiricalAnalysis.mineNotUsedSmells(scan_results )
+        for list_ in notUsedTuple:
+            insights_not_used_holder = insights_not_used_holder + list_ 
+        '''
+        extra insights zone , segment#2: hop zone 
+        '''
+        hopTuple  =  EmpiricalAnalysis.mineSmellHops (scan_results )
+        for list_ in hopTuple:
+            insights_hop_holder = insights_hop_holder + list_ 
+        '''
+        extra insights zone , segment#3: resource zone 
+        '''
+        resoTuple  =  EmpiricalAnalysis.mineSmellyResources (scan_results )
+        for list_ in resoTuple:
+            insights_reso_holder = insights_reso_holder + list_ 
+
+
     df_ = pd.DataFrame( res_holder )
     df_.to_csv( res_csv_name, header= constants.CSV_HEADER , index=False, encoding= constants.CSV_ENCODING )
     pickle.dump( res_dic, open( res_pkl_name , constants.PKL_WRITE_MODE ) )

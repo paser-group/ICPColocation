@@ -8,7 +8,7 @@ import orchestra
 import constants 
 
 
-def reportSmellUsage( script_name,  tup_, smell_type ):
+def reportSmellUsage(  tup_, smell_type ):
     res_holder = []
     within_use_count, cross_use_count , used_var_count, affected_by_var_count   = 0, 0 , 0, 0
     total_affected_attribute_count = 0 
@@ -45,27 +45,26 @@ def reportSmellUsage( script_name,  tup_, smell_type ):
         var_with_smell_count = len( var_with_smell_dict )
         total_affected_attribute_count       = within_use_count 
 
-    res_holder.append( (script_name,  var_with_smell_count, used_var_count, within_use_count, cross_use_count, affected_by_var_count, total_affected_attribute_count )  )
+    res_holder.append( ( smell_type,  var_with_smell_count, used_var_count, within_use_count, cross_use_count, affected_by_var_count, total_affected_attribute_count )  )
     return res_holder 
 
-def mineNotUsedSmells(pp_file):
-    res_tuple = orchestra.doFullTaintForSingleScript( pp_file  )
+def mineNotUsedSmells(res_tuple):
     _, _, ip_tuple, http_tuple, secret_tuple, empty_pass_tuple, default_admin_tuple, weak_cryp_tuple, _ = res_tuple
     '''
     for suspicious comments and missing default no taint propagation
     resource dict not needed here 
     '''
-    invalid_ip_affect_ls = reportSmellUsage(pp_file,  ip_tuple, constants.OUTPUT_INVALID_IP_KW )
-    http_affect_ls       = reportSmellUsage(pp_file,  http_tuple, constants.OUTPUT_HTTP_KW )
-    secret_affect_ls     = reportSmellUsage(pp_file,  secret_tuple, constants.OUTPUT_SECRET_KW )
-    empt_pass_affect_ls  = reportSmellUsage(pp_file,  empty_pass_tuple, constants.OUTPUT_EMPTY_KW )
-    default_adm_affect_ls= reportSmellUsage(pp_file,  default_admin_tuple, constants.OUTPUT_DEFAULT_ADMIN_KW )
-    weak_cryp_affect_ls  = reportSmellUsage(pp_file,  weak_cryp_tuple, constants.OUTPUT_WEAK_ENCR_KW )
+    invalid_ip_affect_ls = reportSmellUsage(  ip_tuple, constants.OUTPUT_INVALID_IP_KW )
+    http_affect_ls       = reportSmellUsage(  http_tuple, constants.OUTPUT_HTTP_KW )
+    secret_affect_ls     = reportSmellUsage(  secret_tuple, constants.OUTPUT_SECRET_KW )
+    empt_pass_affect_ls  = reportSmellUsage(  empty_pass_tuple, constants.OUTPUT_EMPTY_KW )
+    default_adm_affect_ls= reportSmellUsage(  default_admin_tuple, constants.OUTPUT_DEFAULT_ADMIN_KW )
+    weak_cryp_affect_ls  = reportSmellUsage(  weak_cryp_tuple, constants.OUTPUT_WEAK_ENCR_KW )
 
     return invalid_ip_affect_ls , http_affect_ls , secret_affect_ls, empt_pass_affect_ls, default_adm_affect_ls, weak_cryp_affect_ls 
 
 
-def mineHopUsage( script_name, tup_, smell_type ):
+def mineHopUsage(  tup_, smell_type ):
     hop_holder  = []
     if (len(tup_) == 4):  
         # the block with cross script taint detection
@@ -76,7 +75,7 @@ def mineHopUsage( script_name, tup_, smell_type ):
     for var_name, var_track_data in within_taint_dict.items(): 
         for var_data_tuple in var_track_data:
             var_hop_count = var_data_tuple[-1]
-            hop_holder.append( (script_name, smell_type,  var_name,  var_hop_count ) )
+            hop_holder.append( ( smell_type,  var_name,  var_hop_count ) )
     # print(hop_holder)
     return hop_holder
 
@@ -104,7 +103,7 @@ def searchResourceForDefaultAdmin( res_dic, var_nam ):
                 reso_data_holder.append(  ( reso_name, reso_type, val_ ) )
     return reso_data_holder    
 
-def mineAffectedResources(script_name, resource_dict, tup_, smell_type ):
+def mineAffectedResources( resource_dict, tup_, smell_type ):
     reso_holder  = []
     smell_dict_attr = {}
     if (len(tup_) == 4):  
@@ -120,7 +119,7 @@ def mineAffectedResources(script_name, resource_dict, tup_, smell_type ):
             for tu_ in reso_list:
                 res_nam, res_typ, _ = tu_ 
                 if( any(z_ in res_nam for z_ in constants.INVALID_RESO_NAME_KEYWORDS )  == False  ): 
-                    reso_holder.append(  (script_name, res_nam, res_typ, constants.DUMMY_FUNC_ASSIGNEE, var_name , smell_type  )  )
+                    reso_holder.append(  ( res_nam, res_typ, constants.DUMMY_FUNC_ASSIGNEE, var_name , smell_type  )  )
     elif smell_type == constants.OUTPUT_WEAK_ENCR_KW :
         for var_name, var_track_data in within_taint_dict.items(): 
             for var_data_tuple in var_track_data:
@@ -129,7 +128,7 @@ def mineAffectedResources(script_name, resource_dict, tup_, smell_type ):
                 for tu_ in reso_list:
                     res_nam, res_typ, _ = tu_ 
                     if( any(z_ in res_nam for z_ in constants.INVALID_RESO_NAME_KEYWORDS )  == False  ): 
-                        reso_holder.append(  (script_name, res_nam, res_typ, constants.DUMMY_FUNC_ASSIGNEE, var_name , smell_type  )  )
+                        reso_holder.append(  ( res_nam, res_typ, constants.DUMMY_FUNC_ASSIGNEE, var_name , smell_type  )  )
     else: 
         for var_name, var_track_data in within_taint_dict.items(): 
             for var_data_tuple in var_track_data:
@@ -146,8 +145,7 @@ def mineAffectedResources(script_name, resource_dict, tup_, smell_type ):
                 for tu_ in reso_list:
                     res_nam, res_typ, _ = tu_ 
                     if( any(z_ in res_nam for z_ in constants.INVALID_RESO_NAME_KEYWORDS )  == False  ): 
-                        reso_holder.append(  (script_name, res_nam, res_typ, attr_name, var_name , smell_type  )  )
-                    # reso_holder.append(  (res_nam, res_typ, attr_name, smell_type  )  )
+                        reso_holder.append(  ( res_nam, res_typ, attr_name, var_name , smell_type  )  )
     
     if smell_type !=  constants.OUTPUT_WEAK_ENCR_KW :
         for _, attr_smell_data in smell_dict_attr.items():
@@ -156,7 +154,7 @@ def mineAffectedResources(script_name, resource_dict, tup_, smell_type ):
             for tu_ in reso_list:
                 res_nam, res_typ, _ = tu_ 
                 if( any(z_ in res_nam for z_ in constants.INVALID_RESO_NAME_KEYWORDS )  == False  )  : 
-                    reso_holder.append(  (script_name, res_nam, res_typ, attr_name, attr_value , smell_type  )  )
+                    reso_holder.append(  ( res_nam, res_typ, attr_name, attr_value , smell_type  )  )
     # print(reso_holder) 
     # for tup in reso_holder:
     #     print( tup[1], tup[2],  tup[3])
@@ -165,40 +163,42 @@ def mineAffectedResources(script_name, resource_dict, tup_, smell_type ):
     '''
     return reso_holder
 
-def mineSmellyResources(pp_file):
-    res_tuple = orchestra.doFullTaintForSingleScript( pp_file  )
-    _, _, ip_tuple, http_tuple, secret_tuple, empty_pass_tuple, default_admin_tuple, weak_cryp_tuple, dict_reso = res_tuple
+def mineSmellyResources(pp_res_tuple):
+    _, _, ip_tuple, http_tuple, secret_tuple, empty_pass_tuple, default_admin_tuple, weak_cryp_tuple, dict_reso = pp_res_tuple
     invalid_ip_resource_ls, http_resource_ls, secret_resource_ls, empty_pass_resource_ls, weak_crp_resource_ls = [], [], [], [], []
     '''
     for suspicious comments and missing default no taint propagation
     resource dict not needed here 
     default admin has no hops by definition of how it flows 
     '''
-    invalid_ip_resource_ls = mineAffectedResources(pp_file, dict_reso,  ip_tuple, constants.OUTPUT_INVALID_IP_KW )
-    http_resource_ls       = mineAffectedResources(pp_file, dict_reso,  http_tuple, constants.OUTPUT_HTTP_KW ) 
-    secret_resource_ls     = mineAffectedResources(pp_file, dict_reso,  secret_tuple, constants.OUTPUT_SECRET_KW )
-    empty_pass_resource_ls = mineAffectedResources(pp_file, dict_reso,  empty_pass_tuple, constants.OUTPUT_EMPTY_KW )
-    d_admin_resource_ls    = mineAffectedResources(pp_file, dict_reso,  default_admin_tuple, constants.OUTPUT_DEFAULT_ADMIN_KW )
-    weak_crp_resource_ls   = mineAffectedResources(pp_file, dict_reso,  weak_cryp_tuple, constants.OUTPUT_WEAK_ENCR_KW )
+    invalid_ip_resource_ls = mineAffectedResources( dict_reso,  ip_tuple, constants.OUTPUT_INVALID_IP_KW )
+    http_resource_ls       = mineAffectedResources( dict_reso,  http_tuple, constants.OUTPUT_HTTP_KW ) 
+    secret_resource_ls     = mineAffectedResources( dict_reso,  secret_tuple, constants.OUTPUT_SECRET_KW )
+    empty_pass_resource_ls = mineAffectedResources( dict_reso,  empty_pass_tuple, constants.OUTPUT_EMPTY_KW )
+    d_admin_resource_ls    = mineAffectedResources( dict_reso,  default_admin_tuple, constants.OUTPUT_DEFAULT_ADMIN_KW )
+    weak_crp_resource_ls   = mineAffectedResources( dict_reso,  weak_cryp_tuple, constants.OUTPUT_WEAK_ENCR_KW )
 
     return invalid_ip_resource_ls, http_resource_ls, secret_resource_ls, empty_pass_resource_ls, d_admin_resource_ls, weak_crp_resource_ls
 
 
-def mineSmellHops(pp_file):
-    res_tuple = orchestra.doFullTaintForSingleScript( pp_file  )
-    _, _, ip_tuple, http_tuple, secret_tuple, empty_pass_tuple, _, weak_cryp_tuple, _ = res_tuple
+def mineSmellHops(pp_res_tuple ):
+    _, _, ip_tuple, http_tuple, secret_tuple, empty_pass_tuple, _, weak_cryp_tuple, _ = pp_res_tuple
     '''
     for suspicious comments and missing default no taint propagation
     resource dict not needed here 
     default admin has no hops by definition of how it flows 
     '''
-    invalid_ip_hop_ls = mineHopUsage( pp_file, ip_tuple, constants.OUTPUT_INVALID_IP_KW )
-    http_hop_ls       = mineHopUsage( pp_file, http_tuple, constants.OUTPUT_HTTP_KW )
-    secret_hop_ls     = mineHopUsage( pp_file, secret_tuple, constants.OUTPUT_SECRET_KW )
-    empty_pass_hop_ls = mineHopUsage( pp_file, empty_pass_tuple, constants.OUTPUT_EMPTY_KW )
-    weak_cryp_hop_ls  = mineHopUsage( pp_file, weak_cryp_tuple, constants.OUTPUT_WEAK_ENCR_KW )
+    invalid_ip_hop_ls = mineHopUsage(  ip_tuple, constants.OUTPUT_INVALID_IP_KW )
+    http_hop_ls       = mineHopUsage(  http_tuple, constants.OUTPUT_HTTP_KW )
+    secret_hop_ls     = mineHopUsage(  secret_tuple, constants.OUTPUT_SECRET_KW )
+    empty_pass_hop_ls = mineHopUsage(  empty_pass_tuple, constants.OUTPUT_EMPTY_KW )
+    weak_cryp_hop_ls  = mineHopUsage(  weak_cryp_tuple, constants.OUTPUT_WEAK_ENCR_KW )
 
     return invalid_ip_hop_ls , http_hop_ls, secret_hop_ls, empty_pass_hop_ls, weak_cryp_hop_ls
+
+
+
+
 
 
 if __name__=='__main__': 
