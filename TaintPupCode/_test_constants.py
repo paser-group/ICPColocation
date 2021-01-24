@@ -103,3 +103,9 @@ _empirical_script_secret = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/puppe
 _empirical_script_empty  = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/translatewiki-2018-06/puppet/modules/users/manifests/init.pp'
 _empirical_script_d_adm  = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/puppet-2018-06/modules/superset/manifests/init.pp'
 _empirical_script_md5    = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/puppet-2018-06/modules/postgresql/manifests/user.pp'
+
+
+
+
+_empirical_hop_ip     = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/puppet-2018-06/modules/memcached/manifests/init.pp'
+_empirical_hop_http   = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/puppet-2018-06/modules/apt/manifests/init.pp'

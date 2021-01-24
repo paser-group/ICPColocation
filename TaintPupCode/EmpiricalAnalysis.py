@@ -30,7 +30,8 @@ def reportSmellUsage( tup_, smell_type ):
         print('*'*25)
         print('CROSS_VAR_USE_COUNT:::'       + str( cross_use_count  ) )
         print('*'*25)
-        # var_use_count = within_use_count     + cross_use_count ## commenting as in cross script taints, attributes flow into classes as variables
+        ## commenting as in cross script taints, attributes flow into classes as variables that are elaredy detected as part of within script taints 
+        # var_use_count = within_use_count     + cross_use_count 
         var_use_count = within_use_count
         print('TOTAL_VAR_USE_COUNT:::'       + str( var_use_count  ) )
         print('TOTAL_ATTR_USE_COUNT:::'      + str( len(attr_dict)  ) ) 
@@ -87,15 +88,21 @@ def mineNotUsedSmells(pp_file):
     return invalid_ip_affect_cnt , http_affect_cnt , secret_affect_cnt, empt_pass_affect_cnt, default_adm_affect_cnt, weak_cryp_affect_cnt
 
 
-def reportHopUsage( tup_, smell_type ):
-    within_use_count, cross_use_count , used_var_count   = 0, 0 , 0
-    total_affected_attribute_count = 0 
-    print('='*50)
-    print(smell_type)
-    print('='*50)
-    if len( tup_ ) == 4:
+def mineHopUsage( tup_, smell_type ):
+    hop_holder  = []
+    if (len(tup_) == 4):  
         # the block with cross script taint detection
-        within_taint_dict, cross_taint_dict, _, _ = tup_ 
+        within_taint_dict, _, _, _ = tup_ # skiping cross script tracking, as within script trackign already detects how many hops 
+    elif ( len(tup_) == 2  ):
+        # the block with within script taint detection
+        within_taint_dict, _  = tup_ # skiping cross script tracking, as within script trackign already detects how many hops         
+    for var_name, var_track_data in within_taint_dict.items(): 
+        for var_data_tuple in var_track_data:
+            var_hop_count = var_data_tuple[-1]
+            hop_holder.append( ( smell_type,  var_name,  var_hop_count ) )
+    # print(hop_holder)
+    return hop_holder
+
 
 
 
@@ -107,14 +114,20 @@ def mineSmellHops(pp_file):
     resource dict not needed here 
     default admin has no hops by definition of how it flows 
     '''
-    # invalid_ip_hop_cnt = reportHopUsage( ip_tuple, 'INVALID_IP' )
+    invalid_ip_hop_ls = mineHopUsage( ip_tuple, 'INVALID_IP' )
+    http_hop_ls       = mineHopUsage( http_tuple, 'HTTP' )
+    secret_hop_ls     = mineHopUsage( secret_tuple, 'HARD_CODED_SECRET' )
+    empty_pass_hop_ls = mineHopUsage( empty_pass_tuple, 'EMPTY_PASSWORD' )
+    weak_cryp_hop_ls  = mineHopUsage( weak_cryp_tuple, 'WEAK_CRYPT' )
+
+    return invalid_ip_hop_ls , http_hop_ls, secret_hop_ls, empty_pass_hop_ls, weak_cryp_hop_ls
 
 
-    # return invalid_ip_hop_cnt 
-
-
-if __name__=='__main__':
+if __name__=='__main__': 
     # scriptName = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/puppet-2018-06/modules/statistics/manifests/user.pp'
     # scriptName   = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/puppet-2018-06/modules/memcached/manifests/init.pp'
-    scriptName = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/vagrant-2018-06/puppet/modules/role/manifests/raita.pp'
-    mineNotUsedSmells( scriptName )
+    # scriptName = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/vagrant-2018-06/puppet/modules/role/manifests/raita.pp'
+    
+    # mineNotUsedSmells( scriptName )
+
+    mineSmellHops( scriptName )
