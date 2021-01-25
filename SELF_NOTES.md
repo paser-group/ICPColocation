@@ -1295,3 +1295,17 @@ Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-contrail-2
 1. Nothing found or previously reported 
 
 > Handled by TaintPup 
+
+#### Other notes 
+
+Parser cannot handle resources that are decalred within a else block like 
+
+```
+    } else {
+        monitoring::service { 'memcached':
+            description   => 'Memcached',
+            check_command => "check_tcp!${port}",
+        }
+```
+
+in /Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/puppet-2018-06/modules/memcached/manifests/init.pp 

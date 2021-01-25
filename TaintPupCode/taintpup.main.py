@@ -30,9 +30,39 @@ def getCountFromDic(dic_):
     return cnt 
 
 
-def processResults( res_dic, res_csv_name, res_pkl_name ):
+def constructDumpList(file_, lis_tup): 
+    temp = [] 
+    for tup in lis_tup:
+        if (len(tup) == 5): 
+            temp.append( ( file_, tup[0], tup[1], tup[2], tup[3], tup[4] )  )
+        elif (len(tup) == 7): 
+            temp.append( ( file_, tup[0], tup[1], tup[2], tup[3], tup[4], tup[5], tup[6] )  )
+        elif (len(tup) == 3): 
+            temp.append( ( file_, tup[0], tup[1], tup[2]  )  )
+    return temp 
+
+def dumpInsights( insight_dict , org_name): 
+    dumpNotUsed, dumpHop, dumpResource = [], [], []
+    for script, scripts_insights in insight_dict.items(): 
+        notUsed, hop, resource = scripts_insights 
+        dumpNotUsed =  constructDumpList( script, notUsed )
+        dumpHop =  constructDumpList( script, hop )
+        dumpResource =  constructDumpList( script, resource )
+    
+    df_not_used = pd.DataFrame( dumpNotUsed )
+    df_not_used.to_csv( constants.DUMP_NOTUSED_FILE + org_name + constants.CSV_FILE_EXT , header= constants.NOTUSED_HEADER , index=False, encoding= constants.CSV_ENCODING )    
+    
+    df_hop = pd.DataFrame( dumpHop )
+    df_hop.to_csv( constants.DUMP_HOPCOUNT_FILE + org_name + constants.CSV_FILE_EXT, header= constants.HOP_HEADER , index=False, encoding= constants.CSV_ENCODING )    
+    
+    df_resource = pd.DataFrame( dumpResource )
+    df_resource.to_csv( constants.DUMP_RESOURCE_FILE + org_name + constants.CSV_FILE_EXT, header= constants.RESO_HEADER , index=False, encoding= constants.CSV_ENCODING )            
+
+
+def processResults( res_dic, res_csv_name, res_pkl_name, org_nam ):
     res_holder  = [] 
     insights_not_used_holder, insights_hop_holder, insights_reso_holder = [] , [], []
+    insights_dict = {} 
     for file_name, scan_results in res_dic.items():
         # last element of scan results is dict of resources : will be used later 
         susp_cnt, switch_cnt, ip_tuple, http_tuple, secret_tuple, empty_pass_tuple, default_admin_tuple, weak_cry_tuple, _ = scan_results
@@ -71,11 +101,22 @@ def processResults( res_dic, res_csv_name, res_pkl_name ):
         resoTuple  =  EmpiricalAnalysis.mineSmellyResources (scan_results )
         for list_ in resoTuple:
             insights_reso_holder = insights_reso_holder + list_ 
+        '''
+        extra insights zone , hold the results 
+        '''          
+        insights_dict[ file_name ] = ( insights_not_used_holder, insights_hop_holder, insights_reso_holder )
 
 
     df_ = pd.DataFrame( res_holder )
     df_.to_csv( res_csv_name, header= constants.CSV_HEADER , index=False, encoding= constants.CSV_ENCODING )
     pickle.dump( res_dic, open( res_pkl_name , constants.PKL_WRITE_MODE ) )
+
+    '''
+    extra insights zone , dump the results 
+    '''  
+
+    dumpInsights( insights_dict  , org_nam )
+
 
 def giveTimeStamp():
   tsObj = time.time()
@@ -88,21 +129,28 @@ if __name__=='__main__':
     print('*'*100 )
 
     # dataset_dir = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/'
-    # results_csv = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/V1_OSTK.csv'
-    # results_pkl = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/V1_OSTK.pkl'    
+    # results_csv = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/V2_OSTK.csv'
+    # results_pkl = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/V2_OSTK.pkl'    
+    # org_        = 'OSTK'
 
     # dataset_dir = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/mozi-pupp/'
-    # results_csv = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/V1_MOZI.csv'
-    # results_pkl = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/V1_MOZI.pkl'    
-    
+    # results_csv = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/V2_MOZI.csv'
+    # results_pkl = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/V2_MOZI.pkl'    
+    # org_        = 'MOZI'
+
     # dataset_dir = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/' 
-    # results_csv = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/V1_WIKI.csv'
-    # results_pkl = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/V1_WIKI.pkl'
-    # # 
+    # results_csv = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/V2_WIKI.csv'
+    # results_pkl = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/V2_WIKI.pkl'
+    # org_        = 'WIKI'
+
+    # dataset_dir = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/test-pupp/' 
+    # results_csv = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/V2_TEST.csv'
+    # results_pkl = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/V2_TEST.pkl'
+    # org_        = 'TEST'
 
     
     full_res_dic  = orchestra.orchestrateWithTaint( dataset_dir )    
-    processResults( full_res_dic, results_csv, results_pkl  )
+    processResults( full_res_dic, results_csv, results_pkl, org_  )
     
     print('*'*100 )
     print('Ended at:', giveTimeStamp() )

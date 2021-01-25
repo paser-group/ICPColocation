@@ -95,3 +95,13 @@ CSV_HEADER               = ['FILE_NAME', 'SUSPICIOUS_COMMENT', 'MISSING_DEFAULT_
 CSV_ENCODING             = 'utf-8'
 PKL_WRITE_MODE           = 'wb'
 TIME_FORMAT              = '%Y-%m-%d %H:%M:%S'
+CSV_FILE_EXT             = '.csv'
+
+
+# Empirical Zone 
+NOTUSED_HEADER           = ['FILE_NAME', 'SMELL_TYPE', 'SMELLY_VARS', 'USED_SMELLY_VARS', 'WITHIN_TAINTED_VARS', 'CROSS_TAINTED_VARS', 'AFFECTED_ATTRIB_BY_VARS', 'TOTAL_AFFECTED_ATTRI' ]
+HOP_HEADER               = ['FILE_NAME', 'SMELL_TYPE', 'SMELLY_VARS', 'HOP_COUNT' ]
+RESO_HEADER              = ['FILE_NAME', 'RESOURCE_NAME', 'RESOURCE_TYPE', 'ATTRIB_NAME', 'ATTRIB_VALUE', 'SMELL_TYPE' ]
+DUMP_NOTUSED_FILE        = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/NOTUSED_' 
+DUMP_HOPCOUNT_FILE       = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/HOPCOUNT_' 
+DUMP_RESOURCE_FILE       = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/RESOURCE_' 
