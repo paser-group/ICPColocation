@@ -20,7 +20,7 @@ Jan 27, 2020
 5. TP hard coded usernames in /Users/arahman/PRIOR_NCSU/SECU_REPOS/ghub-ansi/openshift@openshift-ansible-contrib/reference-architecture/vmware-ansible/playbooks/cleanup-crs.yaml 
 6. `url:` in /Users/arahman/PRIOR_NCSU/SECU_REPOS/ghub-ansi/openshift@openshift-ansible-contrib/reference-architecture/vmware-ansible/playbooks/roles/heketi-install/tasks/main.yaml is an example of insecure HTTP and default port ... but `ansible_default_ipv4.address` comes from command line if a file is not included 
 
-> Notes on variables: https://docs.ansible.com/ansible/latest/user_guide/playbooks_variables.html
+> Notes on variables: https://docs.ansible.com/ansible/latest/user_guide/playbooks_variables.html 
 
 
 >  Other important notes 
@@ -60,7 +60,7 @@ Jan 27, 2020
 
 18. `../common/roles/rhsm/tasks/main.yml` has a default port that is propagated in `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ghub-ansi/redhat-performance@satellite-performance/playbooks/common/prepare_host.yaml` with `roles:` 
 
-19. Default port usage in `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ghub-ansi/redhat-performance@satellite-performance/playbooks/common/roles/common/tasks/main.yaml` and `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ghub-ansi/redhat-performance@satellite-performance/playbooks/kvm-hosts/install-vms.yaml` 
+19. Default port usage in `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ghub-ansi/redhat-performance@satellite-performance/playbooks/common/roles/common/tasks/main.yaml` and `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ghub-ansi/redhat-performance@satellite-performance/playbooks/kvm-hosts/install-vms.yaml` and `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ghub-ansi/openshift@openshift-ansible-contrib/reference-architecture/gcp/ansible/playbooks/openshift-post.yaml` and `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ghub-ansi/redhat-performance@satellite-performance/playbooks/common/roles/rhsm/tasks/main.yaml` 
 
 20. hard-coded user name TP in `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ghub-ansi/redhat-performance@satellite-performance/playbooks/containerized/install.yaml`, also fun fact `roles:` refer to roles in the `roles` directory 
 
@@ -76,5 +76,7 @@ Jan 27, 2020
 
 26.  In `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ghub-ansi/redhat-performance@satellite-performance/playbooks/tests/rex.yaml` hard-coded secrets propagate from `../../conf/satperf.yaml` used as `var_files` into `name: "Start the 'date' job '{{ job_desc }}'"`. Simialr things happen for `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ghub-ansi/redhat-performance@satellite-performance/playbooks/tests/sync-repositories.yaml` and `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ghub-ansi/redhat-performance@satellite-performance/playbooks/tests/puppet-big-setup.yaml` and `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ghub-ansi/redhat-performance@satellite-performance/playbooks/tests/hammer-list.yaml` and `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ghub-ansi/redhat-performance@satellite-performance/playbooks/tests/puppet-single-setup.yaml` and `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ghub-ansi/redhat-performance@satellite-performance/playbooks/tests/continuous-rex.yaml` and `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ghub-ansi/redhat-performance@satellite-performance/playbooks/tests/puppet-big-test.yaml`
 
-27. 
+27. FP empty password in `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ghub-ansi/openshift@openshift-ansible-contrib/reference-architecture/azure-ansible/3.5/ansibledeployocp/playbooks/roles/azure-deploy/tasks/main.yaml` and `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ghub-ansi/openshift@openshift-ansible-contrib/reference-architecture/azure-ansible/3.6/ansibledeployocp/playbooks/roles/azure-deploy/tasks/main.yaml` 
+
+28. TP `no integrity check` in `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ghub-ansi/openshift@openshift-ansible-contrib/reference-architecture/azure-ansible/3.5/ansibledeployocp/playbooks/roles/prepare/tasks/main.yaml` and `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ghub-ansi/openshift@openshift-ansible-contrib/reference-architecture/azure-ansible/3.6/ansibledeployocp/playbooks/roles/prepare/tasks/main.yaml` and `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ghub-ansi/redhat-performance@satellite-performance/playbooks/katello/roles/add_katello_repos/tasks/main.yaml` 
 
