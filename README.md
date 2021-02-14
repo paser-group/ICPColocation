@@ -2,7 +2,7 @@
 
 [![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
 
-
+[![Actions Status](https://github.com/paser-group/TaintPup/workflows/Build%20TaintPupp/badge.svg)](https://github.com/Build%20TaintPupp/actions)
 
 
 # TaintPup: Taint Tracking to Facilitate Better Secuirty Analysis for Puppet 
