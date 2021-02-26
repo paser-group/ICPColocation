@@ -33,7 +33,7 @@ jobs:
         pip install flake8 pytest
         pip install requests
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    #- name: Run integration tests 
-    #  run: |
-    #    cd TaintPupCode 
-    #    python _TestIntegration.py 
+    - name: Run integration tests 
+     run: |
+       cd TaintPupCode 
+       python _TestIntegration.py 
