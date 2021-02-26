@@ -25,8 +25,8 @@ jobs:
         wget https://apt.puppetlabs.com/puppet6-release-xenial.deb
         sudo dpkg -i puppet6-release-xenial.deb
         sudo apt update
-        sudo apt-get install puppetserver 
-        sudo apt-get install puppet-agent 
+        # sudo apt-get install puppetserver 
+        # sudo apt-get install puppet-agent 
         sudo apt-get install puppet
     - name: Install Python dependencies
       run: |
