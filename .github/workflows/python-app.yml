@@ -37,3 +37,4 @@ jobs:
         cd TaintPupCode 
         python _TestIntegration.py 
         python _TestTaintTracking.py
+        python _TestEmpirical.py
