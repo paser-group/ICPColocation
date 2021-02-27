@@ -23,7 +23,8 @@ class TestTaintGraph( unittest.TestCase ):
         _, _, _, dict_of_all_variables, _, _ , _ = parser.executeParser( _test_constants._liveness_script_name )
         for var2test in _test_constants._liveness_var_input_list:
             self.assertTrue( graph.checkLiveness( var2test, dict_of_all_variables ) ,_test_constants._liveness_error_msg  )
-    
+            graph.var_tracker_list.clear() 
+
     def testUnameVarInTaintDict(self):            
         _, _, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( _test_constants._single_taint_script_name ) 
         _, secret_dict_vars =  orchestra.finalizeHardCodedSecrets( dict_all_attr, dict_all_vari )  
@@ -95,7 +96,7 @@ class TestTaintGraph( unittest.TestCase ):
         self.assertEqual( 2 , len(weak_cry_dic_taint) , _test_constants.common_error_string + str(2) )  
         graph.var_tracker_list.clear()               
 
-    def testTaintedWeakCryptoV2(self):                    
+    def testTaintedWeakCryptoV2(self):      
         _, _, dict_all_attr, dict_all_vari, _, _, dict_func = parser.executeParser( _test_constants._empty_pass_script_name ) 
         weak_crypt_dic     =  orchestra.finalizeWeakEncrypt( dict_func ) 
         weak_cry_dic_taint =  orchestra.getTaintWeakCryptDict( weak_crypt_dic, dict_all_attr, dict_all_vari )

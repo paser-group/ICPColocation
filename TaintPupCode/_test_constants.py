@@ -6,16 +6,16 @@ Constants needed to do testing
 
 common_error_string = 'DOES NOT MATCH:::Should be '
 
-_multi_taint_script_name    = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/sample-puppet-scripts/onos-dasboard.pp' 
+_multi_taint_script_name    = 'TestArtifacts/onos-dashboard.pp' 
 _multi_taint_var_input      = '$password'
 _multi_taint_var_output     = '$json_message'
 _multi_taint_var_error_msg  = common_error_string + _multi_taint_var_output 
 
-_liveness_script_name    = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/packstack-2018-06/packstack/puppet/modules/packstack/manifests/keystone/gnocchi.pp'
+_liveness_script_name    = 'TestArtifacts/packstack.keystone.gnocchi.pp'
 _liveness_var_input_list = [  '$auth_name', '$password', '$public_url', '$admin_url', '$internal_url', '$public_url_s3', '$admin_url_s3', '$internal_url_s3' ]
 _liveness_error_msg      = common_error_string + 'TRUE' 
 
-_single_taint_script_name = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ec2api-2018-06/manifests/db/postgresql.pp' 
+_single_taint_script_name = 'TestArtifacts/puppet-ec2api.db.postgresql.pp' 
 _single_taint_var         = 'user' 
 _single_taint_dict_key    = 'user' 
 _single_taint_type        = 'USERNAME' 
@@ -53,14 +53,14 @@ _http_msg_1              = common_error_string + '1'
 _http_msg_0              = common_error_string + '0'
 _http_attr_script_name   = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/sample-puppet-scripts/onos-dasboard.pp'
 
-_weak_cryp_script_name    = 'test.api.pp' 
+_weak_cryp_script_name    = 'TestArtifacts/test.api.pp' 
 _weak_cryp_msg_           = common_error_string + '3'
 
 
-_empty_pass_script_name    = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/sample-puppet-scripts/manifests/oozie.pp' 
+_empty_pass_script_name    = 'TestArtifacts/oozie.pp' 
 _empty_pass_msg_           = common_error_string + '1'
 
-_default_adm_script_name   = 'test.api.pp' 
+_default_adm_script_name   = 'TestArtifacts/test.api.pp' 
 _default_adm_msg_          = common_error_string + '1'
 
 _secret_script_name   = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/sample-puppet-scripts/onos-dasboard.pp' 
@@ -72,11 +72,11 @@ _secret_flag_status   = 'TRUE'
 
 _username_script_name   = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/sample-puppet-scripts/manifests/oozie/database/mysql.pp' 
 
-_taintedHttp_script_v1 = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/packstack-2018-06/packstack/puppet/modules/packstack/manifests/keystone/magnum.pp'
+_taintedHttp_script_v1 = 'TestArtifacts/packstack.keystone.magnum.pp'
 _tainted_http_msg_v1   = common_error_string + '3'
-_taintedHttp_script_v2 = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/packstack-2018-06/packstack/puppet/modules/packstack/manifests/keystone/manila.pp'
+_taintedHttp_script_v2 = 'TestArtifacts/packstack.keystone.manila.pp'
 _tainted_http_msg_v2   = common_error_string + '5'
-_taintedHttp_script_v3 = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/packstack-2018-06/packstack/puppet/modules/packstack/manifests/keystone/cinder.pp'
+_taintedHttp_script_v3 = 'TestArtifacts/packstack.keystone.cinder.pp'
 _tainted_http_msg_v3   = common_error_string + '9'
 
 OUTPUT_HTTP_KW         = 'INSECURE_HTTP'
@@ -94,7 +94,7 @@ _cross_taint_script_8  = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-
 _cross_taint_script_ip = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-sahara-2018-06/examples/basic.pp' 
 _cross_taint_script_http = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ceilometer-2018-06/examples/site.pp'
 
-_weak_crypt_script     = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/sample-puppet-scripts/test.pp' 
+_weak_crypt_script       = 'TestArtifacts/test.pp' 
 
 
 _empirical_script_ip     = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/puppet-2018-06/modules/memcached/manifests/init.pp'
