@@ -183,10 +183,13 @@ def getWhenBlock(case_locations, case_full_content):
             when_locs, when_content = getContentWithStack( loc_str )    
             '''
             as we are interested to see branches within the switch case statement 
-            we will just taje the first level of when block by using the first tuple in the location list 
+            we will just take the first level of when block by using the first tuple in the location list 
             '''
-            first_level_when_block = getContentWithStack( when_content[when_locs[0][0] : when_locs[0][-1] ]   )
-            when_block_dict[when_block_index] = first_level_when_block
+            # print(when_locs) 
+            # print(when_content) 
+            if len( when_locs ) > 0: 
+                first_level_when_block = getContentWithStack( when_content[when_locs[0][0] : when_locs[0][-1] ]   )
+                when_block_dict[when_block_index] = first_level_when_block
     return when_block_dict 
 
 def getCaseWhenBlock(locs, contents):
@@ -195,7 +198,6 @@ def getCaseWhenBlock(locs, contents):
     for loc_tup in locs:
         loc_str = contents[loc_tup[0]+1:loc_tup[-1]] 
         if (constants.CASE_KEYWORD in loc_str) and ( any(x_ in loc_str for x_ in constants.INVALID_SWITCH_CASE_KEYWORDS  ) == False ):       
-            # print(loc_str)   
             case_block_index += 1 
             case_locs, case_content = getContentWithStack( loc_str )
             if(len(case_locs) > 0):
@@ -276,6 +278,7 @@ if __name__=='__main__':
     # test_pp_file = 'test.api.pp'
     # test_pp_file = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ceph-2018-06/manifests/rgw/keystone/auth.pp'
     # test_pp_file = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/sample-puppet-scripts/manifests/init1.pp' 
-    test_pp_file = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-tripleo-2018-06/manifests/profile/base/pacemaker.pp'
+    # test_pp_file = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-tripleo-2018-06/manifests/profile/base/pacemaker.pp'
+    test_pp_file = '/Users/arahman/TAINTPUP_REPOS/GITLAB/simp@puppetlabs-postgresql/manifests/repo.pp'
 
     executeParser( test_pp_file )

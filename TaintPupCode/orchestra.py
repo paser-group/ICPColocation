@@ -501,8 +501,8 @@ def orchestrateWithTaint(dir_):
     all_pupp_files = getPuppetFiles(  dir_ )
     final_res_dic  = {} 
     for pupp_file in all_pupp_files:
-        res_tup  = doFullTaintForSingleScript( pupp_file )
         print( constants.ANALYZING_KW + pupp_file )
+        res_tup  = doFullTaintForSingleScript( pupp_file )
         if pupp_file not in final_res_dic: 
             final_res_dic[ pupp_file ] = res_tup 
     return final_res_dic 
