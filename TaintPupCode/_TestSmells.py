@@ -68,6 +68,12 @@ class TestSmells( unittest.TestCase ):
         default_count = orchestra.finalizeSwitches( dict_switch  )
         self.assertEqual(  0 , default_count , _test_constants.common_error_string + str (0) ) 
 
+
+    def testMissingDefaultPresenceV11( self ): 
+        _, _, _, _, dict_switch, _, _ = parser.executeParser( _test_constants._missing_default_script11 ) # this one has a default block 
+        default_count = orchestra.finalizeSwitches( dict_switch  )
+        self.assertEqual(  0 , default_count , _test_constants.common_error_string + str (0) ) 
+
     def testPresentDefault( self ): 
         _, _, _, _, dict_switch, _, _ = parser.executeParser( _test_constants._present_default_script_name ) 
         no_default_count = orchestra.finalizeSwitches( dict_switch  )
