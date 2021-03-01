@@ -26,14 +26,22 @@ def finalizeSusps(ls):
 
 def finalizeSwitches( dic_ ): 
     no_default_count = 0 
+    prior_case_branch = constants.NULL_SYMBOL
     for k_, v_ in dic_.items():
         branches = v_[-1]
+        # print(k_) 
+        # print(branches) 
+        per_case_branch = constants.NULL_SYMBOL
         default_flag = False 
         for branch_count, branch_content in branches.items():
-            if constants.CASE_DEFAULT_KEYWORD in branch_content[-1]:
-                default_flag = True 
-        if default_flag == False : 
+            branch_name = branch_content[-1]
+            per_case_branch = per_case_branch +  constants.EQUAL_SYMBOL +  branch_name
+            if constants.CASE_DEFAULT_KEYWORD in branch_name:
+                    default_flag = True                 
+        if default_flag == False and prior_case_branch != per_case_branch  : 
             no_default_count += 1 
+        prior_case_branch = per_case_branch 
+        # print(prior_case_branch, per_case_branch) 
     return no_default_count
 
 
@@ -509,21 +517,6 @@ def orchestrateWithTaint(dir_):
 
 
 if __name__=='__main__':
-    probmatic3 = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/puppet-2018-06/modules/librenms/manifests/init.pp'
-
-    res_tup     = doFullTaintForSingleScript( probmatic3 )
-    res_tup_sec = res_tup[4]
-    secret_taint_dict, cross_secret_dict, secret_dict_attr, secret_dict_vars = res_tup_sec  
-    print(secret_dict_vars , len(secret_dict_vars) ) 
-    print('*'*50)
-    print(secret_dict_attr, len(secret_dict_attr)) 
-    print('*'*50)
-    print(secret_taint_dict, len(secret_taint_dict)) 
-
-    '''
-    problematic missing defaults
-    '''
-    problem1= '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-library-2018-06/deployment/puppet/fuel/manifests/astute.pp'
     '''
     problematic invalid IPs
     '''
@@ -532,4 +525,8 @@ if __name__=='__main__':
     problematic insecure HTTP
     '''
     proble3 = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ceph-2018-06/manifests/repo.pp'
+
+
+
+
 

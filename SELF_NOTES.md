@@ -1323,3 +1323,9 @@ like `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-onos-2018-06/de
 
 `monitor_user` is assigned a value but not used in an attribute 
 
+##### Nested switch cases statements are problematic 
+
+/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-library-2018-06/deployment/puppet/fuel/manifests/astute.pp
+
+/Users/arahman/PRIOR_NCSU/SECU_REPOS/mozi-pupp/puppet-2018-06/modules/talos/manifests/init.pp 
+

@@ -13,13 +13,20 @@ import EmpiricalAnalysis
 
 def getCountFromTuple(tu_):
     cnt  = 0 
-    taint_dic, _, attrib_dic , _ = tu_  # we will not use non-tainted security smells so skipping last element of tuple 
+    # sample format for secret dict: secret_taint_dict, cross_secret_dict, secret_dict_attr, secret_dict_vars 
+    taint_dic, cross_taint_dic, attrib_dic , _ = tu_  # we will not use non-tainted security smells so skipping last element of tuple 
+    '''
     # we will not consider cross dict as we are calculating within script smells 
     # one hard-coded secret can be assigned in more places , so get the list 
     for name_, data_ in taint_dic.items(): 
         cnt = cnt + len( data_ )
+    '''
+    # all tainted secret-related variables are tracked as dictionary index 
+    cnt = cnt + len(taint_dic) 
     # all attribute secrets are tracked as dictionary index 
     cnt = cnt + len(attrib_dic) 
+    # all cross script tainted secret-related variables are tracked as dictionary index 
+    cnt = cnt + len(cross_taint_dic) 
     return cnt 
 
 def getCountFromDic(dic_):
