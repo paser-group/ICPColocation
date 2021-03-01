@@ -20,9 +20,13 @@ class TestAggregation( unittest.TestCase ):
 
 
     def testTupleCountV2( self ): 
-        res_tup  = orchestra.doFullTaintForSingleScript( _test_constants._aggregate_script_http )
-        _, _, _, http_tuple, _, _, _, _, _ = res_tup        
-        self.assertEqual(  6 , taintpup_main.getCountFromTuple( http_tuple ) , _test_constants.common_error_string + str(2) ) 
+        _, dict_clas, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( _test_constants._aggregate_script_http )         
+        http_dict_attr, http_dict_vars                      = orchestra.finalizeHTTP( dict_all_attr, dict_all_vari )
+        http_taint_dict                                     = graph.trackTaint( constants.OUTPUT_HTTP_KW, http_dict_vars, dict_all_attr, dict_all_vari )
+        scripts2Track                                       = orchestra.getReferredScripts( dict_clas , _test_constants._aggregate_script_http ) 
+        cross_http_dict                                     = orchestra.getCrossScriptHTTP ( scripts2Track, dict_clas )     
+        http_tuple                                          = ( http_taint_dict, cross_http_dict, http_dict_attr, http_dict_vars ) 
+        self.assertEqual(  6 , taintpup_main.getCountFromTuple( http_tuple ) , _test_constants.common_error_string + str(6) ) 
 
 
 if __name__ == '__main__':
