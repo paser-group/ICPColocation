@@ -506,3 +506,25 @@ def orchestrateWithTaint(dir_):
         if pupp_file not in final_res_dic: 
             final_res_dic[ pupp_file ] = res_tup 
     return final_res_dic 
+
+
+if __name__=='__main__':
+    '''
+    problamtic hard-coded secrets 
+    '''
+    probmatic1= '/Users/arahman/PRIOR_NCSU/SECU_REPOS/mozi-pupp/puppet-2018-06/modules/toplevel/manifests/server/signing.pp'
+    probmatic2= '/Users/arahman/PRIOR_NCSU/SECU_REPOS/mozi-pupp/relabs-puppet-2018-06/modules/toplevel/manifests/server/signing.pp'
+    probmatic3= '/Users/arahman/PRIOR_NCSU/SECU_REPOS/mozi-pupp/puppet-2018-06/modules/firewall/manifests/linux/redhat.pp'
+    '''
+    problematic missing defaults
+    '''
+    problem1= '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-library-2018-06/deployment/puppet/fuel/manifests/astute.pp'
+    '''
+    problematic invalid IPs
+    '''
+    problem2 = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-barbican-2018-06/manifests/api.pp'
+    '''
+    problematic insecure HTTP
+    '''
+    proble3 = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ceph-2018-06/manifests/repo.pp'
+    

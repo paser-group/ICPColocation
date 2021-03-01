@@ -242,9 +242,14 @@ def getFunctions( locs, texts  ):
     return func_dict 
 
 
-def mineParseOutput(parser_output_file):
-    full_file_as_str = readAsStr( parser_output_file )
+def mineParseOutput(parser_output_str, pp_original_file):
+    full_file_as_str = parser_output_str 
     # print(full_file_as_str) 
+    '''
+    As puppet parser output strips all comments we need the original file name as well 
+    to get comments 
+    '''
+
     locations, full_content_as_str = getContentWithStack( full_file_as_str )
     
     dict_of_resources              = getResources( locations, full_content_as_str )
@@ -252,7 +257,7 @@ def mineParseOutput(parser_output_file):
     dict_of_all_attribs            = getAttributes( locations, full_content_as_str  )
     dict_of_all_variables          = getVars( locations, full_content_as_str )
     dict_of_switch_cases           = getCaseWhenBlock( locations, full_content_as_str )
-    list_of_susp_comments          = getSuspComments( parser_output_file )
+    list_of_susp_comments          = getSuspComments( pp_original_file )
     dict_of_funcs                  = getFunctions( locations, full_content_as_str )
 
     # print(dict_of_funcs) 
@@ -263,13 +268,15 @@ def executeParser(pp_file):
     parseResults = None 
     if (os.path.exists(pp_file) ):
         try:
-            command2exec = constants.NATIVE_PUPPET_PARSER_CMD +  constants.WHITESPACE_SYMBOL + pp_file + constants.WHITESPACE_SYMBOL + constants.REDIRECT_SYMBOL + constants.WHITESPACE_SYMBOL + constants.TEMP_LOG_FILE 
-            subprocess.check_output([constants.BASH_CMD, constants.BASH_FLAG, command2exec])
+            command2exec   = constants.NATIVE_PUPPET_PARSER_CMD +  constants.WHITESPACE_SYMBOL + pp_file 
+            subprocess_out = subprocess.check_output([constants.BASH_CMD, constants.BASH_FLAG, command2exec])
+            subprocess_str = subprocess_out.decode( constants.CSV_ENCODING ) 
         except subprocess.CalledProcessError as e_:
             print( str(e_) )
         # num_lines = sum(1 for line in open( constants.TEMP_LOG_FILE , constants.FILE_READ_MODE ))
-        parseResults = mineParseOutput( constants.TEMP_LOG_FILE )
-        os.remove( constants.TEMP_LOG_FILE )
+        
+        parseResults = mineParseOutput( subprocess_str, pp_file ) 
+
     return parseResults 
 
 
@@ -279,6 +286,6 @@ if __name__=='__main__':
     # test_pp_file = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ceph-2018-06/manifests/rgw/keystone/auth.pp'
     # test_pp_file = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/sample-puppet-scripts/manifests/init1.pp' 
     # test_pp_file = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-tripleo-2018-06/manifests/profile/base/pacemaker.pp'
-    test_pp_file = '/Users/arahman/TAINTPUP_REPOS/GITLAB/simp@puppetlabs-postgresql/manifests/repo.pp'
+    # test_pp_file = '/Users/arahman/TAINTPUP_REPOS/GITLAB/simp@puppetlabs-postgresql/manifests/repo.pp'
 
-    executeParser( test_pp_file )
+    executeParser( 'EMPTY' )
