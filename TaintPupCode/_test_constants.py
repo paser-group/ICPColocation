@@ -113,3 +113,6 @@ _empirical_script_md5    = 'TestArtifacts/wiki.postgresql.user.pp'
 
 
 _empirical_hop_http      = 'TestArtifacts/wiki.apt.init.pp'
+
+_aggregate_script_ip     = 'TestArtifacts/ostk.barbican.api.pp'
+_aggregate_script_http   = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ceph-2018-06/manifests/repo.pp'

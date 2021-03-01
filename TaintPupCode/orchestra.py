@@ -518,14 +518,22 @@ def orchestrateWithTaint(dir_):
 
 if __name__=='__main__':
     '''
-    problematic invalid IPs
-    '''
-    problem2 = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-barbican-2018-06/manifests/api.pp'
-    '''
     problematic insecure HTTP
     '''
-    proble3 = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ceph-2018-06/manifests/repo.pp'
+    problem2 = ''
 
+
+    http_taint_dict, cross_http_dict, http_dict_attr, http_dict_vars = http_tuple 
+    
+
+    print(http_taint_dict, len(http_taint_dict) )
+    print('='*50)
+    print(cross_http_dict, len(cross_http_dict) )
+    print('='*50)
+    print(http_dict_attr, len(http_dict_attr) )
+    print('='*50)    
+    print(http_dict_vars, len(http_dict_vars) )
+    print('='*50)    
 
 
 
