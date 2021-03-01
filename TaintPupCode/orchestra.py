@@ -509,12 +509,17 @@ def orchestrateWithTaint(dir_):
 
 
 if __name__=='__main__':
-    '''
-    problamtic hard-coded secrets 
-    '''
-    probmatic1= '/Users/arahman/PRIOR_NCSU/SECU_REPOS/mozi-pupp/puppet-2018-06/modules/toplevel/manifests/server/signing.pp'
-    probmatic2= '/Users/arahman/PRIOR_NCSU/SECU_REPOS/mozi-pupp/relabs-puppet-2018-06/modules/toplevel/manifests/server/signing.pp'
-    probmatic3= '/Users/arahman/PRIOR_NCSU/SECU_REPOS/mozi-pupp/puppet-2018-06/modules/firewall/manifests/linux/redhat.pp'
+    probmatic3 = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/puppet-2018-06/modules/librenms/manifests/init.pp'
+
+    res_tup     = doFullTaintForSingleScript( probmatic3 )
+    res_tup_sec = res_tup[4]
+    secret_taint_dict, cross_secret_dict, secret_dict_attr, secret_dict_vars = res_tup_sec  
+    print(secret_dict_vars , len(secret_dict_vars) ) 
+    print('*'*50)
+    print(secret_dict_attr, len(secret_dict_attr)) 
+    print('*'*50)
+    print(secret_taint_dict, len(secret_taint_dict)) 
+
     '''
     problematic missing defaults
     '''
@@ -527,4 +532,4 @@ if __name__=='__main__':
     problematic insecure HTTP
     '''
     proble3 = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-ceph-2018-06/manifests/repo.pp'
-    
+

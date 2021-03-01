@@ -125,11 +125,45 @@ class TestSmells( unittest.TestCase ):
     def testHardcodedPass( self ): 
         self.assertTrue( orchestra.isValidPassword( _test_constants._secret_password ) , _test_constants._secret_flag_status  ) 
 
-    def testHardcodedSecret( self ): 
+    def testHardcodedSecretV1( self ): 
         _, _, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( _test_constants._secret_script_name ) 
         _attr, _vars = orchestra.finalizeHardCodedSecrets( dict_all_attr, dict_all_vari )
         self.assertEqual(  2 , len(  _vars ) , _test_constants._secret_msg_ ) 
 
+    def testHardcodedSecretV2( self ): 
+        _, _, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( _test_constants._secret_script_v2 )
+        _attr, _vars = orchestra.finalizeHardCodedSecrets( dict_all_attr, dict_all_vari )
+        self.assertEqual(  0 , len(  _attr ) , _test_constants._secret_msg_ ) 
+
+    def testHardcodedSecretV3( self ): 
+        _, _, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( _test_constants._secret_script_v3 )
+        _attr, _vars = orchestra.finalizeHardCodedSecrets( dict_all_attr, dict_all_vari )
+        self.assertEqual(  0 , len(  _attr ) , _test_constants._secret_msg_ ) 
+
+    def testHardcodedSecretV4( self ): 
+        _, _, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( _test_constants._secret_script_v3 )
+        _attr, _vars = orchestra.finalizeHardCodedSecrets( dict_all_attr, dict_all_vari )
+        self.assertEqual(  0 , len(  _vars ) , _test_constants._secret_msg_ ) 
+
+    def testHardcodedSecretV5( self ): 
+        _, _, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( _test_constants._secret_script_v4 )
+        _attr, _vars = orchestra.finalizeHardCodedSecrets( dict_all_attr, dict_all_vari )
+        self.assertEqual(  8 , len(  _attr ) , _test_constants._secret_msg_ ) 
+
+    def testHardcodedSecretV6( self ): 
+        _, _, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( _test_constants._secret_script_v5 )
+        _attr, _vars = orchestra.finalizeHardCodedSecrets( dict_all_attr, dict_all_vari )
+        self.assertEqual(  5 , len(  _attr ) , _test_constants._secret_msg_ ) 
+
+    def testHardcodedSecretV7( self ): 
+        _, _, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( _test_constants._secret_script_v6 )
+        _attr, _vars = orchestra.finalizeHardCodedSecrets( dict_all_attr, dict_all_vari )
+        self.assertEqual(  14 , len(  _attr ) , _test_constants._secret_msg_ ) 
+
+    def testHardcodedSecretV8( self ): 
+        _, _, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( _test_constants._secret_script_v7 )
+        _attr, _vars = orchestra.finalizeHardCodedSecrets( dict_all_attr, dict_all_vari )
+        self.assertEqual(  10 , len(  _attr ) , _test_constants._secret_msg_ ) 
 
     def testHardcodedUname( self ): 
         _, _, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( _test_constants._username_script_name ) 

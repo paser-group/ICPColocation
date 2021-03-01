@@ -1296,9 +1296,9 @@ Location: `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-contrail-2
 
 > Handled by TaintPup 
 
-#### Other notes 
+### Other notes 
 
-Parser cannot handle resources that are decalred within a else block like 
+##### Parser cannot handle resources that are decalred within a else block like 
 
 ```
     } else {
@@ -1309,3 +1309,17 @@ Parser cannot handle resources that are decalred within a else block like
 ```
 
 in /Users/arahman/PRIOR_NCSU/SECU_REPOS/wiki-pupp/puppet-2018-06/modules/memcached/manifests/init.pp 
+
+##### Some scripts have syntax errors 
+
+like `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-onos-2018-06/deployment_scripts/puppet/manifests/neutron-start.pp` for which Puppet's parser throws 
+
+> Error: Syntax error at '[' at line 17:24
+
+
+##### Great example of shpwing how not all avriables are used in attributes 
+
+/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-monasca-2018-06/manifests/vertica/config.pp 
+
+`monitor_user` is assigned a value but not used in an attribute 
+
