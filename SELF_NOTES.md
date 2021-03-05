@@ -1317,7 +1317,7 @@ like `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-onos-2018-06/de
 > Error: Syntax error at '[' at line 17:24
 
 
-##### Great example of shpwing how not all avriables are used in attributes 
+##### Great example of showing how not all avriables are used in attributes 
 
 /Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-monasca-2018-06/manifests/vertica/config.pp 
 

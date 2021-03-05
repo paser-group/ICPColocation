@@ -106,7 +106,7 @@ def cloneRepos(repo_list, bootThreshold = 5.0):
     for repo_ in repo_list:
             counter += 1 
             print('Cloning ', repo_ )
-            dirName = '/Users/arahman/TAINTPUP_REPOS/GITLAB/' + repo_.split('/')[-2] + '@' + repo_.split('/')[-1] 
+            dirName = '/Users/arahman/TAINTPUP_REPOS/GITHUB/' + repo_.split('/')[-3] + '@' + repo_.split('/')[-2] 
             cloneRepo(repo_, dirName )
             all_fil_cnt = sum([len(files) for r_, d_, files in os.walk(dirName)])
             if (all_fil_cnt <= 0):
@@ -120,7 +120,7 @@ def cloneRepos(repo_list, bootThreshold = 5.0):
             str_ = str_ + str(counter) + ',' +  repo_ + ',' + dirName + ','  + str(puppProp) + ','   + '\n'
             print("So far we have processed {} repos".format(counter) )
             if((counter % 50) == 0):
-                dumpContentIntoFile(str_, 'gitlab_taintpup_tracker_completed_repos.csv')
+                dumpContentIntoFile(str_, 'github_taintpup_tracker_completed_repos.csv')
             print('#'*100)
 
 
@@ -134,7 +134,7 @@ if __name__=='__main__':
     print('Started at:', giveTimeStamp() )
     print('*'*100 )
 
-    repos_df = pd.read_csv('/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/MiningWork/gitlab_repos_puppet_filtered.csv')
+    repos_df = pd.read_csv('/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/MiningWork/github_repos_puppet_filtered.csv')
     list_    = repos_df['repo_url'].tolist()
     list_    = np.unique(list_)
 

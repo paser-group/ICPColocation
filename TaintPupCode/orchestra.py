@@ -10,6 +10,8 @@ import os
 from collections import Counter 
 import graph 
 import requests 
+import time 
+import pandas as pd 
 
 def getPuppetFiles(path_to_dir):
     valid_  = [] 
@@ -505,14 +507,27 @@ def doFullTaintForSingleScript( pupp_file ):
     return ( susp_cnt, switch_cnt, ip_tuple, http_tuple, secret_tuple, empty_pass_tuple, default_admin_tuple, weak_cryp_tuple, dict_reso )
 
 
+def mineProfileMetrics(pp_script):
+    dict_reso, dict_clas, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( pp_script )     
+    sloc = sum(1 for line in open(pp_script, encoding=constants.CSV_ENCODING ))
+    return sloc, len(dict_reso), len(dict_clas), len(dict_all_attr), len(dict_all_vari) 
+
 def orchestrateWithTaint(dir_):
     all_pupp_files = getPuppetFiles(  dir_ )
     final_res_dic  = {} 
+    profile_data_holder = []
     for pupp_file in all_pupp_files:
         print( constants.ANALYZING_KW + pupp_file )
-        res_tup  = doFullTaintForSingleScript( pupp_file )
+        start_    = time.monotonic()
+        res_tup   = doFullTaintForSingleScript( pupp_file )
+        end_      = time.monotonic()
+        time_dura = round( ( end_ - start_ ), 5) 
+        loc, reso_cnt, clas_cnt, attr_cnt, vari_cnt = mineProfileMetrics( pupp_file )
+        profile_data_holder.append( ( pupp_file, loc, reso_cnt, clas_cnt, attr_cnt, vari_cnt, time_dura ) )
         if pupp_file not in final_res_dic: 
             final_res_dic[ pupp_file ] = res_tup 
+    profile_df  = pd.DataFrame( profile_data_holder )
+    profile_df.to_csv( dir_ +  constants.PROFILE_DUMP_FILE_NAME, header= constants.CSV_HEADER , index=False, encoding= constants.CSV_ENCODING )
     return final_res_dic 
 
 

@@ -11,7 +11,12 @@ import constants
 def getContentAsList(path2File):
     data = None 
     with open(path2File, constants.FILE_READ_MODE) as file_:
-        data = file_.read()
+        try:
+            data = file_.read()
+        except UnicodeDecodeError as err_:
+            data = constants.NULL_SYMBOL
+            print( str( err_ ) )
+
     data_ls = data.split(constants.NEWLINE_CONSTANT) 
     return data_ls 
 
@@ -272,6 +277,7 @@ def executeParser(pp_file):
             subprocess_out = subprocess.check_output([constants.BASH_CMD, constants.BASH_FLAG, command2exec])
             subprocess_str = subprocess_out.decode( constants.CSV_ENCODING ) 
         except subprocess.CalledProcessError as e_:
+            subprocess_str = constants.NULL_SYMBOL
             print( str(e_) )
         # num_lines = sum(1 for line in open( constants.TEMP_LOG_FILE , constants.FILE_READ_MODE ))
         

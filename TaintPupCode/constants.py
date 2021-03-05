@@ -105,3 +105,4 @@ RESO_HEADER              = ['FILE_NAME', 'RESOURCE_NAME', 'RESOURCE_TYPE', 'ATTR
 DUMP_NOTUSED_FILE        = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/NOTUSED_' 
 DUMP_HOPCOUNT_FILE       = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/HOPCOUNT_' 
 DUMP_RESOURCE_FILE       = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/RESOURCE_' 
+PROFILE_DUMP_FILE_NAME   = 'PROFILE.csv'
