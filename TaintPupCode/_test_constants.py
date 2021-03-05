@@ -116,3 +116,6 @@ _empirical_hop_http      = 'TestArtifacts/wiki.apt.init.pp'
 
 _aggregate_script_ip     = 'TestArtifacts/ostk.barbican.api.pp'
 _aggregate_script_http   = 'TestArtifacts/ostk.ceph.http.repo.pp'
+
+_integration_structure   = 'TestArtifacts/hiera.pp'
+_integration_default     = 'TestArtifacts/cinder.pp'

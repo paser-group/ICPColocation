@@ -131,7 +131,7 @@ def checkFilterStatus(root_dir_path):
 
 if __name__=='__main__':
 #    the_dir = '/Users/arahman/TAINTPUP_REPOS/MOZILLA/'
-   the_dir = '/Users/arahman/TAINTPUP_REPOS/WIKIMEDIA/'
+#    the_dir = '/Users/arahman/TAINTPUP_REPOS/WIKIMEDIA/'
 #    the_dir = '/Users/arahman/TAINTPUP_REPOS/GITHUB/'
 
 

@@ -6,12 +6,12 @@ import orchestra
 class TestIntegration( unittest.TestCase ):
 
     def testSingleScriptStructure(self):     
-        scriptName  = 'TestArtifacts/hiera.pp'
+        scriptName  = _test_constants._integration_structure 
         icp_tuple   =  orchestra.doFullTaintForSingleScript( scriptName )       
         self.assertEqual(9, len(icp_tuple) ,  _test_constants.common_error_string + str(9)  )   
 
     def testSingleScriptMissingDefault(self):     
-        scriptName  = 'TestArtifacts/cinder.pp'
+        scriptName  = _test_constants._integration_default
         icp_tuple   =  orchestra.doFullTaintForSingleScript( scriptName )       
         self.assertEqual(1, icp_tuple[1] ,  _test_constants.common_error_string + str(1)  )   
 
