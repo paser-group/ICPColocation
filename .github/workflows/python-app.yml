@@ -36,7 +36,7 @@ jobs:
     - name: Run integration and taint-related tests 
       run: |
         cd TaintPupCode 
-        python _TestIntegration.py 
+        # python _TestIntegration.py 
         python _TestTaintTracking.py
         python _TestEmpirical.py
         python _TestSmells.py
