@@ -11,7 +11,13 @@ from collections import Counter
 import graph 
 import requests 
 import time 
+import time 
 import pandas as pd 
+
+def giveTimeStamp():
+  tsObj = time.time()
+  strToret = datetime.datetime.fromtimestamp(tsObj).strftime(constants.TIME_FORMAT) 
+  return strToret
 
 def getPuppetFiles(path_to_dir):
     valid_  = [] 
@@ -508,8 +514,13 @@ def doFullTaintForSingleScript( pupp_file ):
 
 
 def mineProfileMetrics(pp_script):
-    dict_reso, dict_clas, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( pp_script )     
-    sloc = sum(1 for line in open(pp_script, encoding=constants.CSV_ENCODING ))
+    dict_reso, dict_clas, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( pp_script ) 
+    try:
+        sloc = sum(1 for line in open(pp_script, encoding=constants.CSV_ENCODING ))
+    except UnicodeDecodeError as err_:
+        print( str( err_ ) )
+        sloc = constants.NULL_CONSTANT
+
     return sloc, len(dict_reso), len(dict_clas), len(dict_all_attr), len(dict_all_vari) 
 
 def orchestrateWithTaint(dir_):
@@ -522,12 +533,11 @@ def orchestrateWithTaint(dir_):
         res_tup   = doFullTaintForSingleScript( pupp_file )
         end_      = time.monotonic()
         time_dura = round( ( end_ - start_ ), 5) 
-        loc, reso_cnt, clas_cnt, attr_cnt, vari_cnt = mineProfileMetrics( pupp_file )
-        profile_data_holder.append( ( pupp_file, loc, reso_cnt, clas_cnt, attr_cnt, vari_cnt, time_dura ) )
+        profile_data_holder.append( ( pupp_file, giveTimeStamp() , time_dura ) )
         if pupp_file not in final_res_dic: 
             final_res_dic[ pupp_file ] = res_tup 
     profile_df  = pd.DataFrame( profile_data_holder )
-    profile_df.to_csv( dir_ +  constants.PROFILE_DUMP_FILE_NAME, header= constants.CSV_HEADER , index=False, encoding= constants.CSV_ENCODING )
+    profile_df.to_csv( dir_ +  constants.TIME_DUMP_FILE_NAME , header= constants.TIME_HEADER , index=False, encoding= constants.CSV_ENCODING )
     return final_res_dic 
 
 

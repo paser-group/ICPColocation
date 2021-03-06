@@ -123,18 +123,19 @@ def checkFilterStatus(root_dir_path):
         print('*'*10)
         all_list.append( tup ) 
     df_ = pd.DataFrame( all_list ) 
-    df_.to_csv('/Users/arahman/TAINTPUP_REPOS/WIKIMEDIA_BREAKDOWN.csv', header=['INDEX', 'REPO', 'DEVS', 'FILES', 'PP_FILES', 'COMMITS', 'AGE_MONTHS'] , index=False, encoding='utf-8')    
+    df_.to_csv('/Users/arahman/TAINTPUP_REPOS/OPENSTACK_BREAKDOWN.csv', header=['INDEX', 'REPO', 'DEVS', 'FILES', 'PP_FILES', 'COMMITS', 'AGE_MONTHS'] , index=False, encoding='utf-8')    
 
 
                         
 
 
 if __name__=='__main__':
-#    the_dir = '/Users/arahman/TAINTPUP_REPOS/MOZILLA/'
-#    the_dir = '/Users/arahman/TAINTPUP_REPOS/WIKIMEDIA/'
 #    the_dir = '/Users/arahman/TAINTPUP_REPOS/GITHUB/'
+#    the_dir = '/Users/arahman/TAINTPUP_REPOS/GITLAB/'
+#    the_dir = '/Users/arahman/TAINTPUP_REPOS/MOZILLA/'
+#    the_dir = '/Users/arahman/TAINTPUP_REPOS/OPENSTACK/'
+#    the_dir = '/Users/arahman/TAINTPUP_REPOS/WIKIMEDIA/'
 
+   doCleanUp(the_dir)
 
-#    doCleanUp(the_dir)
-
-   checkFilterStatus( the_dir )
+#    checkFilterStatus( the_dir )

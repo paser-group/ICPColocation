@@ -22,6 +22,7 @@ ARROWHEAD_SYMBOL = '->'
 EQUAL_SYMBOL = '='
 NULL_SYMBOL = ''
 LCURL_SYMBOL = '{'
+NULL_CONSTANT = 0
 
 
 CWE_SUSP_COMMENT_LIST      = ['hack', 'fixme', 'later', 'todo', 'to-do', 'bug'  ]
@@ -92,6 +93,8 @@ DUMMY_FUNC_ASSIGNEE      = 'ESLIC_DUMMY_FUNC_ASSIGNEE'
 OUTPUT_WEAK_ENCR_KW      = 'WEAK_ENCRYPTION' 
 
 CSV_HEADER               = ['FILE_NAME', 'SUSPICIOUS_COMMENT', 'MISSING_DEFAULT_SWITCH', 'INVALID_IP', 'INSECURE_HTTP', 'HARD_CODED_SECRET', 'EMPTY_PASSWORD', 'DEFAULT_ADMIN', 'WEAK_ENCRYPT', 'TOTAL' ]
+METRIC_HEADER            = ['FILE_NAME', 'LOC', 'RESOURCES', 'CLASSES', 'ATTRIBUTES', 'VARIABLES', 'DURATION'  ]
+TIME_HEADER              = ['FILE_NAME', 'TIMESTAMP', 'DURATION'  ]
 CSV_ENCODING             = 'utf-8'
 PKL_WRITE_MODE           = 'wb'
 TIME_FORMAT              = '%Y-%m-%d %H:%M:%S'
@@ -106,3 +109,4 @@ DUMP_NOTUSED_FILE        = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-Ten
 DUMP_HOPCOUNT_FILE       = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/HOPCOUNT_' 
 DUMP_RESOURCE_FILE       = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/RESOURCE_' 
 PROFILE_DUMP_FILE_NAME   = 'PROFILE.csv'
+TIME_DUMP_FILE_NAME      = 'TIMESTAMPS.csv'
