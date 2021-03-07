@@ -110,3 +110,5 @@ DUMP_HOPCOUNT_FILE       = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-Ten
 DUMP_RESOURCE_FILE       = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/RESOURCE_' 
 PROFILE_DUMP_FILE_NAME   = 'PROFILE.csv'
 TIME_DUMP_FILE_NAME      = 'TIMESTAMPS.csv'
+HACK_USER                = 'user'
+HACK_ADMIN_USER          = 'admin_user'

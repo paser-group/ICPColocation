@@ -51,10 +51,11 @@ def constructDumpList(file_, lis_tup):
 def dumpInsights( insight_dict , org_name): 
     dumpNotUsed, dumpHop, dumpResource = [], [], []
     for script, scripts_insights in insight_dict.items(): 
-        notUsed, hop, resource = scripts_insights 
-        dumpNotUsed =  constructDumpList( script, notUsed )
-        dumpHop =  constructDumpList( script, hop )
-        dumpResource =  constructDumpList( script, resource )
+        notUsed, hop, resource, tot_smell_count = scripts_insights 
+        dumpNotUsed  = dumpNotUsed  + constructDumpList( script, notUsed )
+        if tot_smell_count > 0:
+            dumpHop      = dumpHop      + constructDumpList( script, hop )
+            dumpResource = dumpResource + constructDumpList( script, resource )
     
     df_not_used = pd.DataFrame( dumpNotUsed )
     df_not_used.to_csv( constants.DUMP_NOTUSED_FILE + org_name + constants.CSV_FILE_EXT , header= constants.NOTUSED_HEADER , index=False, encoding= constants.CSV_ENCODING )    
@@ -68,9 +69,9 @@ def dumpInsights( insight_dict , org_name):
 
 def processResults( res_dic, res_csv_name, res_pkl_name, org_nam ):
     res_holder  = [] 
-    insights_not_used_holder, insights_hop_holder, insights_reso_holder = [] , [], []
     insights_dict = {} 
     for file_name, scan_results in res_dic.items():
+        insights_not_used_holder, insights_hop_holder, insights_reso_holder = [] , [], []
         # last element of scan results is dict of resources : will be used later 
         susp_cnt, switch_cnt, ip_tuple, http_tuple, secret_tuple, empty_pass_tuple, default_admin_tuple, weak_cry_tuple, _ = scan_results
         
@@ -111,7 +112,7 @@ def processResults( res_dic, res_csv_name, res_pkl_name, org_nam ):
         '''
         extra insights zone , hold the results 
         '''          
-        insights_dict[ file_name ] = ( insights_not_used_holder, insights_hop_holder, insights_reso_holder )
+        insights_dict[ file_name ] = ( insights_not_used_holder, insights_hop_holder, insights_reso_holder, total_count )
 
 
     df_ = pd.DataFrame( res_holder )
@@ -157,14 +158,14 @@ if __name__=='__main__':
     # org_        = 'OSTK'
 
 
-    # dataset_dir = '/Users/arahman/TAINTPUP_REPOS/WIKIMEDIA/' 
-    # results_csv = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/V7_WIKI.csv'
-    # results_pkl = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/V7_WIKI.pkl'
-    # org_        = 'WIKI'
+    dataset_dir = '/Users/arahman/TAINTPUP_REPOS/WIKIMEDIA/' 
+    results_csv = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/V8_WIKI.csv'
+    results_pkl = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/V8_WIKI.pkl'
+    org_        = 'WIKI'
 
     # dataset_dir = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/test-pupp/' 
-    # results_csv = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/V7_TEST.csv'
-    # results_pkl = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/V7_TEST.pkl'
+    # results_csv = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/V8_TEST.csv'
+    # results_pkl = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/V8_TEST.pkl'
     # org_        = 'TEST'
 
     

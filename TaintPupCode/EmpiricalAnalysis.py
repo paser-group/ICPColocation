@@ -84,8 +84,8 @@ def searchResourceForAttr(res_dic, att_nam, var_nam ):
     reso_data_holder = []
     for _, v_  in res_dic.items():
         reso_name, reso_type,  _, _, attrib_per_reso_dict = v_ 
-        for _, v_ in attrib_per_reso_dict.items():
-            _, _, attr_, val_ = v_ 
+        for _, v1_ in attrib_per_reso_dict.items():
+            _, _, attr_, val_ = v1_ 
             # print( attr_, att_nam, var_nam, val_   )
             if  ( att_nam in attr_ )  and ( var_nam in val_ ) :
 
@@ -137,9 +137,9 @@ def mineAffectedResources( resource_dict, tup_, smell_type ):
                 '''
                 HACK 
                 '''
-                if  ('user' == var_name or 'admin_user' == var_name ) :
+                if  (constants.HACK_USER == var_name or constants.HACK_ADMIN_USER == var_name ) :
                     var_name = constants.DOLLAR_SYMBOL + var_name 
-                elif  ('admin_user' == var_name) :
+                elif  (constants.HACK_ADMIN_USER == var_name) :
                     var_name = constants.DOLLAR_SYMBOL + constants.LCURL_SYMBOL + var_name 
                 reso_list = searchResourceForAttr( resource_dict, attr_name , var_name )
                 for tu_ in reso_list:
