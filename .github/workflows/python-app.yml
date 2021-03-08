@@ -39,5 +39,5 @@ jobs:
         # python _TestIntegration.py 
         # python _TestTaintTracking.py
         # python _TestEmpirical.py
-        python _TestSmells.py
-        python _TestAggregate.py
+        # python _TestSmells.py
+        # python _TestAggregate.py

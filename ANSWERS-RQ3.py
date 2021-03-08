@@ -8,23 +8,23 @@ import numpy as np
 from collections import Counter 
 
 def resoSemantics( reso_resu_file, attr_file_name ):
+    reso_types = []
     attr_df  = pd.read_csv( attr_file_name )
     non_zero_df = attr_df[attr_df['TOTAL_AFFECTED_ATTRI'] > 0 ]
     legit_scripts  = np.unique( non_zero_df['FILE_NAME'].tolist() )
     print('*'*50)
     print(reso_resu_file)
-    reso_df    = pd.read_csv( reso_resu_file )
-    smell_types = np.unique( reso_df['SMELL_TYPE'].tolist() )
+    reso_df          = pd.read_csv( reso_resu_file )
+    filtered_reso_df = reso_df[reso_df['RESOURCE_TYPE']!='block']
+    smell_types      = np.unique( filtered_reso_df['SMELL_TYPE'].tolist() )
     for smell in smell_types:
         smell_df = reso_df[reso_df['SMELL_TYPE']==smell]
         for script_ in legit_scripts:
-            script_df = smell_df[smell_df['FILE_NAME']==script_]
-            reso_types =  dict( Counter(  script_df['RESOURCE_TYPE'].tolist() ) )
-            print('*'*50)
-            print(smell)
-            print('*'*50)
-            print( reso_types )        
-            print('*'*50)
+            script_df  = smell_df[smell_df['FILE_NAME']==script_]
+            reso_types = reso_types +  list( np.unique( script_df['RESOURCE_TYPE'].tolist() ) )
+        print('*'*50)
+        print( 'SMELL:{}, TYPES:{}  '.format( smell,  dict( Counter(  reso_types ) ) )         )
+        print('*'*50)
 
 def resoCountPerScript( reso_resu_file, attr_file_name ):
     attr_df  = pd.read_csv( attr_file_name )
@@ -34,8 +34,9 @@ def resoCountPerScript( reso_resu_file, attr_file_name ):
     print(reso_resu_file)
     print("AFFECTED_RESOURCES")
     print('*'*50)
-    reso_df    = pd.read_csv( reso_resu_file )
-    smell_types = np.unique( reso_df['SMELL_TYPE'].tolist() )
+    reso_df          = pd.read_csv( reso_resu_file )
+    filtered_reso_df = reso_df[reso_df['RESOURCE_TYPE']!='block']
+    smell_types      = np.unique( filtered_reso_df['SMELL_TYPE'].tolist() )
     for smell in smell_types:
         per_script_reso_list = []
         smell_df       = reso_df[reso_df['SMELL_TYPE']==smell]
@@ -76,7 +77,12 @@ def attribCountPerScript(attr_resu_file):
 
 
 if __name__=='__main__':
-    org_name       = 'WIKI'
+    # org_name       = 'WIKI'
+    # org_name       = 'GITLAB'
+    # org_name       = 'MOZI'
+    # org_name       = 'OSTK'
+    # org_name       = 'GITHUB'
+
     reso_file_name = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/RESOURCE_' + org_name  + '.csv'
     attr_file_name = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/NOTUSED_'  + org_name  + '.csv'    
     
