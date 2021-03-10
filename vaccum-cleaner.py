@@ -22,7 +22,7 @@ def doCleanUp(dir_name):
        for file_ in files_:
            full_p_file = os.path.join(root_, file_)
            if(os.path.exists(full_p_file)):
-             if (full_p_file.endswith('pp')):
+             if (full_p_file.endswith('.pp')):
                pp_.append(full_p_file)
              else:
                non_pp.append(full_p_file)

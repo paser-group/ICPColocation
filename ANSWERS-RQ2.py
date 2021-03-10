@@ -68,10 +68,10 @@ def getValidTaints( file_ ):
 
 if __name__ == '__main__':
     # ORG_ = 'WIKI'
-    # ORG_       = 'GITLAB'
-    # ORG_       = 'MOZI'    
-    # ORG_       = 'OSTK'
-    # ORG_       = 'GITHUB'        
+    # ORG_ = 'OSTK'
+    # ORG_ = 'MOZI'    
+    # ORG_ = 'GITLAB'
+    # ORG_ = 'GITHUB'        
 
     notused_file_name = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/NOTUSED_'  + ORG_  + '.csv'
     hopcnt_file_name  = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/HOPCOUNT_' + ORG_  + '.csv'

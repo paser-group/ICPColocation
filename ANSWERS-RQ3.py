@@ -27,6 +27,7 @@ def resoSemantics( reso_resu_file, attr_file_name ):
         print('*'*50)
 
 def resoCountPerScript( reso_resu_file, attr_file_name ):
+    all_reso_count = []
     attr_df  = pd.read_csv( attr_file_name )
     non_zero_df = attr_df[attr_df['TOTAL_AFFECTED_ATTRI'] > 0 ]
     legit_scripts  = np.unique( non_zero_df['FILE_NAME'].tolist() )
@@ -46,13 +47,16 @@ def resoCountPerScript( reso_resu_file, attr_file_name ):
                 script_df =  smell_df[smell_df['FILE_NAME']==per_script]
                 resources =  np.unique( script_df['RESOURCE_NAME'].tolist() )
                 per_script_reso_list.append( len(resources) ) 
+                all_reso_count.append( len(resources) )
         print('*'*50)
         print('SMELL:{}, MIN:{}, MEDIAN:{}, MAX:{}'.format( smell, min(per_script_reso_list), np.median(per_script_reso_list), max(per_script_reso_list) )  )
         print('*'*50)                
-    
+    print('ALL, MIN:{}, MEDIAN:{}, MAX:{}'.format(  min(all_reso_count), np.median(all_reso_count), max(all_reso_count) )  )
+    print('*'*50)                    
 
 
 def attribCountPerScript(attr_resu_file): 
+    all_attr_count = []
     df_ = pd.read_csv( attr_resu_file )
     non_zero_df = df_[df_['TOTAL_AFFECTED_ATTRI'] > 0 ]
     smells      = np.unique(  non_zero_df['SMELL_TYPE'].tolist() )
@@ -69,23 +73,26 @@ def attribCountPerScript(attr_resu_file):
             script_attrib_list = smell_df[smell_df['FILE_NAME']==script]['TOTAL_AFFECTED_ATTRI'].tolist()
             for script_attrib_cnt in script_attrib_list:
                 collector.append( script_attrib_cnt )
+                all_attr_count.append( script_attrib_cnt )
         print('*'*50)
         # print(collector)
         print('SMELL:{}, MIN:{}, MEDIAN:{}, MAX:{}'.format( smell_, min(collector), np.median(collector), max(collector) )  )
         print('*'*50)
+    print('ALL, MIN:{}, MEDIAN:{}, MAX:{}'.format(  min(all_attr_count), np.median(all_attr_count), max(all_attr_count) )  )
+    print('*'*50)                            
 
 
 
 if __name__=='__main__':
-    # org_name       = 'WIKI'
+    # org_name       = 'GITHUB'
     # org_name       = 'GITLAB'
     # org_name       = 'MOZI'
     # org_name       = 'OSTK'
-    # org_name       = 'GITHUB'
+    org_name       = 'WIKI'
 
     reso_file_name = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/RESOURCE_' + org_name  + '.csv'
     attr_file_name = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/NOTUSED_'  + org_name  + '.csv'    
     
+    attribCountPerScript( attr_file_name )
     resoSemantics( reso_file_name , attr_file_name )
     resoCountPerScript( reso_file_name , attr_file_name )
-    attribCountPerScript( attr_file_name )
