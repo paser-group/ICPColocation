@@ -85,8 +85,10 @@ def finalizeInvalidIPs(attr_dict, dict_vars):
 
 def extraHTTPCheck(_valu):
     flag_ = True
-    if(constants.LOCALHOST_KEYWORD in _valu) or (constants.CONCAT_KEYWORD in _valu) or ( constants.LOCAL_IP_KEYWORD in _valu ) or ( constants.DOLLAR_SYMBOL in _valu):
+    if(constants.LOCALHOST_KEYWORD in _valu) or (constants.CONCAT_KEYWORD in _valu) or ( constants.LOCAL_IP_KEYWORD in _valu ) or ( constants.DOLLAR_SYMBOL in _valu) or ( constants.EXAMPLE_DOMAIN_KEYWORD in _valu ) :
         flag_ = True 
+    # elif ( any(z_ in _valu for z_ in constants.INVALID_HTTP_PATTERNS) ):
+    #     flag_ = False 
     else: 
         third_slash_loc, cnt  = 0 , 0
         for z in range( len(_valu) ):
@@ -116,6 +118,7 @@ def finalizeHTTP(attr_dict, dict_vars):
         attr_value = attr_data[-1]
         attr_ascii = sanitizeConfigVals( attr_value )
         if (attr_ascii >= 600) and ( constants.HTTP_PATTERN in attr_value) and (extraHTTPCheck( attr_value ) ): # 600 is the total of 'http://'
+            # print( attr_value, extraHTTPCheck( attr_value ) )
             output_attrib_dict[attr_count] = ( attr_name, attr_value, attr_ascii)  # keeping ascii for debugging in taint tracking 
     for var_name, var_data in dict_vars.items():
         var_count += 1 
@@ -199,6 +202,7 @@ def finalizeHardCodedSecrets( attr_dict, vars_dict ):
         var_count  += 1 
         var_value  = var_data[-1]
         var_name   = var_name.strip() 
+        # print( var_name, var_value , isValidKeyName( var_name ) , checkIfValidSecret( var_value ) )
         if(any(x_ in var_name for x_ in constants.SECRET_PASSWORD_LIST )) and (checkIfValidSecret ( var_value ) ) and ( isValidPassword( var_name ) ):        
             secret_var_dict[var_count] = var_name, var_value, constants.OUTPUT_PASS_KW
         elif(any(x_ in var_name for x_ in constants.SECRET_USER_LIST )) and (checkIfValidSecret ( var_value ) ) and (isValidUserName( var_name ) ):        
@@ -510,6 +514,7 @@ def doFullTaintForSingleScript( pupp_file ):
     default_admin_tuple    = ( default_taint_dict, default_admin_dict )
     weak_cryp_tuple        = ( weak_cry_dic_taint, weak_crypt_dic  )    
 
+    # print(  empty_pwd_taint_dict )
     return ( susp_cnt, switch_cnt, ip_tuple, http_tuple, secret_tuple, empty_pass_tuple, default_admin_tuple, weak_cryp_tuple, dict_reso )
 
 
@@ -545,6 +550,7 @@ def orchestrateWithTaint(dir_):
 
 
 if __name__=='__main__':
+    doFullTaintForSingleScript( '' )
     print('='*50)    
 
 

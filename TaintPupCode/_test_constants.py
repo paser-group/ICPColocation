@@ -59,6 +59,8 @@ _weak_cryp_msg_           = common_error_string + '3'
 
 
 _empty_pass_script_name    = 'TestArtifacts/oozie.pp' 
+_tainted_empty_pass_script = 'TestArtifacts/ostk.ci.fuel.project.zabbix.server.pp'
+_tainted_pass_script       = 'TestArtifacts/sensu.postgresql.pp'
 _empty_pass_msg_           = common_error_string + '1'
 
 _default_adm_script_name   = 'TestArtifacts/test.api.pp' 
@@ -119,3 +121,5 @@ _aggregate_script_http   = 'TestArtifacts/ostk.ceph.http.repo.pp'
 
 _integration_structure   = 'TestArtifacts/hiera.pp'
 _integration_default     = 'TestArtifacts/cinder.pp'
+
+_example_domain_str      = 'http://internal.example.com:8080/twelfth'

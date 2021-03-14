@@ -170,5 +170,9 @@ class TestSmells( unittest.TestCase ):
         _attr, _vars = orchestra.finalizeHardCodedSecrets( dict_all_attr, dict_all_vari )
         self.assertEqual(  2 , len(  _attr ), _test_constants._secret_msg_ ) 
 
+    def testExampleDomainHTTP( self ): 
+        self.assertTrue( orchestra.extraHTTPCheck( _test_constants._example_domain_str ) , _test_constants.common_error_string + str(True)   )
+
+
 if __name__ == '__main__':
     unittest.main()

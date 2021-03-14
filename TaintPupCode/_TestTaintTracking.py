@@ -110,6 +110,20 @@ class TestTaintGraph( unittest.TestCase ):
         self.assertEqual( 1 , len(weak_cry_dic_taint) , _test_constants.common_error_string + str(1) )         
         graph.var_tracker_list.clear()               
 
+    def testTaintedEmptyPass(self):                    
+        _, _, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( _test_constants._tainted_empty_pass_script ) 
+        _, empty_pwd_vars = orchestra.finalizeEmptyPassword( dict_all_attr, dict_all_vari  )
+        empty_pwd_taint_dict           = graph.trackTaint( constants.OUTPUT_EMPTY_KW, empty_pwd_vars, dict_all_attr, dict_all_vari )        
+        self.assertEqual( 0 , len(empty_pwd_taint_dict) , _test_constants.common_error_string + str(0) )         
+        graph.var_tracker_list.clear()               
+
+    def testTaintedPassword(self):                    
+        _, _, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( _test_constants._tainted_pass_script ) 
+        secret_dict_attr, secret_dict_vars = orchestra.finalizeHardCodedSecrets( dict_all_attr, dict_all_vari )
+        secret_taint_dict                  = graph.trackTaint( constants.OUTPUT_SECRET_KW, secret_dict_vars, dict_all_attr, dict_all_vari )
+        self.assertEqual( 2 , len(secret_taint_dict) + len(secret_dict_attr) , _test_constants.common_error_string + str(2) )         
+        graph.var_tracker_list.clear()               
+
 def checkVarInSmellDict(  dic_smell  ):
         status = False
         for var_cnt, var_data in dic_smell.items():

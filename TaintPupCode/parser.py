@@ -77,6 +77,7 @@ def getAttributes(all_locs, all_as_str):
                     attribCnt += 1 
                     key_, value_ = loc_str.split( constants.ATTRIBUTE_SYMBOL  )
                     key_, value_ = key_.strip(), value_.strip()
+
                     '''
                     check for invalid parsing key words like block, resource 
                     '''
@@ -256,6 +257,7 @@ def mineParseOutput(parser_output_str, pp_original_file):
     '''
 
     locations, full_content_as_str = getContentWithStack( full_file_as_str )
+
     
     dict_of_resources              = getResources( locations, full_content_as_str )
     dict_of_classes                = getClasses( locations, full_content_as_str ) 
@@ -265,7 +267,7 @@ def mineParseOutput(parser_output_str, pp_original_file):
     list_of_susp_comments          = getSuspComments( pp_original_file )
     dict_of_funcs                  = getFunctions( locations, full_content_as_str )
 
-    # print(dict_of_funcs) 
+    # print(dict_of_all_attribs) 
     return dict_of_resources, dict_of_classes, dict_of_all_attribs, dict_of_all_variables, dict_of_switch_cases, list_of_susp_comments , dict_of_funcs
 
 
@@ -293,5 +295,6 @@ if __name__=='__main__':
     # test_pp_file = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/sample-puppet-scripts/manifests/init1.pp' 
     # test_pp_file = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-tripleo-2018-06/manifests/profile/base/pacemaker.pp'
     # test_pp_file = '/Users/arahman/TAINTPUP_REPOS/GITLAB/simp@puppetlabs-postgresql/manifests/repo.pp'
+    test_pp_file = '/Users/arahman/TAINTPUP_REPOS/GITHUB/fuel-infra@puppet-neutron/examples/cisco_ml2.pp'
 
-    executeParser( 'EMPTY' )
+    executeParser( test_pp_file )

@@ -33,7 +33,7 @@ def trackTaint( smell_type, smell_dict_var, all_attrib_dict, all_vari_dict ):
             '''
             first check if variable is used in an expression 
             '''
-            if( checkLiveness( var_name, all_vari_dict ) ): 
+            if( checkLiveness( var_name, all_vari_dict )   ): 
                 # print( var_name  + ' is alive ' )
                 '''
                 Now we have support for mutltiple taint tracking 
@@ -49,14 +49,15 @@ def trackTaint( smell_type, smell_dict_var, all_attrib_dict, all_vari_dict ):
                     attr_value = attr_data[-1] 
                     # print(var_name , multi_taint_var_name, attr_value)   
                     enh_var_name =  constants.DOLLAR_SYMBOL + constants.LPAREN_SYMBOL + var_name.replace(constants.DOLLAR_SYMBOL, constants.NULL_SYMBOL )  + constants.RPAREN_SYMBOL  ##need to handle ${url}
-                    if( var_name in attr_value ) or (enh_var_name in attr_value) or (multi_taint_var_name in attr_value):  
-                        '''
-                        one variable can be used for multiple attributes 
-                        '''
-                        if var_name not in graphDict:
-                            graphDict[var_name] = [(attr_name, attr_value , smell_type, hop_count) ] 
-                        else: 
-                            graphDict[var_name] = graphDict[var_name] + [ (attr_name, attr_value , smell_type, hop_count)  ]
+                    if constants.CALL_KW not in attr_value:
+                        if( var_name in attr_value ) or (enh_var_name in attr_value) or (multi_taint_var_name in attr_value):  
+                            '''
+                            one variable can be used for multiple attributes 
+                            '''
+                            if var_name not in graphDict:
+                                graphDict[var_name] = [(attr_name, attr_value , smell_type, hop_count) ] 
+                            else: 
+                                graphDict[var_name] = graphDict[var_name] + [ (attr_name, attr_value , smell_type, hop_count)  ]
     return graphDict 
 
 
@@ -136,13 +137,13 @@ def trackSingleVarTaint( smell_type, var_name, all_vari_dict, all_attrib_dict ):
             '''
             attr_name  = attr_data[-2] 
             attr_value = attr_data[-1] 
-            # print(var_name , multi_taint_var_name, attr_value)   
             enh_var_name =  constants.DOLLAR_SYMBOL + constants.LPAREN_SYMBOL + var_name.replace(constants.DOLLAR_SYMBOL, constants.NULL_SYMBOL )  + constants.RPAREN_SYMBOL  ##need to handle ${url}
-            if( var_name in attr_value ) or (enh_var_name in attr_value) or (multi_taint_var_name in attr_value):  
-                if var_name not in graphDict:
-                    graphDict[var_name] = [(attr_name, attr_value , smell_type, hop_count) ] 
-                else: 
-                    graphDict[var_name] = graphDict[var_name] + [ (attr_name, attr_value , smell_type, hop_count)  ]
+            if constants.CALL_KW not in attr_value:
+                if( var_name in attr_value ) or (enh_var_name in attr_value) or (multi_taint_var_name in attr_value):  
+                    if var_name not in graphDict:
+                        graphDict[var_name] = [(attr_name, attr_value , smell_type, hop_count) ] 
+                    else: 
+                        graphDict[var_name] = graphDict[var_name] + [ (attr_name, attr_value , smell_type, hop_count)  ]
     return graphDict 
 
 

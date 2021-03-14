@@ -88,7 +88,7 @@ if __name__=='__main__':
     # org_name       = 'GITLAB'
     # org_name       = 'MOZI'
     # org_name       = 'OSTK'
-    org_name       = 'WIKI'
+    # org_name       = 'WIKI'
 
     reso_file_name = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/RESOURCE_' + org_name  + '.csv'
     attr_file_name = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/NOTUSED_'  + org_name  + '.csv'    
