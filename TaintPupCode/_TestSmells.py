@@ -123,7 +123,7 @@ class TestSmells( unittest.TestCase ):
         self.assertTrue( orchestra.isValidUserName( _test_constants._secret_uname ) , _test_constants._secret_flag_status  ) 
 
     def testHardcodedPass( self ): 
-        self.assertTrue( orchestra.isValidPassword( _test_constants._secret_password ) , _test_constants._secret_flag_status  ) 
+        self.assertTrue( orchestra.isValidPasswordName( _test_constants._secret_password ) , _test_constants._secret_flag_status  ) 
 
     def testHardcodedSecretV1( self ): 
         _, _, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( _test_constants._secret_script_name ) 
@@ -172,6 +172,11 @@ class TestSmells( unittest.TestCase ):
 
     def testExampleDomainHTTP( self ): 
         self.assertTrue( orchestra.extraHTTPCheck( _test_constants._example_domain_str ) , _test_constants.common_error_string + str(True)   )
+
+    def testHardcodedSecretV9( self ): 
+        _, _, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( _test_constants._secret_strange_config_script )
+        _attr, _vars = orchestra.finalizeHardCodedSecrets( dict_all_attr, dict_all_vari )
+        self.assertEqual(  2 , len(  _attr ) , _test_constants.common_error_string + str(2) ) 
 
 
 if __name__ == '__main__':

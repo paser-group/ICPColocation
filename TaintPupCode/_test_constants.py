@@ -77,6 +77,7 @@ _secret_msg_          = common_error_string + '2'
 _secret_uname         = 'karaf'
 _secret_password      = 'karaf'
 _secret_flag_status   = 'TRUE'
+_secret_strange_config_script ='/Users/arahman/TAINTPUP_REPOS/GITHUB/derekhiggins@packstack/packstack/puppet/templates/cinder.pp'
 
 
 _username_script_name   = 'TestArtifacts/oozie.database.mysql.pp' 

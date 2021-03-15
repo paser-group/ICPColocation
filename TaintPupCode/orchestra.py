@@ -168,21 +168,22 @@ def checkIfEmptyPass(single_config_val):
 
 def isValidUserName(uName): 
     valid = True
-    if( any(z_ in uName for z_ in constants.FORBIDDEN_USER_VALUES) ): 
+    if( any(z_ in uName for z_ in constants.FORBIDDEN_USER_NAMES ) ): 
         valid = False  
     return valid
 
 def isValidKeyName(keyName): 
     valid = True
-    if( any(z_ in keyName for z_ in constants.FORBIDDEN_KEY_VALUES) ): 
+    if( any(z_ in keyName for z_ in constants.FORBIDDEN_KEY_NAMES ) ): 
         valid = False  
     return valid
 
-def isValidPassword(pName): 
+def isValidPasswordName(pName): 
     valid = True
-    if( any(z_ in pName for z_ in constants.FORBIDDEN_PASS_VALUES) ): 
+    if( any(z_ in pName for z_ in constants.FORBIDDEN_PASS_NAMES) ): 
         valid = False  
     return valid
+  
 
 def finalizeHardCodedSecrets( attr_dict, vars_dict ):
     secret_attr_dict , secret_var_dict = {}, {} 
@@ -192,7 +193,7 @@ def finalizeHardCodedSecrets( attr_dict, vars_dict ):
         attr_name  = attr_data[-2] 
         attr_value = attr_data[-1]
         attr_name  = attr_name.strip() 
-        if(any(x_ in attr_name for x_ in constants.SECRET_PASSWORD_LIST )) and (checkIfValidSecret ( attr_value ) ) and (isValidPassword( attr_name )):        
+        if(any(x_ in attr_name for x_ in constants.SECRET_PASSWORD_LIST )) and (checkIfValidSecret ( attr_value ) ) and (isValidPasswordName( attr_name )):        
             secret_attr_dict[attr_count] = attr_name,   attr_value, constants.OUTPUT_PASS_KW
         elif(any(x_ in attr_name for x_ in constants.SECRET_USER_LIST )) and (checkIfValidSecret ( attr_value ) ) and (isValidUserName( attr_name ) ) :        
             secret_attr_dict[attr_count] =  attr_name,  attr_value, constants.OUTPUT_USER_KW
@@ -203,7 +204,7 @@ def finalizeHardCodedSecrets( attr_dict, vars_dict ):
         var_value  = var_data[-1]
         var_name   = var_name.strip() 
         # print( var_name, var_value , isValidKeyName( var_name ) , checkIfValidSecret( var_value ) )
-        if(any(x_ in var_name for x_ in constants.SECRET_PASSWORD_LIST )) and (checkIfValidSecret ( var_value ) ) and ( isValidPassword( var_name ) ):        
+        if(any(x_ in var_name for x_ in constants.SECRET_PASSWORD_LIST )) and (checkIfValidSecret ( var_value ) ) and ( isValidPasswordName( var_name ) ):        
             secret_var_dict[var_count] = var_name, var_value, constants.OUTPUT_PASS_KW
         elif(any(x_ in var_name for x_ in constants.SECRET_USER_LIST )) and (checkIfValidSecret ( var_value ) ) and (isValidUserName( var_name ) ):        
             secret_var_dict[var_count] = var_name, var_value, constants.OUTPUT_USER_KW 
@@ -335,7 +336,7 @@ def getCrossScriptSecret( script_list, class_dict ):
             for k_, v_ in attr_dict.items(): 
                 attrib_name, attrib_value = v_[-2], v_[-1] 
                 secret_attr_dict = {}
-                if(any(x_ in attrib_name for x_ in constants.SECRET_PASSWORD_LIST )) and (checkIfValidSecret ( attrib_value ) ) and (isValidPassword( attrib_name )):        
+                if(any(x_ in attrib_name for x_ in constants.SECRET_PASSWORD_LIST )) and (checkIfValidSecret ( attrib_value ) ) and (isValidPasswordName ( attrib_name )):        
                     secret_attr_dict[attrib_name] =     constants.OUTPUT_PASS_KW
                 elif(any(x_ in attrib_name for x_ in constants.SECRET_USER_LIST )) and (checkIfValidSecret ( attrib_value ) ) and (isValidUserName( attrib_name ) ) :        
                     secret_attr_dict[attrib_name] =    constants.OUTPUT_USER_KW
@@ -514,7 +515,7 @@ def doFullTaintForSingleScript( pupp_file ):
     default_admin_tuple    = ( default_taint_dict, default_admin_dict )
     weak_cryp_tuple        = ( weak_cry_dic_taint, weak_crypt_dic  )    
 
-    # print(  empty_pwd_taint_dict )
+    # print(  secret_dict_attr )
     return ( susp_cnt, switch_cnt, ip_tuple, http_tuple, secret_tuple, empty_pass_tuple, default_admin_tuple, weak_cryp_tuple, dict_reso )
 
 
@@ -550,7 +551,7 @@ def orchestrateWithTaint(dir_):
 
 
 if __name__=='__main__':
-    doFullTaintForSingleScript( '' )
+    doFullTaintForSingleScript( '/Users/arahman/TAINTPUP_REPOS/GITHUB/derekhiggins@packstack/packstack/puppet/templates/cinder.pp' )
     print('='*50)    
 
 

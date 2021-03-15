@@ -1317,12 +1317,79 @@ like `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-onos-2018-06/de
 > Error: Syntax error at '[' at line 17:24
 
 
-##### Great example of showing how not all avriables are used in attributes 
+##### Great example of showing how not all variables are used in attributes 
 
-/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-monasca-2018-06/manifests/vertica/config.pp 
+1. /Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-monasca-2018-06/manifests/vertica/config.pp 
 
 `monitor_user` is assigned a value but not used in an attribute 
 
+2.   /Users/arahman/TAINTPUP_REPOS/WIKIMEDIA/vagrant/puppet/modules/changeprop/manifests/init.pp 
+
+```
+  $restbase_uri = "http://localhost:${restbase_port}"
+
+    service::node { 'changeprop':
+        port       => $port,
+        module     => 'hyperswitch',
+        log_level  => $log_level,
+        git_remote => 'https://github.com/wikimedia/change-propagation.git',
+        config     => template('changeprop/config.yaml.erb'),
+    }
+```
+
+##### Great example of TaintPup can capture data flow WAY BETTER than SLIC 
+File name: /Users/arahman/TAINTPUP_REPOS/MOZILLA/puppet/modules/python/manifests/system_pip_conf.pp
+```
+        file {
+            "${filename}":
+                content => template("python/user-pip-conf.erb"),
+                owner   => $user,
+                group   => $group,
+                mode    => "0644";
+        }
+```
+
+File name: /Users/arahman/TAINTPUP_REPOS/OPENSTACK/fuel-library-2018-06/deployment/puppet/osnailyfacter/manifests/openstack/manage_cinder_types.pp
+
+```
+define osnailyfacter::openstack::manage_cinder_types (
+  $ensure               = 'present',
+  $volume_backend_names = {},
+  $key                  = 'volume_backend_name',
+) {
+  if $ensure == 'present' {
+    $value = $volume_backend_names[$name]
+    cinder_type { $name:
+      properties => ["${key}=${value}"]
+    }
+  } else {
+    cinder_type { $name:
+      ensure => absent
+    }
+  }
+}
+
+```
+File name: /Users/arahman/TAINTPUP_REPOS/GITHUB/cisco@cisco-network-puppet-module/examples/cisco/demo_ospf.pp 
+```
+ $auth_password = '3109a60f51374a0d'
+  cisco_ospf_area_vlink { 'dark_blue vrf2 12345 1.1.1.1':
+    ensure                             => 'present',
+    auth_key_chain                     => 'myKeyChain',
+    authentication                     => md5,
+    authentication_key_encryption_type => '3des',
+    authentication_key_password        => $auth_password,
+    dead_interval                      => 500,
+    hello_interval                     => 2000,
+    message_digest_algorithm_type      => md5,
+    message_digest_encryption_type     => cisco_type_7,
+    message_digest_key_id              => 39,
+    message_digest_password            => $md_password,
+    retransmit_interval                => 10000,
+    transmit_delay                     => 400,
+  }
+
+```
 ##### Nested switch cases statements are problematic 
 
 /Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-library-2018-06/deployment/puppet/fuel/manifests/astute.pp

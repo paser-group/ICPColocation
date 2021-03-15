@@ -295,6 +295,6 @@ if __name__=='__main__':
     # test_pp_file = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/sample-puppet-scripts/manifests/init1.pp' 
     # test_pp_file = '/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-tripleo-2018-06/manifests/profile/base/pacemaker.pp'
     # test_pp_file = '/Users/arahman/TAINTPUP_REPOS/GITLAB/simp@puppetlabs-postgresql/manifests/repo.pp'
-    test_pp_file = '/Users/arahman/TAINTPUP_REPOS/GITHUB/fuel-infra@puppet-neutron/examples/cisco_ml2.pp'
+    test_pp_file = '/Users/arahman/TAINTPUP_REPOS/GITHUB/derekhiggins@packstack/packstack/puppet/templates/cinder.pp'
 
     executeParser( test_pp_file )
