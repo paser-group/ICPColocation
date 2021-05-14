@@ -80,3 +80,22 @@ Jan 27, 2020
 
 28. TP `no integrity check` in `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ghub-ansi/openshift@openshift-ansible-contrib/reference-architecture/azure-ansible/3.5/ansibledeployocp/playbooks/roles/prepare/tasks/main.yaml` and `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ghub-ansi/openshift@openshift-ansible-contrib/reference-architecture/azure-ansible/3.6/ansibledeployocp/playbooks/roles/prepare/tasks/main.yaml` and `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ghub-ansi/redhat-performance@satellite-performance/playbooks/katello/roles/add_katello_repos/tasks/main.yaml` 
 
+29. A string that starts with the word `vault` is a secret stored using Vault, so probably a FP. Example : 
+> db_password: {{ vaulted_db_passord }}
+> Reff: https://titanwolf.org/Network/Articles/Article?AID=c096dd39-fc98-48c2-ac9c-7ecec1e0e125#gsc.tab=0
+
+Need to check of vault file is encrypted or decrypted, if decrypted then will look like this 
+```
+# vault_file
+vaulted_db_passord: a_super_secret
+vaulted_aws_secret_access_key: the_aws_secret
+```
+
+30. This article (https://www.cyberark.com/resources/blog/securely-automate-it-tasks-with-ansible-and-cyberark) says:
+
+```
+Ansible Playbooks are highly privileged. To access, manage and configure IT resources – such as a VM, server or cloud compute instance – playbooks require appropriate credentials and secrets. If these powerful privileged credentials are not properly managed and secured – or left hardcoded in playbooks or scripts – they become attractive targets for attackers.
+```
+
+Is it possible to get this ^ ? 
+

@@ -877,7 +877,7 @@ Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/fuel-plugin-opendayli
 Location:  `/Users/arahman/PRIOR_NCSU/SECU_REPOS/ostk-pupp/puppet-nova-2018-06/`
 
 1. In `manifests/metadata/novajoin/` , `$password = $::os_service_default,` is a FP. 
-2. In `manifests.network/neutron.pp`, `'neutron/password': value => $neutron_password, secret => true;` ensures secret is not logged in console. Absence of `secret => true` will be a new category called `secret leakage` 
+2. In `manifests.network/neutron.pp`, `'neutron/password': value => $neutron_password, secret => true;` ensures secret is not logged in console. Absence of `secret => true` can be a new category called `secret leakage` 
 3. In `manifests/cron/archived_deleted_rows.pp` , `user => pick($user, $::nova::params::nova_user),` is a TP. 
 4. In `examples/nova_wsgi.pp` and `examples/nova_with_pacemaker.pp`, `admin_password => 'a_big_secret'` is passed into `manifests/api/pp` but not used, so FP 
 

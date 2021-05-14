@@ -82,6 +82,61 @@ def attribCountPerScript(attr_resu_file):
     print('*'*50)                            
 
 
+def getsemCount( reso_titles ):
+    
+    user_cnt, data_storage, file_, web_service , net , pkg = 0 , 0 , 0, 0 ,0 , 0 
+    for tit in reso_titles:
+        if ( 'sql'  in  tit ) or ('elasti' in tit ) or ('swift' in tit ) or ('cinder' in tit ) or ('memcache' in tit ) or ('redis' in tit ) or ('db' in tit ) or ('etcd' in tit ) or ('kibana' in tit ):
+            data_storage = data_storage + 1 
+        elif ('file' in tit ) or ('exec' in tit ) :
+            file_ = file_ + 1 
+        elif ('dns' in tit ) or ('vlan' in tit ) or ('vtp' in tit ) or ('firewall' in tit ) or ('nfv' in tit ):
+            net = net + 1 
+        elif ('package' in tit ) or ('service' in tit ) or ('nova' in tit ) or ('yum' in tit )or ('repo' in tit ) or ('apt' in tit ) or ('proxy' in tit ) or ('distro' in tit ) or ('install' in tit ): 
+            pkg = pkg + 1 
+        elif ('apache' in tit) or ('mod' in tit) or ('www' in tit) or ('http' in tit)  or ('url' in tit ) or ('wp' in tit)  or ('wordpress' in tit ) :
+            web_service = web_service + 1 
+        elif ('user' in tit ) or ('auth' in tit ) or ('token' in tit ) or ('admin' in tit ) or ('cert' in tit ) or ('password' in tit ) or ('ssl' in tit ) or ('ca' in tit ) or ('cred' in tit ):
+            user_cnt = user_cnt + 1           
+        # else: 
+        #     data_storage = data_storage + 1   
+
+    return user_cnt, data_storage, file_, web_service , net , pkg 
+    
+
+
+def getSemanticFreq( org_, file_ ):
+    print('='*100)
+    print(org_) 
+    print('='*100)
+    df_           = pd.read_csv( file_ )
+    reso_titles   = df_['RESOURCE_NAME'].tolist()
+    reso_types    = df_['RESOURCE_TYPE'].tolist() 
+    tot_title_cnt = len( reso_titles )
+
+    user_cnt, data_storage, file_, web_service , net , pkg  = getsemCount( reso_titles )
+    t_user_cnt, t_data_storage, t_file_, t_web_service , t_net , t_pkg  = getsemCount( reso_types  ) 
+
+    tot_usr  = user_cnt + t_user_cnt 
+    tot_data = data_storage + t_data_storage
+    tot_file = file_ + t_file_ 
+    tot_web  = web_service + t_web_service
+    tot_net  = net + t_net
+    tot_pkg  = pkg + t_pkg 
+
+    perc_usr =  round( float(tot_usr) / float(tot_title_cnt) *100 , 3) 
+    perc_dat =  round( float(tot_data) / float(tot_title_cnt) *100 , 3) 
+    perc_fil =  round( float(tot_file) / float(tot_title_cnt) *100 , 3) 
+    perc_web =  round( float(tot_web) / float(tot_title_cnt) *100 , 3) 
+    perc_net =  round( float(tot_net) / float(tot_title_cnt) *100 , 3) 
+    perc_pkg =  round( float(tot_pkg) / float(tot_title_cnt) *100 , 3)         
+
+    print('='*100)
+    print('USER:{}, DATA_STORAGE:{}, FILE:{}, WEB:{}, NET:{}, PKG:{}'.format( perc_usr, perc_dat, perc_fil, perc_web, perc_net, perc_pkg  ) )
+    print('='*100)    
+    
+
+
 
 if __name__=='__main__':
     # org_name       = 'GITHUB'
@@ -93,6 +148,8 @@ if __name__=='__main__':
     reso_file_name = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/RESOURCE_' + org_name  + '.csv'
     attr_file_name = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/NOTUSED_'  + org_name  + '.csv'    
     
-    attribCountPerScript( attr_file_name )
-    resoSemantics( reso_file_name , attr_file_name )
-    resoCountPerScript( reso_file_name , attr_file_name )
+    # attribCountPerScript( attr_file_name )
+    # resoSemantics( reso_file_name , attr_file_name )
+    # resoCountPerScript( reso_file_name , attr_file_name )
+
+    getSemanticFreq(org_name, reso_file_name )
