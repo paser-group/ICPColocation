@@ -88,6 +88,10 @@ _taintedHttp_script_v2 = 'TestArtifacts/packstack.keystone.manila.pp'
 _tainted_http_msg_v2   = common_error_string + '5'
 _taintedHttp_script_v3 = 'TestArtifacts/packstack.keystone.cinder.pp'
 _tainted_http_msg_v3   = common_error_string + '9'
+_taintedHttp_script_v4 = 'TestArtifacts/http.scheme.gse.nagios.pp'
+_tainted_http_msg_v4   = common_error_string + '1'
+_taintedHttp_script_v5 = 'TestArtifacts/http.scheme.afd.nagios.pp'
+_tainted_http_msg_v5   = common_error_string + '1'
 
 OUTPUT_HTTP_KW         = 'INSECURE_HTTP'
 

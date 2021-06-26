@@ -66,6 +66,20 @@ class TestTaintGraph( unittest.TestCase ):
         self.assertEqual( 9 , len(http_taint_dict['$cinder_protocol']) , _test_constants._tainted_http_msg_v3)         
         graph.var_tracker_list.clear()                
 
+    def testTaintedHTTP_V4(self):           
+        _, _, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( _test_constants._taintedHttp_script_v4 ) 
+        _, http_dict_vars =  orchestra.finalizeHTTP( dict_all_attr, dict_all_vari )  
+        http_taint_dict = graph.trackTaint( _test_constants.OUTPUT_HTTP_KW, http_dict_vars, dict_all_attr, dict_all_vari )
+        self.assertEqual( 1 , len(http_taint_dict['http_scheme']) , _test_constants._tainted_http_msg_v4 )         
+        graph.var_tracker_list.clear()                
+
+    def testTaintedHTTP_V5(self):            
+        _, _, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( _test_constants._taintedHttp_script_v5 ) 
+        _, http_dict_vars =  orchestra.finalizeHTTP( dict_all_attr, dict_all_vari )  
+        http_taint_dict = graph.trackTaint( _test_constants.OUTPUT_HTTP_KW, http_dict_vars, dict_all_attr, dict_all_vari )
+        self.assertEqual( 1 , len(http_taint_dict['http_scheme']) , _test_constants._tainted_http_msg_v5 )         
+        graph.var_tracker_list.clear()                        
+
     def testTaintedHopCountV1(self):            
         _, _, dict_all_attr, dict_all_vari, _, _, _ = parser.executeParser( _test_constants._multi_taint_script_name ) 
         _, http_dict_vars =  orchestra.finalizeHTTP( dict_all_attr, dict_all_vari )  

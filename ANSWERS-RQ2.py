@@ -66,6 +66,31 @@ def getValidTaints( file_ ):
     print('*'*50)  
 
 
+
+def getDirectAttribs( file_ ):
+    print('*'*50)
+    print('D-I-R-E-C-T--A-T-T-R-I-B-S')
+    print('*'*50)
+    print( file_ )
+    print('*'*50)
+    overall_direct_attrs = 0 
+    df_ = pd.read_csv( file_ )
+    df_['DIRECT_ATTRIB_CNT'] = df_['TOTAL_AFFECTED_ATTRI'] - df_['AFFECTED_ATTRIB_BY_VARS']
+    # print(df_.head())
+    smells = np.unique( df_['SMELL_TYPE'].tolist() )
+    for smell_ in smells:
+        smell_df_                 = df_[df_['SMELL_TYPE'] == smell_]
+        per_smell_direct_attribs  = sum( smell_df_['DIRECT_ATTRIB_CNT'].tolist() ) 
+        overall_direct_attrs      = overall_direct_attrs + per_smell_direct_attribs 
+        print('*'*50)
+        print('SMELL:{}, TOTAL:{}'.format( smell_,  per_smell_direct_attribs )  )
+        print('*'*50)
+    print('ALL, TOTAL:{}'.format(  overall_direct_attrs  )  )    
+    print('*'*50)                
+
+
+
+
 if __name__ == '__main__':
     # ORG_ = 'WIKI'
     # ORG_ = 'OSTK'
@@ -76,5 +101,7 @@ if __name__ == '__main__':
     notused_file_name = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/NOTUSED_'  + ORG_  + '.csv'
     hopcnt_file_name  = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/HOPCOUNT_' + ORG_  + '.csv'
 
-    getHopCount( hopcnt_file_name )
-    getValidTaints( notused_file_name )
+    # getHopCount( hopcnt_file_name )
+    # getValidTaints( notused_file_name )
+
+    getDirectAttribs( notused_file_name )

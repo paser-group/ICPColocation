@@ -132,9 +132,31 @@ def getSemanticFreq( org_, file_ ):
     perc_pkg =  round( float(tot_pkg) / float(tot_title_cnt) *100 , 3)         
 
     print('='*100)
+    print('Total affected resources:', tot_title_cnt )
+    print('='*100)    
     print('USER:{}, DATA_STORAGE:{}, FILE:{}, WEB:{}, NET:{}, PKG:{}'.format( perc_usr, perc_dat, perc_fil, perc_web, perc_net, perc_pkg  ) )
     print('='*100)    
     
+
+
+def getLOCOnly( out_fil ):
+    print('-'*100)    
+    print(out_fil)
+    print('-'*100)
+    out_df = pd.read_csv( out_fil )
+    all_pp_scripts =  np.unique( out_df['SCRIPT'].tolist() )
+    print('Count:', len(all_pp_scripts) )
+    print('-'*100)    
+    tot_loc = 0 
+    for pp in all_pp_scripts:
+        try:
+            pp_loc = sum(1 for line in open( pp , 'r', encoding= 'latin-1' )) 
+        except UnicodeDecodeError:
+            pp_loc = 10 
+        tot_loc = tot_loc + pp_loc 
+    print('Size:', tot_loc )        
+    print('-'*100)    
+
 
 
 
@@ -145,11 +167,17 @@ if __name__=='__main__':
     # org_name       = 'OSTK'
     # org_name       = 'WIKI'
 
-    reso_file_name = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/RESOURCE_' + org_name  + '.csv'
-    attr_file_name = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/NOTUSED_'  + org_name  + '.csv'    
+    # reso_file_name = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/RESOURCE_' + org_name  + '.csv'
+    # attr_file_name = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/NOTUSED_'  + org_name  + '.csv'    
     
-    # attribCountPerScript( attr_file_name )
-    # resoSemantics( reso_file_name , attr_file_name )
-    # resoCountPerScript( reso_file_name , attr_file_name )
+    # output_file = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/IaC/FixFalsePositive/output/V9_WIKI.EVALUATION.csv'
+    # getLOCOnly( output_file  )  ## for summary stats 
 
-    getSemanticFreq(org_name, reso_file_name )
+    # attribCountPerScript( attr_file_name )
+    # resoSemantics( reso_file_name , attr_file_name )  ## for RQ3, part 2.a 
+    # resoCountPerScript( reso_file_name , attr_file_name ) ## for RQ3, part 1 
+    # getSemanticFreq(org_name, reso_file_name )  ## for RQ3, part 2.b
+
+
+
+

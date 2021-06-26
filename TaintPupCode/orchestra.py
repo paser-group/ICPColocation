@@ -124,11 +124,14 @@ def finalizeHTTP(attr_dict, dict_vars):
         var_count += 1 
         var_value = var_data[-1]
         var_ascii = sanitizeConfigVals( var_value )
+        # print( var_name, var_data,  var_ascii) 
         if (var_ascii >= 600) and ( constants.HTTP_PATTERN in var_value) and (extraHTTPCheck( var_value) ): # 600 is the total of 'http://'
             output_variable_dict[var_count] = (var_name, var_value, var_ascii) 
-        elif constants.XTRA_HTTP_PROTO_KW in var_name and  (var_ascii ==  448 or var_ascii == 526) : ### need to handle $magnum_protocol = 'http', ascii for 'http' is 448
-            output_variable_dict[var_count] = ( var_name, var_value, var_ascii)             
+        elif ( any( z in var_name for z in constants.XTRA_HTTP_VAR_KWS) ) and  (var_ascii ==  448 or var_ascii == 526) : ### need to handle $magnum_protocol = 'http', ascii for 'http' is 448
+            output_variable_dict[var_count] = ( var_name, var_value, var_ascii)                     
 
+
+    # print( output_variable_dict ) 
     return output_attrib_dict, output_variable_dict # dict will help in taint tracking 
 
 def finalizeWeakEncrypt(func_dict):
@@ -515,7 +518,7 @@ def doFullTaintForSingleScript( pupp_file ):
     default_admin_tuple    = ( default_taint_dict, default_admin_dict )
     weak_cryp_tuple        = ( weak_cry_dic_taint, weak_crypt_dic  )    
 
-    # print(  secret_dict_attr, secret_taint_dict )
+    # print(  http_dict_vars, http_taint_dict )
     return ( susp_cnt, switch_cnt, ip_tuple, http_tuple, secret_tuple, empty_pass_tuple, default_admin_tuple, weak_cryp_tuple, dict_reso )
 
 
@@ -551,7 +554,10 @@ def orchestrateWithTaint(dir_):
 
 
 if __name__=='__main__':
-    doFullTaintForSingleScript( '/Users/arahman/TAINTPUP_REPOS/GITLAB/simp@puppetlabs-mysql/manifests/backup/mysqldump.pp' )
+    # doFullTaintForSingleScript( '/Users/arahman/TAINTPUP_REPOS/GITLAB/simp@puppetlabs-mysql/manifests/backup/mysqldump.pp' )
+    # res_tup = doFullTaintForSingleScript( '/Users/arahman/TAINTPUP_REPOS/OPENSTACK/fuel-plugin-lma-collector-2018-06/deployment_scripts/puppet/modules/lma_collector/manifests/gse_nagios.pp' )
+    # res_tup = doFullTaintForSingleScript( '/Users/arahman/TAINTPUP_REPOS/OPENSTACK/fuel-plugin-lma-collector-2018-06/deployment_scripts/puppet/modules/lma_collector/manifests/afd_nagios.pp' )
+    
     print('='*50)    
 
 
