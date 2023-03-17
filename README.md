@@ -7,9 +7,12 @@
 
 # TaintPup: Taint Tracking to Facilitate Better Secuirty Analysis for Puppet 
 
-## Collaborators 
+## Main developer
 
-Akond Rahman (Lead, PI) 
+Akond Rahman 
+
+## Colloborator 
+
 Chris Parnin 
 
 ### Details 
